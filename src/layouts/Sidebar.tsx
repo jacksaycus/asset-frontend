@@ -19,7 +19,15 @@ const DRAWER_WIDTH = 280;
 const RootStyle = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('lg')]: {
         flexShrink: 0,
-        width: DRAWER_WIDTH
+        width: DRAWER_WIDTH,
+        display: 'flex',
+        height: '1000px',
+        padding: '16px',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        borderRight: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+        background: 'var(--White, #FFF)'
     }
 }));
 
@@ -96,21 +104,18 @@ function Sidebar(props: Props) {
         <Scrollbar
             sx={{
                 height: '100%',
-                '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
+                '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' },
+                padding:'16px',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start' 
             }}
         >
             <Spacetopbottom />
-            {/* <Box sx={{ px: 2.5, py: 3 }}> */}
+            
             <Stack direction="row" alignItems="center" spacing={2}>
                 <Box component={RouterLink} to="/"
                              sx={{ 
-                                // display: 'flex',
-                                // width: '44px',
-                                // height: '44px',
-                                // justifyContent: 'center',
-                                // alignItems: 'center',
-                                // gap: '12px'
-                               
                         }}              
                 >
                     <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,29 +155,7 @@ function Sidebar(props: Props) {
                     </LogoRightBottom>
                     
             </Stack>
-            {/* </Box> */}
-
-            {/* <Box sx={{ mb: 5, mx: 2.5 }}>
-                <Link underline="none" component={RouterLink} to="#">
-                    <AccountStyle>
-                        <Avatar src={account.photoURL} alt="photoURL" />
-                        <Box sx={{ ml: 2 }}>
-                            <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                                김길동
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                빅데이타연구소
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary' }} >
-                               나의 서버스 요청대기 0<br/>
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                나의 서비스 승인대기 0
-                            </Typography>
-                        </Box>
-                    </AccountStyle>
-                </Link>
-            </Box> */}
+            
             <Spacetopbottom />
             <NavSection />
 

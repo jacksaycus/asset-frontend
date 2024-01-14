@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams ,GridToolbar } from '@mui/x-data-grid';
 import { Icon , addIcon } from '@iconify/react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Rating from '@mui/material/Rating';
+import Snackbar from '@mui/material/Snackbar';
  import {
     Stack,
     Button,
@@ -15,6 +17,7 @@ import Rating from '@mui/material/Rating';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Page from 'src/components/Page';
 import AccountManagementDetail from './AccountManagementDetail';
+import { getCars, deleteCar } from '../api/assetapi';
 
 function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
@@ -168,7 +171,51 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 , rating: 2 },
 ];
 
+const rows1 = [
+  { id: 1, brand: 'ford', model: 'mustang', color: 'red0' , registrationNumber: 'adf-1121', modelYear: '2023',  price:59000},
+  
+];
+
 function AccountManagement() {
+  const [detail, setDetail] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+
+  const queryClient = useQueryClient();
+
+  const { data, error, isSuccess } = useQuery({
+    queryKey: ["cars"],
+    queryFn: getCars
+  });
+
+  const { mutate } = useMutation(deleteCar, {
+    onSuccess: () => {
+      setOpen(true);
+      queryClient.invalidateQueries({ queryKey: ['cars'] });
+    },
+    onError: (err) => {
+      console.error(err);
+    },
+  }); 
+
+  const columns: GridColDef[] = [
+    {field: 'brand', headerName: 'Brand', width: 200},
+    {field: 'model', headerName: 'Model', width: 200},
+    {field: 'color', headerName: 'Color', width: 200},
+    {field: 'registrationNumber', headerName: 'Reg.nr.', width: 150},
+    {field: 'modelYear', headerName: 'Model Year', width: 150},
+    {field: 'price', headerName: 'Price', width: 150},
+    
+  ]; 
+
+  // if (!isSuccess) {
+  //   return <span>Loading...</span>
+  // }
+  // else if (error) {
+  //   return <span>Error when fetching ...</span>
+  // }
+  // else {
+
   return(
     <>
       <Page title="계정관리">
@@ -287,7 +334,7 @@ function AccountManagement() {
              <BetweenDiv></BetweenDiv>
              <Stack direction="row" alignItems="center" spacing={1}>
              <Box sx={{ height: 400, width: '100%' ,backgroundColor:'white'}}>
-                <DataGrid
+                {/* <DataGrid
                   rows={rows}
                   columns={columns}
                   initialState={{
@@ -300,11 +347,28 @@ function AccountManagement() {
                   pageSizeOptions={[5]}
                   checkboxSelection
                   disableRowSelectionOnClick
-                />
+                /> */}
+                <DataGrid
+                // rows={data}
+                rows={rows1}
+                columns={columns}
+                disableRowSelectionOnClick={true}
+                // getRowId={row => row._links.self.href}
+                // slots={{ toolbar: GridToolbar }}
+              />
+              {/* <Snackbar
+                open={open}
+                autoHideDuration={2000}
+                onClose={() => setOpen(false)}
+                message="Car deleted" /> */}
               </Box>
              </Stack>
              <BetweenDiv/>
-               <AccountManagementDetail/>
+               {
+                 detail && 
+                     <AccountManagementDetail/>
+               }
+
              <BetweenDiv/>
              <Stack direction="row" alignItems="center" spacing={1}>
              <Box component={RouterLink} to="/" 
@@ -341,6 +405,7 @@ function AccountManagement() {
       </Page>
     </>
   );
+//  }
 }
 
 export default AccountManagement;

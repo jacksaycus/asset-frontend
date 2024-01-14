@@ -17,6 +17,7 @@ import { HelmetProvider } from 'react-helmet-async';
 // import ThemeConfig from 'src/theme';
 // import ScrollToTop from 'src/components/ScrollToTop';
 // import Router from 'src/routes';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './index';
 
 // const App = (): JSX.Element => {
@@ -27,13 +28,15 @@ import App from './index';
 //         </ThemeConfig>
 //     );
 // };
-
+const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
     <HelmetProvider>
         <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
             <App />
+            </QueryClientProvider>
         </BrowserRouter>
     </HelmetProvider>
 );

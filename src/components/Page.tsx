@@ -2,12 +2,12 @@ import { Helmet } from 'react-helmet-async';
 import React, { forwardRef } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
 interface Props {
     children?;
     title?;
     other?;
 }
-
 const Page = forwardRef(function Page(props: Props, ref) {
     const { children, title = '', ...other } = props;
     const RootDiv = styled('div')({
@@ -28,7 +28,7 @@ const Page = forwardRef(function Page(props: Props, ref) {
                 <title>{title}</title>
             </Helmet>
             <RootDiv>
-            {children}
+              {children}
             </RootDiv>
         </Box>
     );

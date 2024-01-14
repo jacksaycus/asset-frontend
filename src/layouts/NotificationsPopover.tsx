@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { set, sub, formatDistanceToNow } from 'date-fns';
 import { Icon } from '@iconify/react';
-import bellFill from '@iconify/icons-eva/bell-fill';
+import bellFill from '@iconify/icons-eva/bell-outline';
 import clockFill from '@iconify/icons-eva/clock-fill';
 // import doneAllFill from '@iconify/icons-eva/done-all-fill';
 import { alpha } from '@mui/material/styles';
@@ -154,7 +154,9 @@ const NotificationsPopover = (): JSX.Element => {
                 sx={{
                     ...(open && {
                         bgcolor: (theme) =>
-                            alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
+                            alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+                    paddingLeft:'unset',
+                    marginLeft:'0px'
                     })
                 }}
             >

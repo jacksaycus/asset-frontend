@@ -10,6 +10,7 @@ import Router from 'src/routes';
 import route from './route';
 import findActivePage from 'src/utils/findActivePage';
 import PageContext from 'src/components/PageContext';
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   React.useEffect(() => {
@@ -45,12 +46,15 @@ function App() {
       pageContextValue.activePage=''
     }
     return (
-        <PageContext.Provider value={pageContextValue}>
+      <>
+      <PageContext.Provider value={pageContextValue}>
         <ThemeConfig>
+        <CssBaseline />
             <ScrollToTop />
             <Router />
-        </ThemeConfig>
+          </ThemeConfig>
         </PageContext.Provider>
+        </>
     );
 }
 

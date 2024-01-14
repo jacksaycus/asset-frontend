@@ -13,6 +13,8 @@ import {
     ClickAwayListener,
     IconButton
 } from '@mui/material';
+import SearchPopover from './SearchPopover';
+import NotificationsPopover from './NotificationsPopover';
 
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
@@ -37,6 +39,19 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
     }
 }));
 
+const RootDiv = styled('div')({
+    display: 'flex',
+    height: '68px',
+    width:'100%',
+    minWidth: '1180px',
+    padding: '12px 32px',
+    alignItems: 'center',
+    gap: '12px',
+    alignSelf: 'stretch',
+    borderBottom: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+    background: 'var(--White, #FFF)'
+})
+
 function Searchbar() {
     const [isOpen, setOpen] = useState(false);
     const handleOpen = () => {
@@ -49,16 +64,25 @@ function Searchbar() {
     const { activePage } = React.useContext(PageContext);
     return (
         
-          <div>
-            <Box sx={{ width: '100%', maxWidth: 500}}>
-              <Typography variant="h6" gutterBottom style={{color:'black'}}>
+          <RootDiv>
+            {/* <Box sx={{ width: '100%', maxWidth: 500}}> */}
+              <Typography 
+                sx={{
+                    color: 'var(--Gray-Gray-900, #222)',
+                    width:'1223px',
+                    fontFamily: 'Pretendard',
+                    fontSize: '20px',
+                    fontStyle: 'normal',
+                    fontWeight: '600',
+                    lineHeight: '28px'
+                }}
+                >
                 {activePage.title}
               </Typography>
-            </Box>
-                
-
-                
-            </div>
+              <SearchPopover />
+               <NotificationsPopover />
+            {/* </Box> */}
+            </RootDiv>
         
     );
 }
