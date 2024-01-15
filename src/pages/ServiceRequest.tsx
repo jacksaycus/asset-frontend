@@ -12,14 +12,21 @@ function ServiceRequest() {
 
   return(
     
-      <Page>
-        <Container>
+      <Page title='서비스'>
+        <Container sx={{
+            marginLeft:'38px'
+        }}>
 
-          {/* <Stack direction="row" spacing={0} > */}
-          <Grid container spacing={0}> 
-          <Grid item>
+          <Stack direction="row" spacing={0} 
+                sx={{width:'1550px'}}
+          >
+          {/* <Grid container spacing={0} 
+            
+          > 
+          <Grid item> */}
             <div
                 style={{
+                  width:'1500px',
                   display: 'flex',
                   // padding: '12px 117.5px 12px 118.5px',
                   justifyContent: 'flex-start',
@@ -66,27 +73,37 @@ function ServiceRequest() {
                     fontWeight: '600',
                     lineHeight: '24px',
                     paddingTop:'7px',
-                    paddingLeft:'3px'
+                    paddingLeft:'3px',
+                    paddingRight:'3px'
                    }}
                 >
                   {val.title}
                 </Typography>
                 {index<5 &&
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingRight: '3px',
+                  paddingLeft: '3px'
+                }}
+                >
                 <div
                   style={{
-                    width: '80px',
+                    width: '100px',
                     height: '1px',
                     background: 'var(--Gray-Gray-300, #E0E0E0)'
                   }}
                 >
                 </div>
+                </div> 
                 }
             </>
             ))}
            </div>
-        {/* </Stack> */}
-        </Grid>
-        </Grid>
+        </Stack>
+        {/* </Grid>
+        </Grid> */}
 
         </Container>
       </Page>

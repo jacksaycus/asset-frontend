@@ -12,7 +12,8 @@ const Page = forwardRef(function Page(props: Props, ref) {
     const { children, title = '', ...other } = props;
     const RootDiv = styled('div')({
         display: 'flex',
-        width: '1260px',
+        
+        // maxwidth: '1250px',
         minWidth: '1180px',
         padding: '32px',
         flexDirection: 'column',

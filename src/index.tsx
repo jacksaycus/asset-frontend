@@ -49,7 +49,7 @@ function App() {
       <>
       <PageContext.Provider value={pageContextValue}>
         <ThemeConfig>
-        <CssBaseline />
+        {/* <CssBaseline /> */}
             <ScrollToTop />
             <Router />
           </ThemeConfig>
