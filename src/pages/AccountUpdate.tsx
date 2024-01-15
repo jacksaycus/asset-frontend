@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Container, Button, Stack, Typography, TextField, Grid , Paper, Box } from '@mui/material';
+import { Container, Stack, Typography, TextField, Grid , Paper, Box, Button } from '@mui/material';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
 import { Icon , addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
+import SignImage from 'src/assets/images/sign.png';
 import CompanyDialog from './CompanyDialog';
 
 const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
@@ -84,7 +85,7 @@ const AttachCommentStyle = styled('div')({
   border: '1px solid var(--Gray-Gray-200, #EEE)'
 })
 
-function AccountCreate() {
+function AccountUpdate() {
   
   const [values, setValues] = React.useState({ userid: '', password: '' , email:'', tel:'', priority:'', bigo:'', company:'', branch:'' })
 
@@ -113,8 +114,9 @@ function AccountCreate() {
       setCompanyname(companyname);
       setBranchname(branchname);
     };
+  
 
-    return(
+  return(
     <>
       <Page>
         <Container>
@@ -222,22 +224,7 @@ function AccountCreate() {
                    </Typography>
                    </Stack>
                    <Stack direction="row" spacing={0}>
-                    {/* <SearchButton>
-                        <Typography
-                           sx={{
-                            color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                            textAlign: 'center',
-                            fontFamily: 'Pretendard',
-                            fontSize: '14px',
-                            fontStyle: 'normal',
-                            fontWeight: '600',
-                            lineHeight: '20px'
-                           }}
-                           >
-                            찾아보기
-                           </Typography>
-                           {getIcon('search')}
-                    </SearchButton> */}
+                    {/* <SearchButton onClick={handleClickOpen}> */}
                     <Button 
                         sx={{
                             display: 'flex',
@@ -560,63 +547,18 @@ function AccountCreate() {
 
                               <Stack direction="row" spacing={0} 
                               >
-                                <SearchButton>
-                                  <Typography
-                                    sx={{
-                                      color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                                      textAlign: 'center',
-                                      fontFamily: 'Pretendard',
-                                      fontSize: '14px',
-                                      fontStyle: 'normal',
-                                      fontWeight: '600',
-                                      lineHeight: '20px'
-                                    }}
-                                    >
-                                      파일선택
-                                    </Typography>
-                                    {getIcon('attach')}
-                                 </SearchButton>
-                                 <div
-                                   style={{ display: 'flex',
-                                            alignItems: 'center',
-                                            paddingLeft: '12px'}
-                                    }>
-
-                                 </div>
-                                 <ErrorStyle/>
-                                 <div style={{
-                                       width: '5px',
-                                       height: '8px',
-                                       flexShrink: '0',
-                                       fill: 'var(--Gray-Gray-900, #222)',
-                                       paddingTop:'5px'
-                                 }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="5" height="8" viewBox="0 0 5 8" fill="none">
-                                      <path d="M0 4L5 0V8L0 4Z" fill="#222222"/>
-                                      </svg>
-                                 </div>
-                                 <div style={{
-                                            display: 'inline-flex',
-                                            padding: '4px 8px',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            gap: '4px',
-                                            borderRadius: '4px',
-                                            background: 'var(--Gray-Gray-900, #222)'
-                                 }}>
-                                 <Typography
-                                    sx={{
-                                      color: 'var(--White, #FFF)',
-                                      fontFamily: 'Pretendard',
-                                      fontSize: '12px',
-                                      fontStyle: 'normal',
-                                      fontWeight: '500',
-                                      lineHeight: '16px'
-                                    }}
-                                   >
-                                    PNG 파일 업로드만 가능합니다.
-                                  </Typography>
-                                  </div>
+                                <div style={{
+                                    display: 'flex',
+                                    padding: '16px',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-start',
+                                    borderRadius: '4px',
+                                    border: '1px solid var(--Gray-Gray-200, #EEE)'
+                                }}>
+                                     <img src={SignImage} width='150px' height='127.434px' />   
+                                </div>
+                                
                              </Stack>
                              <div
                                 style={{
@@ -721,4 +663,4 @@ function AccountCreate() {
   );
 }
 
-export default AccountCreate;
+export default AccountUpdate;

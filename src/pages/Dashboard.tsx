@@ -17,7 +17,7 @@ interface Props {
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-const DropDrag: FunctionComponent<Props> = (props) => {
+const Dashboard: FunctionComponent<Props> = (props) => {
   const [layouts, setLayouts] = useState<{ [index: string]: any[] }>({
     lg: _.map(_.range(0, 25), function (item, i) {
       var y = Math.ceil(Math.random() * 4) + 1;
@@ -131,9 +131,9 @@ const DropDrag: FunctionComponent<Props> = (props) => {
   );
 };
 
-export default DropDrag;
+export default Dashboard;
 
-DropDrag.defaultProps = {
+Dashboard.defaultProps = {
   className: "layout",
   rowHeight: 30,
   onLayoutChange: (layout: any, layouts: any) => {},

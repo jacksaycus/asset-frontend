@@ -41,8 +41,8 @@ const pages: MuiPage[] = [
     title: '서비스',
     icon: 'service',
     children: [
-      { pathname: '/service/request' , title:'요청',icon: 'dot'},
-      { pathname: '/service/list' , title:'현황',icon: 'dot'},
+      { pathname: '/service/request' , title:'서비스',icon: 'dot'},
+      { pathname: '/service/list' , title:'서비스',icon: 'dot'},
     ],
   },
   {
@@ -56,6 +56,14 @@ const pages: MuiPage[] = [
   {
     pathname: '/accountcreate',
     title: '계정생성',
+    icon: '',
+    children: [
+    ]
+  }
+  ,
+  {
+    pathname: '/accountupdate',
+    title: '계정수정',
     icon: '',
     children: [
     ]

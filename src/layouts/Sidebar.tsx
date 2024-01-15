@@ -138,12 +138,12 @@ function Sidebar(props: Props) {
                         <Typography 
                         sx={{
                             color: 'var(--Gray-Gray-900, #222)',
-                        fontFamily: 'Pretendard',
-                        fontSize: '14px',
-                        fontStyle: 'normal',
-                        fontWeight: '700',
-                        lineHeight: '20px',
-                        flex: '1 0 0'
+                            fontFamily: 'Pretendard',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: '20px',
+                            flex: '1 0 0'
                         }}
                         >
                           k_itms001

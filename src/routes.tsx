@@ -3,11 +3,12 @@ import React, { ReactElement } from 'react';
 import Layout from 'src/layouts/index';
 import SimpleLayout from 'src/layouts/SimpleLayout';
 import NotFound from 'src/pages/Page404';
-import Helloworld from 'src/pages/Dashboard';
+import Dashboard from 'src/pages/Dashboard';
 import ServiceList from 'src/pages/ServiceList';
 import ServiceRequest from 'src/pages/ServiceRequest';
 import AccountManagement from 'src/pages/AccountManagement';
 import AccountCreate from 'src/pages/AccountCreate';
+import AccountUpdate from 'src/pages/AccountUpdate';
 import AssetManagement from 'src/pages/AssetManagement';
 import Contract from 'src/pages/Contract';
 import Stat from 'src/pages/Stat';
@@ -21,9 +22,10 @@ export const Router = (): ReactElement => {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route path="dashboard" element={<Helloworld />} />
+                <Route path="dashboard" element={<Dashboard />} />
                 <Route path="accountmanagement" element={<AccountManagement />} />
                 <Route path="accountcreate" element={<AccountCreate />} />
+                <Route path="accountupdate" element={<AccountUpdate />} />
                 <Route path="assetmanagement" element={<AssetManagement />} />
                 <Route path="contract" element={<Contract />} />
                 <Route path="stat" element={<Stat />} />
