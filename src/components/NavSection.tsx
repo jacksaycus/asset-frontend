@@ -276,7 +276,7 @@ function NavSection() {
             <List disablePadding>
                 {
                    pages.map((item) => (
-                    <>
+                    <React.Fragment key={item.pathname}>
                     <NavItem key={item.pathname} item={item} />
                       { (item.pathname==='/assetmanagement' || item.pathname==='/company')&&(
                        <>
@@ -285,7 +285,7 @@ function NavSection() {
                        )
                        }
              
-                    </>
+                     </React.Fragment>
                 ))}
             </List>
             <ExpandDiv/>

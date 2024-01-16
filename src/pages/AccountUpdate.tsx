@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Container, Stack, Typography, TextField, Grid , Paper, Box, Button } from '@mui/material';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
@@ -86,7 +87,7 @@ const AttachCommentStyle = styled('div')({
 })
 
 function AccountUpdate() {
-  
+  const navigate = useNavigate();
   const [values, setValues] = React.useState({ userid: '', password: '' , email:'', tel:'', priority:'', bigo:'', company:'', branch:'' })
 
   const [commpanyname, setCompanyname] = React.useState('');
