@@ -42,7 +42,7 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 const RootDiv = styled('div')({
     display: 'flex',
     height: '68px',
-    width:'100%',
+    width:'1548px',
     minWidth: '1180px',
     padding: '12px 32px',
     alignItems: 'center',

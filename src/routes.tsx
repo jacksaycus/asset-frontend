@@ -10,6 +10,7 @@ import AccountManagement from 'src/pages/AccountManagement';
 import AccountCreate from 'src/pages/AccountCreate';
 import AccountUpdate from 'src/pages/AccountUpdate';
 import AssetManagement from 'src/pages/AssetManagement';
+import AssetCreate from 'src/pages/AssetCreate';
 import Contract from 'src/pages/Contract';
 import Stat from 'src/pages/Stat';
 import ReportList from 'src/pages/ReportList';
@@ -27,6 +28,7 @@ export const Router = (): ReactElement => {
                 <Route path="accountcreate" element={<AccountCreate />} />
                 <Route path="accountupdate" element={<AccountUpdate />} />
                 <Route path="assetmanagement" element={<AssetManagement />} />
+                <Route path="assetcreate" element={<AssetCreate />} />
                 <Route path="contract" element={<Contract />} />
                 <Route path="stat" element={<Stat />} />
                 <Route path="reportlist" element={<ReportList />} />

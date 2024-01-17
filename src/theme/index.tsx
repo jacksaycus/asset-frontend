@@ -32,7 +32,7 @@ export const ThemeConfig = (props: Props): JSX.Element => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <GlobalStyles />
+                {/* <GlobalStyles /> */}
                 {children}
             </ThemeProvider>
         </StyledEngineProvider>

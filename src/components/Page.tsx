@@ -12,14 +12,17 @@ const Page = forwardRef(function Page(props: Props, ref) {
     const { children, title = '', ...other } = props;
     const RootDiv = styled('div')({
         display: 'flex',
-        width: '1395px',
+        width: '1230px',
         // maxwidth: '1250px',
         minWidth: '1180px',
         padding: '32px',
         flexDirection: 'column',
         alignItems: 'flexStart',
         gap: '20px',
-        flex: '1 0 0',
+        // flex: '1 0 0',
+        position: 'relative',
+        top:'-47px',
+        left:'-15px',
         background: 'var(--Gray-Gray-50, #FAFAFA)'
     });
 

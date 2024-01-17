@@ -46,7 +46,10 @@ const ManagerBadge = styled('div')({
 const RootDiv = styled('div')({
     display: 'flex',
     padding: '28px',
+    width: '1150px',
     flexDirection: 'column',
+    position: 'relative',
+    left:'-15px',
     alignItems: 'flex-start',
     gap: '20px',
     alignSelf: 'stretch',

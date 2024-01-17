@@ -46,15 +46,18 @@ const ManagerBadge = styled('div')({
 })
 
 const RootDiv = styled('div')({
-    display: 'flex',
-    padding: '28px',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '20px',
-    alignSelf: 'stretch',
-    borderRadius: '12px',
-    border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
-    background: 'var(--White, #FFF)'
+  display: 'flex',
+  padding: '28px',
+  width: '1150px',
+  flexDirection: 'column',
+  position: 'relative',
+  left:'-15px',
+  alignItems: 'flex-start',
+  gap: '20px',
+  alignSelf: 'stretch',
+  borderRadius: '12px',
+  border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+  background: 'var(--White, #FFF)'
 })
 
 const SearchButton = styled('div')({

@@ -78,6 +78,14 @@ const pages: MuiPage[] = [
   }
   ,
   {
+    pathname: '/assetcreate',
+    title: '자산생성',
+    icon: 'assets',
+    children: [
+    ]
+  }
+  ,
+  {
     pathname: '/contract',
     title: '계약',
     icon: 'contract',

@@ -289,7 +289,7 @@ function AccountManagement() {
             >검색하기</Button>
              </Stack>
              <BetweenDiv></BetweenDiv>
-             <Stack direction="row" alignItems="center" spacing={58}
+             <Stack direction="row" alignItems="center" spacing={56}
             >
               <Typography variant="h6" gutterBottom 
                   sx={{
