@@ -1,128 +1,45 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
 import { Icon , addIcon } from '@iconify/react';
 import Rating from '@mui/material/Rating';
+import { v4 as uuidv4 } from 'uuid'
  import {
          Stack,
          Box,
          Typography,
-         Paper
+         Paper,
+         Button
 } from '@mui/material';
-// import { Link as RouterLink, useLocation } from 'react-router-dom';
-// import Page from 'src/components/Page';
+import AccountRating from './AccountRating'
 import SignImage from 'src/assets/images/sign.png';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
-function RatingEditInputCell(props) {
-  const { id, value, api, field } = props;
-
-  const handleChange = async (event) => {
-    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
-    if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      // Wait for the validation to run
-      const isValid = await api.commitCellChange({ id, field });
-      if (isValid) {
-        api.setCellMode(id, field, 'view');
-      }
-    }
-  };
-
-  const handleRef = (element) => {
-    if (element) {
-      element.querySelector(`input[value="${value}"]`).focus();
-    }
-  };
-
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
-      <Rating
-        ref={handleRef}
-        name="rating"
-        precision={1}
-        value={value}
-        onChange={handleChange}
-      />
-    </Box>
-  );
-}
-
-RatingEditInputCell.propTypes = {
-  api: PropTypes.any.isRequired,
-  field: PropTypes.string.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-const BetweenDiv = styled('div')({
-                    display: 'flex',
-                     padding: '20px',
-                    flexDirection: 'column',
-                    alignItems: 'flexStart',
-                    gap: '20px',
-                    flex: '1 0 0',
-})
-
-function renderRating(params:any) {
-  return <Rating readOnly value={params.value} />;
-}
-
-function renderRatingEditInputCell(params) {
-  return <RatingEditInputCell {...params} />;
-}
-
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
+  {field: 'id', headerName: '', width: 0 },
+  {field: 'requestno', headerName: '요청번호', width: 150},
+  {field: 'servicename', headerName: '서비스명', width: 150},
+  {field: 'servicetype', headerName: '서비스유형', width: 150},
+  {field: 'workstatus', headerName: '작업상태', width: 150},
+  {field: 'requestdate', headerName: '요청일', width: 150},
+  {field: 'name', headerName: '이름', width: 150},
   {
     field: 'rating',
-    headerName: 'Rating',
-    renderCell: renderRating,
-    renderEditCell: renderRatingEditInputCell,
-    editable: true,
-    width: 180,
-    type: 'number',
-  },
+    align:'left',
+    headerName: '평점',
+    width: 130,
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    renderCell: (params: GridCellParams) =>
+     <AccountRating iconProp={params.row} />
+   },      
 ];
 
 const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 , rating: 5 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 , rating: 4 },
+    {id:uuidv4(),requestno:'#234213423',servicename:'신협은행장기점검',servicetype:'완료',workstatus:'완료',requestdate:'20230101',name:'김길동',rating:0},
+    {id:uuidv4(),requestno:'#234213422',servicename:'국민은행장기점검',servicetype:'완료',workstatus:'완료',requestdate:'20230201',name:'김길동',rating:1},
 ];
 
 const AccountDetailRootDiv = styled('div')({
@@ -152,7 +69,14 @@ const DeviderStyle = styled('div')({
 
 const accountListColumn = ['회사및지점','아이디','이름','연란처','핸드폰 연락처','이메일'];
 const accountList = ['신현은행(인천점)','k-itms01','홍길동','01-111-1111','02-000-0000','gildong@k-one.co.kr'];
+
 function AccountManagementDetail() {
+  const navigate = useNavigate();
+  const moveUpdate = (e) => {
+    e.preventDefault();
+    navigate('/accountupdate');
+  };
+  
   return(
     <>
       <AccountDetailRootDiv>
@@ -188,11 +112,6 @@ function AccountManagementDetail() {
         {accountListColumn.map((val, index) => (
             <Box
                sx={{
-                // display: 'flex',
-                // flexDirection: 'row',
-                // justifyContent: 'center',
-                // alignItems: 'flex-start',
-                // flex: '1 0 0',
                 display: 'grid',
                 columnGap: 3,
                 rowGap: 0,
@@ -275,16 +194,13 @@ function AccountManagementDetail() {
                 <DataGrid
                   rows={rows}
                   columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
-                      },
-                    },
+                  columnVisibilityModel={{
+                    id: false,
                   }}
-                  pageSizeOptions={[5]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
+                  disableRowSelectionOnClick={true}
+                  // getRowId={row => row._links.self.href}
+                  getRowId={(row: any) =>  uuidv4()}
+                  slots={{ toolbar: GridToolbar }}
                 />
               </Box>
         </Stack>
@@ -375,6 +291,63 @@ function AccountManagementDetail() {
             alignSelf: 'stretch',
           }}
         >
+        <Button 
+             sx= {{
+              display: 'flex',
+              padding: '8px 20px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '4px',
+              borderRadius: '1000px',
+              border: '1px solid var(--Main-Red-Red-500, #EF2B2A)',
+              background: 'var(--White, #FFF)',
+             }}
+             onClick={moveUpdate}
+             >
+              <Typography
+                  sx={{
+                    color: 'var(--Main-Red-Red-500, #EF2B2A)',
+                    textAlign: 'center',
+                    fontFamily: 'Pretendard',
+                    fontSize: '14px',
+                    fontStyle: 'normal',
+                    fontWeight: '600',
+                    lineHeight: '20px'
+                  }}
+                  >
+                    수정하기
+                  </Typography>
+             </Button>
+             <Button
+                  sx={{
+                    display: 'flex',
+                    padding: '8px 16px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '4px',
+                    borderRadius: '4px',
+                    boxShadow: '0px 1px 1px 0px rgba(0, 0, 0, 0.25)'
+                  }}
+                  onClick={() => {
+                    if (window.confirm(`진심으로 삭제하시겠습니까?`)) {
+                       //mutate(params.row._links.car.href);
+                    } 
+                  }}
+             >
+                  <Typography
+                       sx={{
+                        color: 'var(--Gray-Gray-500, #9E9E9E)',
+                        textAlign: 'center',
+                        fontFamily: 'Pretendard',
+                        fontSize: '14px',
+                        fontStyle: 'normal',
+                        fontWeight: '600',
+                        lineHeight: '20px',
+                       }}
+                       >
+                       삭제하기
+                       </Typography>
+             </Button>
 
         </Stack>
       </AccountDetailRootDiv>

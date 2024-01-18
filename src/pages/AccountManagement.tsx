@@ -1,379 +1,301 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { DataGrid, GridColDef, GridValueGetterParams ,GridToolbar } from '@mui/x-data-grid';
-import { Icon , addIcon } from '@iconify/react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import Rating from '@mui/material/Rating';
-import Snackbar from '@mui/material/Snackbar';
- import {
-    Stack,
-    Button,
-     TextField,
-     Box,
-     Container,
-    Typography
-} from '@mui/material';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import Page from 'src/components/Page';
+import * as React from 'react'
+import { Container, Stack, Typography, Grid, Button , TextField, MenuItem, Popover, IconButton, Link } from '@mui/material'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
+import frame from 'src/assets/images/icons/frame.png'
+import plus from 'src/assets/images/icons/plus.png'
+import down from 'src/assets/images/icons/down.png'
+import filesave from 'src/assets/images/icons/file_save.png'
+import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined'
+import { v4 as uuidv4 } from 'uuid'
+import {Account} from './src/types'
+import AccountAuthority from './AccountAuthority'
+import AccountRating from './AccountRating'
 import AccountManagementDetail from './AccountManagementDetail';
-import { getCars, deleteCar } from '../api/assetapi';
-
-function RatingEditInputCell(props) {
-  const { id, value, api, field } = props;
-
-  const handleChange = async (event) => {
-    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
-    if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      // Wait for the validation to run
-      const isValid = await api.commitCellChange({ id, field });
-      if (isValid) {
-        api.setCellMode(id, field, 'view');
-      }
-    }
-  };
-
-  const handleRef = (element) => {
-    if (element) {
-      element.querySelector(`input[value="${value}"]`).focus();
-    }
-  };
-
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
-      <Rating
-        ref={handleRef}
-        name="rating"
-        precision={1}
-        value={value}
-        onChange={handleChange}
-      />
-    </Box>
-  );
-}
-RatingEditInputCell.propTypes = {
-  api: PropTypes.any.isRequired,
-  field: PropTypes.string.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
-addIcon('create', {
-  body: '<path d="M9.75 10.25H4V8.75H9.75V3H11.2499V8.75H17V10.25H11.2499V16H9.75V10.25Z" fill="#067DFD"/>',
-  width: 20,
-  height: 20,
-});
-addIcon('exceldownload', {
-  body: '<path d="M9.99998 13.157L6.44233 9.59938L7.32052 8.69554L9.375 10.75V3.75H10.625V10.75L12.6794 8.69554L13.5576 9.59938L9.99998 13.157ZM5.25642 16.25C4.83547 16.25 4.47917 16.1041 4.1875 15.8125C3.89583 15.5208 3.75 15.1645 3.75 14.7435V12.484H4.99998V14.7435C4.99998 14.8077 5.02669 14.8664 5.0801 14.9199C5.13353 14.9733 5.19231 15 5.25642 15H14.7435C14.8077 15 14.8664 14.9733 14.9199 14.9199C14.9733 14.8664 15 14.8077 15 14.7435V12.484H16.25V14.7435C16.25 15.1645 16.1041 15.5208 15.8125 15.8125C15.5208 16.1041 15.1645 16.25 14.7435 16.25H5.25642Z" fill="#067DFD"/>',
-  width: 20,
-  height: 20,
-});
-
-const CellspacingDiv = styled('div')({
-       justifyContent: 'spaceBetween',
-       alignItems: 'center',
-       alignSelf: 'stretch',
-       width:'100x%'
-})
-
-// const TableBackground = styled('div')({
-//        display: 'flex',
-//        width: '1660px',
-//        minWidth: '1180px',
-//        padding: '32px',
-//        flexDirection: 'column',
-//        alignItems: 'flexStart',
-//        gap: '20px',
-//        flex: '1 0 0',
-//        background: 'var(--Gray-Gray-50, #FAFAFA)'
-// })
-const BetweenDiv = styled('div')({
-                    display: 'flex',
-                     padding: '20px',
-                    flexDirection: 'column',
-                    alignItems: 'flexStart',
-                    gap: '20px',
-                    flex: '1 0 0',
-})
-
-const ExcelButtonDiv = styled('div')({
-  display: 'flex',
-  height: '36px',
-  padding: '8px 12px 8px 16px',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '8px',
-  borderRadius: '4px',
-  border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
-  background: 'var(--White, #FFF)',
-  boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)'
-})
-
-function renderRating(params:any) {
-  return <Rating readOnly value={params.value} />;
-}
-
-function renderRatingEditInputCell(params) {
-  return <RatingEditInputCell {...params} />;
-}
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'rating',
-    headerName: 'Rating',
-    renderCell: renderRating,
-    renderEditCell: renderRatingEditInputCell,
-    editable: true,
-    width: 180,
-    type: 'number',
-  },
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 , rating: 5 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 , rating: 4 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 , rating: 3 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 , rating: 2 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null , rating: 1 },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 , rating: 3 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 , rating: 4 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 , rating: 3 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 , rating: 2 },
-];
-
-const rows1 = [
-  { id: 1, brand: 'ford', model: 'mustang', color: 'red0' , registrationNumber: 'adf-1121', modelYear: '2023',  price:59000},
-  
-];
 
 function AccountManagement() {
-  const [detail, setDetail] = React.useState(false);
+    const navigate = useNavigate();
 
-  const [open, setOpen] = React.useState(false);
+    const [detail, setDetail] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
-  const queryClient = useQueryClient();
+    const moveRequest = (e) => {
+        e.preventDefault();
+        navigate('/accountcreate', { replace: true });
+    };
 
-  const { data, error, isSuccess } = useQuery({
-    queryKey: ["cars"],
-    queryFn: getCars
-  });
+    const condition = [
+        {
+            value: 'cond1',
+            label: '조건1',
+          },
+    ]
 
-  const { mutate } = useMutation(deleteCar, {
-    onSuccess: () => {
-      setOpen(true);
-      queryClient.invalidateQueries({ queryKey: ['cars'] });
-    },
-    onError: (err) => {
-      console.error(err);
-    },
-  }); 
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
-  const columns: GridColDef[] = [
-    {field: 'brand', headerName: 'Brand', width: 200},
-    {field: 'model', headerName: 'Model', width: 200},
-    {field: 'color', headerName: 'Color', width: 200},
-    {field: 'registrationNumber', headerName: 'Reg.nr.', width: 150},
-    {field: 'modelYear', headerName: 'Model Year', width: 150},
-    {field: 'price', headerName: 'Price', width: 150},
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      navigate("/accountcreate");
+    };
+  
     
-  ]; 
+    const data = [{id:uuidv4(),company:'신한은행',userid:'길길동',authority:'supermanager',name:'레노보',tel:'0134213',phone:'00000000', email:'kone@kon.com',rating:0}];
+    const columns: GridColDef[] = [
+      {field: 'id', headerName: '', width: 0 },
+      {field: 'company', headerName: '회사및지점명', width: 150},
+      {field: 'userid', headerName: '아이디', width: 80},
+      {
+        field: 'authority',
+        align:'left',
+        headerName: '권한',
+        width: 120,
+        sortable: false,
+        filterable: false,
+        disableColumnMenu: true,
+        renderCell: (params: GridCellParams) =>
+         <AccountAuthority iconProp={params.row} />
+       },
+      {field: 'name', headerName: '이름.', width: 100},
+      {field: 'tel', headerName: '연락처', width: 100},
+      {field: 'phone', headerName: '핸드폰연락처', width: 100},
+      {field: 'email', headerName: '이메일', width: 130},
+      {
+        field: 'rating',
+        align:'left',
+        headerName: '평점',
+        width: 130,
+        sortable: false,
+        filterable: false,
+        disableColumnMenu: true,
+        renderCell: (params: GridCellParams) =>
+         <AccountRating iconProp={params.row} />
+       },      
+    ]; 
 
-  // if (!isSuccess) {
-  //   return <span>Loading...</span>
-  // }
-  // else if (error) {
-  //   return <span>Error when fetching ...</span>
-  // }
-  // else {
-
-  return(
-    <>
-      <Page title="계정관리">
-         <Container>
-            <Stack direction="row" alignItems="center" spacing={2}
+    
+    return (
+            <>
+            <div style={{
+                    display: 'flex',
+                    width: 'auto',
+                    // minWidth: '1180px',
+                    padding: '22px',
+                    marginRight:'auto',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: '20px',
+                    flex: '1 0 0',
+                    background: 'var(--Gray-Gray-50, #FAFAFA)',
+                    marginLeft:'0px',
+                    paddingLeft:'0px',
+                    justifyContent: 'flex-start'
+            }}
             >
+              
+            <Stack direction="row" spacing={2} style={{marginLeft:'20px'}}>
               <TextField
-                id="select1"
+                name="condition"
                 variant="standard"
                 select
-                // helperText="Please select your condition"
                 sx={{
                   ".MuiInputBase-input": {
-                  display: 'flex',
-                  width: '200px',
-                  padding: '8px 4px',
-                  alignItems: 'center',
-                  rightPadding: '4px',
-                  alignSelf: 'stretch',
-                  borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
+                    display: 'flex',
+                    width: '192px',
+                    height: '24px',
+                    // padding: '8px 4px',
+                    // alignItems: 'center',
+                    gap: '4px',
+                    borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
                   }
                 }}
-              >
-            </TextField>
-            <TextField
-                variant="standard"
-                id="select2"
-                select
-                // helperText="Please select your condition"
-                sx={{
-                  ".MuiInputBase-input": {
-                  display: 'flex',
-                  width: '200px',
-                  padding: '8px 4px',
-                  alignItems: 'center',
-                  // rightPadding: '4px',
-                  alignSelf: 'stretch',
-                  borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
-                  }
+                >
+                {condition.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                    </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                    fullWidth
+                    name="condition1"
+                    variant="standard"
+                    sx={{
+                        '.MuiInputBase-input': {
+                            width: '650px',
+                            height: '18px',
+                            display: 'flex',
+                            padding: '8px 12px',
+                            alignItems: 'center',
+                            gap: '10px',
+                            flex: '1 0 0',
+                            borderRadius: '4px',
+                            border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                            background: 'var(--White, #FFF)'
+                        }
+                    }}
+                ></TextField>
+                <div
+                   style={{
+                    display: 'flex',
+                    width : '14%',
+                    height: '36px',
+                    padding: '8px 16px',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'left',
+                    borderRadius:'4px',
+                    background: 'var(--Main-Blue-Blue-500, #067DFD)',
+                   }}
+                   >
+                <Button 
+                  fullWidth
+                sx = {{
+                    
                 }}
-              >
-            </TextField>
-            <TextField
-              id="text"
-              type="search"
-              variant="standard"
-              placeholder="검색어를 입력하세요"
-              fullWidth
-              sx={{
-                   display: 'flex',
-                   padding: '8px 12px',
-                   alignItems: 'center',
-                   gap: '10px',
-                   flex: '1 0 0',
-                   borderRadius: '4px',
-                   border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
-                   background: 'var(--White, #FFF)'
-              }}
-            />
-            <Button variant="contained"
-                     sx={{
-                          display: 'flex',
-                          height: '36px',
-                          padding: '8px 16px',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: '4px',
-                          background: 'var(--Main-Blue-Blue-500, #067DFD)'
-                     }}
-            >검색하기</Button>
-             </Stack>
-             <BetweenDiv></BetweenDiv>
-             <Stack direction="row" alignItems="center" spacing={56}
-            >
-              <Typography variant="h6" gutterBottom 
-                  sx={{
-                    color: 'var(--Gray-Gray-900, #222)',
-                    fontFamily:'Pretendard',
-                    fontSize: '20px',
-                    fontStyle: 'normal',
-                    fontWeight: '600px',
-                    lineHeight: '28px'
-                  }}
-              >
-                        계정리스트
-                    </Typography>
-                    <CellspacingDiv></CellspacingDiv>
-                    {/* <Button variant="contained">계정생성 + </Button> */}
-                    <Box component={RouterLink} to="/accountcreate" 
-                      sx={{ 
-                          //  display: 'inline-flex' 
-                          display: 'flex',
-                          padding: '8px 12px 8px 16px',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          gap: '4px',
-                          borderRadius: '4px',
-                          background: 'var(--Main-Blue-Blue-50, #EEF7FF)',
+                >
+                  <Typography
+                        sx = {{
+                          color: 'var(--White, #FFF)',
+                          fontFamily: 'Pretendard',
+                          fontSize: '14px',
+                          fontStyle: 'normal',
+                          fontWeight: '600',
+                          lineHeight: '20px',
                         }}
-                    >
-                    <Typography variant="h6" gutterBottom 
-                  sx={{
-                       color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                       textAlign: 'center',
-                       fontFamily: 'Pretendard',
-                       fontSize: '14px',
-                       fontStyle: 'normal',
-                       fontWeight: '600',
-                       lineHeight: '20px'
+                        >
+                          검색하기
+                  </Typography>
+                </Button>
+                </div>
+                <img src={frame} style={{
+                     marginLeft:'6px',
+                }} width='36px' height='36px' />
+              </Stack>
+
+              <div style={{
+                      display: 'flex',
+                      padding: '20px',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '20px',
+                      alignSelf: 'stretch',
+                      borderRadius: '12px',
+                      border: '1px solid var(--Gray-Gray-200, #EEE)',
+                      background: 'var(--White, #FFF)',
+                      width:'1050px'
+                   }}
+              >
+                  <Stack direction="row" spacing={2} style={{marginLeft:'20px', width:'1100px'}}>
+                    <div style={{
+                          width:'100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          gap: '12px',
+                          alignSelf: 'stretch',
+                          
+                    }}>
+                        <Typography
+                            sx={{
+                              color: 'var(--Gray-Gray-900, #222)',
+                              fontFamily: 'Pretendard',
+                              width:'150px',
+                              fontSize: '20px',
+                              fontStyle: 'normal',
+                              fontWeight: '600',
+                              lineHeight: '28px',
+                              position: 'relative',
+                              left:'-124px'
+                            }}
+                        >
+                          계정 리스트
+                        </Typography>
+                      
+                      <div style={{
+                              display: 'flex',
+                              height: '40px',
+                              padding: '8px 12px 8px 16px',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              gap: '4px',
+                              borderRadius: '4px',
+                              background: 'var(--Main-Blue-Blue-50, #EEF7FF)',
+                              marginLeft:'540px'
+                         }}
+                       >
+                       <Button
+                          sx={{width:'120px'}}
+                          onClick={handleClick}
+
+                       >
+                          <Typography
+                                sx={{
+                                  color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                                  textAlign: 'center',
+                                  fontFamily: 'Pretendard',
+                                  fontSize: '16px',
+                                  fontStyle: 'normal',
+                                  fontWeight: '600',
+                                  lineHeight: '24px'
+                                }}
+                           >
+                          계정 추가
+                          </Typography>
+                          <img src={plus} width='24px' height='24px'/>
+                        </Button>
+                        
+                     </div>
+                   </div>
+                  </Stack>  
+                  
+                  <div style={{
+                        display: 'flex',
+                        padding: '20px',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '20px',
+                        alignSelf: 'stretch',
+                        borderRadius: '12px',
+                        border: '1px solid var(--Gray-Gray-200, #EEE)',
+                        background: 'var(--White, #FFF)'
+                    }}>
+                       
+                       <DataGrid  sx={{
+                        position: 'relative',
+                        left:'-20px',
                        }}
-                       >계정생성</Typography>
-                     {getIcon('create')}
-                     </Box>
-             </Stack>
-             <BetweenDiv></BetweenDiv>
-             <Stack direction="row" alignItems="center" spacing={1}>
-             <Box sx={{ height: 400, width: '100%' ,backgroundColor:'white'}}>
-                {/* <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[5]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
-                /> */}
-                <DataGrid
-                // rows={data}
-                rows={rows1}
-                columns={columns}
-                disableRowSelectionOnClick={true}
-                // getRowId={row => row._links.self.href}
-                // slots={{ toolbar: GridToolbar }}
-              />
-              {/* <Snackbar
-                open={open}
-                autoHideDuration={2000}
-                onClose={() => setOpen(false)}
-                message="Car deleted" /> */}
-              </Box>
-             </Stack>
-             <BetweenDiv/>
-               {
+                          columnVisibilityModel={{
+                            id: false,
+                          }}
+                          rows={data}
+                          columns={columns}
+                          disableRowSelectionOnClick={true}
+                          // getRowId={row => row._links.self.href}
+                          getRowId={(row: any) =>  uuidv4()}
+                          slots={{ toolbar: GridToolbar }}
+                          checkboxSelection
+                        />
+                  </div>
+
+               </div>
+
+            </div>
+
+            {
                  detail && 
                      <AccountManagementDetail/>
-               }
+            }
 
-             <BetweenDiv/>
-             <Stack direction="row" alignItems="center" spacing={1}>
-             <Box component={RouterLink} to="/" 
-               sx={{ 
-                      // display: 'inline-flex' ,
+            <div style={{
+                   display: 'flex',
+                   width: '1660px',
+                   minWidth: '1180px',
+                   padding: '32px',
+                   flexDirection: 'column',
+                   alignItems: 'flex-start',
+                   gap: '20px'
+            }}
+            >
+             <Button sx={{
                       display: 'flex',
                       height: '36px',
                       padding: '8px 12px 8px 16px',
@@ -383,29 +305,30 @@ function AccountManagement() {
                       borderRadius: '4px',
                       border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
                       background: 'var(--White, #FFF)',
-                      boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)'
-                   }}
-             >
-               <Typography variant="h6" gutterBottom
-               sx={{
-                color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                fontFamily: 'Pretendard',
-                fontSize: '14px',
-                fontStyle: 'normal',
-                fontWeight: '600',
-                lineHeight: '20px'
-               }}
+                      boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
+                      position: 'relative',
+                      left:'-30px'
+              }}
+              // onClick={moveRequest}
               >
-                   엑셀다운로드
-                </Typography>
-                {getIcon('exceldownload')}
-             </Box>
-          </Stack>
-         </Container>
-      </Page>
-    </>
-  );
-//  }
+                  <Typography sx={{
+                          color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                          fontFamily: 'Pretendard',
+                          fontSize: '14px',
+                          fontStyle: 'normal',
+                          fontWeight: '600',
+                          lineHeight: '20px'
+                  }}
+                  >
+                    엑셀 다운로드
+                  </Typography>
+                  <img src={down} width='24px' height='24px' />   
+              </Button>
+
+            </div>
+
+            </>   
+        );
 }
 
 export default AccountManagement;

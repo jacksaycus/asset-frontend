@@ -160,7 +160,7 @@ const NotificationsPopover = (): JSX.Element => {
                     })
                 }}
             >
-                <Badge  color="error">
+                <Badge badgeContent={totalUnRead} color="error">
                     <Icon icon={bellFill} width={20} height={20} />
                 </Badge>
             </IconButton>

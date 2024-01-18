@@ -56,7 +56,9 @@ function ServiceRequest() {
                             // padding: '12px 117.5px 12px 118.5px',
                             justifyContent: 'flex-start',
                             alignItems: 'left',
-                            alignSelf: 'stretch'
+                            alignSelf: 'stretch',
+                            position:'relative',
+                            left:'-60px'
                         }}
                     >
                         {rqueststep.map((val, index) => (
@@ -138,7 +140,9 @@ function ServiceRequest() {
                         gap: '32px',
                         borderRadius: '12px',
                         border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
-                        background: 'var(--White, #FFF)'
+                        background: 'var(--White, #FFF)',
+                        position:'relative',
+                        left:'-60px'
                     }}
                 >
                     <div

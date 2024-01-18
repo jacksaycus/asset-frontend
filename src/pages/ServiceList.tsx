@@ -32,6 +32,8 @@ function ServiceRequest() {
             borderRadius: '12px',
             border: '1px solid var(--Gray-Gray-200, #EEE)',
             background: 'var(--White, #FFF)',
+            position:'relative',
+            left:'-40px'
         }}>
           <img src={activeicon} width='100px' height='100px' />
           <div style={{
