@@ -12,15 +12,18 @@ import {
     Divider
 } from '@mui/material';
 import group from 'src/assets/images/icons/group.png';
+import {Service} from 'src/types'
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
 
 type RequestFormProps = {
     values: any;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   }
 function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
-
+    const { register, formState } = useFormContext();
     return (
         <React.Fragment>
+            {/* <form  autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}> */}
             <div
                 style={{
                     display: 'flex',
@@ -57,6 +60,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     *
                 </Typography>
                 <input
+                    {...register('servicename', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '890px',
@@ -76,7 +80,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicename}
                 />
             </div>
-
+            {formState.errors.servicename?.type === "required" && <span>서비스명을 입력하세요</span>}
             <div
                 style={{
                     display: 'flex',
@@ -113,6 +117,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     *
                 </Typography>
                 <input
+                   {...register('servicecontent', { required: true} )}
                     style={{
                         display: 'flex',
                         marginLeft: '14px',
@@ -132,7 +137,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicecontent}
                 />
             </div>
-
+            {formState.errors.servicecontent?.type === "required" && <span>서비스명을 입력하세요</span>}        
             <div
                 style={{
                     display: 'flex',
@@ -169,6 +174,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     *
                 </Typography>
                 <input
+                    {...register('servicetype', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '890px',
@@ -188,7 +194,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicetype}
                 />
             </div>
-
+            {formState.errors.servicetype?.type === "required" && <span>서비스유형을 입력하세요</span>}       
             <div
                 style={{
                     display: 'flex',
@@ -225,6 +231,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     *
                 </Typography>
                 <input
+                    {...register('pridicttime', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '340px',
@@ -242,7 +249,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     id="pridicttime"
                     value={values.pridicttime}
                 />
-
+               
                 <Typography
                     sx={{
                         color: 'var(--Gray-Gray-900, #222)',
@@ -280,14 +287,16 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="priority"
+                        {...register('priority', { required: true} )}
                     >
-                        <FormControlLabel value="toprange" control={<Radio />} label="상" />
-                        <FormControlLabel value="midrange" control={<Radio />} label="중" />
-                        <FormControlLabel value="rowrange" control={<Radio />} label="하" />
+                        <FormControlLabel value="toprange" onClick={handleChange} control={<Radio />} label="상" />
+                        <FormControlLabel value="midrange" onClick={handleChange} control={<Radio />} label="중" />
+                        <FormControlLabel value="rowrange" onClick={handleChange} control={<Radio />} label="하" />
                     </RadioGroup>
                 </div>
             </div>
-
+            {formState.errors.pridicttime?.type === "required" && <span>예상소요시간을 입력하세요</span>}
+            {formState.errors.priority?.type === "required" && <span>중요도를 입력하세요</span>}
             <div
                 style={{
                     display: 'flex',
@@ -323,6 +332,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     *
                 </Typography>
                 <input
+                {...register('servicehopedate', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '340px',
@@ -338,9 +348,10 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     type="text"
                     name="servicehopedate"
                     id="servicehopedate"
+                    
                 />
             </div>
-
+            {formState.errors.servicehopedate?.type === "required" && <span>서비스희망일을 입력하세요</span>}        
             <div
                 style={{
                     display: 'flex',
@@ -451,6 +462,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     <img src={group} width="40px" height="40px" />
                 </div>
             </div>
+            {/* </form> */}
         </React.Fragment>
     );
 }

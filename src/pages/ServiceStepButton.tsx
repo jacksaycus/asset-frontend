@@ -43,7 +43,8 @@ function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}
-                    onClick={handleNextStep}
+                    type='submit'
+                    // onClick={handleNextStep}
                 >
                     <Typography
                         sx={{

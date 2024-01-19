@@ -22,4 +22,27 @@ export type Account = {
   phone: string;
   email : string;
   rating: number;
+  password: string;
+  repassword: string;
 }
+
+export type Profile = {
+  name: string;
+  userid: string;
+  password: string;
+  email: string;
+  tel: string;
+  phone: string;
+  bigo: string;
+}
+
+export type Service = {
+  servicename: string;
+  servicecontent: string;
+  servicetype: string;
+  pridicttime: string;
+  priority: string;
+  servicehopedate: string;
+  bigo: string;
+}
+

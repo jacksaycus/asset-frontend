@@ -86,6 +86,14 @@ const pages: MuiPage[] = [
   }
   ,
   {
+    pathname: '/profile',
+    title: '프로필',
+    icon: '',
+    children: [
+    ]
+  }
+  ,
+  {
     pathname: '/contract',
     title: '계약',
     icon: 'contract',

@@ -17,8 +17,23 @@ import Page from 'src/components/Page';
 import ServiceRequestForm from './ServiceRequestForm';
 import ServiceStepButton from './ServiceStepButton';
 import group from 'src/assets/images/icons/group.png';
+import { useForm, FormProvider, useFormContext } from "react-hook-form"
+import {Service} from 'src/types'
 
 function ServiceRequest() {
+    const methods = useForm();
+//   const {
+//     register,
+//     handleSubmit,
+//     watch,
+//     formState: { errors },
+//   } = useForm<Service>()
+
+  const onSubmit = (data: Service) => {
+    alert(JSON.stringify(data));
+    handleNextStep();
+  };
+
   const [step, setStep] = React.useState(1);
   
   const handleNextStep = () => {
@@ -48,6 +63,10 @@ function ServiceRequest() {
                     marginLeft: '38px'
                 }}
             >
+             <FormProvider {...methods}>   
+                
+             
+             <form  autoComplete="off" noValidate onSubmit={methods.handleSubmit(onSubmit)}>
                 <Stack direction="row" spacing={0} sx={{ width: '1550px' }}>
                     <div
                         style={{
@@ -172,11 +191,15 @@ function ServiceRequest() {
                             서비스 요청
                         </Typography>
 
+                        
                         <ServiceRequestForm step={step} />
 
                     </div>
                     <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} />
+                    
                 </div>
+                </form>
+                </FormProvider>
             </Container>
         </Page>
     );

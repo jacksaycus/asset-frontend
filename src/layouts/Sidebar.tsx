@@ -135,6 +135,7 @@ function Sidebar(props: Props) {
                                 alignSelf: 'stretch'
                             }}      
                         >
+                    <Link href="/profile" underline="none">
                         <Typography 
                         sx={{
                             color: 'var(--Gray-Gray-900, #222)',
@@ -151,6 +152,7 @@ function Sidebar(props: Props) {
                         <BadgeStyle>
                             {getIcon('circle')} 승인권자
                         </BadgeStyle>
+                        </Link>
                         </Box> 
                     </LogoRightBottom>
                     

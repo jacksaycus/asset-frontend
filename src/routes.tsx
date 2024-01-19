@@ -7,8 +7,8 @@ import Dashboard from 'src/pages/Dashboard';
 import ServiceList from 'src/pages/ServiceList';
 import ServiceRequest from 'src/pages/ServiceRequest';
 import AccountManagement from 'src/pages/AccountManagement';
-import AccountCreate from 'src/pages/AccountCreate';
-import AccountUpdate from 'src/pages/AccountUpdate';
+import AccountCreate from 'src/pages/AccountCreateWrapper';
+import AccountUpdate from 'src/pages/AccountUpdateWrapper';
 import AssetManagement from 'src/pages/AssetManagement';
 import AssetCreate from 'src/pages/AssetCreate';
 import Contract from 'src/pages/Contract';
@@ -18,6 +18,7 @@ import Notice from 'src/pages/Notice';
 import CompanyManagement from 'src/pages/CompanyManagement';
 import CompanyReport from 'src/pages/CompanyReport';
 import Login from 'src/pages/Login';
+import Profile from 'src/pages/PersonalInfo';
 
 export const Router = (): ReactElement => {
     return (
@@ -30,6 +31,7 @@ export const Router = (): ReactElement => {
                 <Route path="assetmanagement" element={<AssetManagement />} />
                 <Route path="assetcreate" element={<AssetCreate />} />
                 <Route path="contract" element={<Contract />} />
+                <Route path="profile" element={<Profile />} />
                 <Route path="stat" element={<Stat />} />
                 <Route path="reportlist" element={<ReportList />} />
                 <Route path="notice" element={<Notice />} />
