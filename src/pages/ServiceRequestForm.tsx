@@ -37,6 +37,7 @@ function ServiceRequestForm({ step }: RequestFormProps) {
     });
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setValues({ ...values, [event.target.name]: event.target.value });
+            // setValues((event.target as HTMLInputElement).value);
         // console.log(values[event.target.name]);
     };
 

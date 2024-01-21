@@ -1,0 +1,9 @@
+input[type="radio"]:not(:checked){
+    padding-left: 0px;
+}
+[type="radio"]:not(:checked)+span{
+    padding-left: 0px;
+}
+[type="radio"]:not(:checked)+span, [type="radio"]:checked+span {
+    padding-left: 0px;
+}

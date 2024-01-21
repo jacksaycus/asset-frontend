@@ -124,18 +124,25 @@ function AssetList() {
             }}
             >
               
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2}
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '20px',
+              alignSelf: 'stretch',
+            }}>
               <TextField
                 name="condition"
                 variant="standard"
+                InputProps={{disableUnderline:true}}
                 select
                 sx={{
                   ".MuiInputBase-input": {
                     display: 'flex',
-                    width: '192px',
-                    height: '24px',
-                    // padding: '8px 4px',
-                    // alignItems: 'center',
+                    width: '200px',
+                    height: '36px',
+                    padding: '8px 4px',
+                    alignItems: 'center',
                     gap: '4px',
                     borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
                   }
@@ -151,10 +158,11 @@ function AssetList() {
                     fullWidth
                     name="condition1"
                     variant="standard"
+                    InputProps={{disableUnderline:true}}
                     sx={{
                         '.MuiInputBase-input': {
-                            width: '650px',
-                            height: '18px',
+                            // width: '650px',
+                            // height: '38px',
                             display: 'flex',
                             padding: '8px 12px',
                             alignItems: 'center',

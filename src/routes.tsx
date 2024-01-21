@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import React, { ReactElement } from 'react';
-import Layout from 'src/layouts/index';
-import SimpleLayout from 'src/layouts/SimpleLayout';
+import Layout from 'src/appShell/index';
+import SimpleLayout from 'src/appShell/SimpleLayout';
 import NotFound from 'src/pages/Page404';
-import Dashboard from 'src/pages/Dashboard';
+import DashboardViewPage from 'src/pages/DashboardViewPage';
 import ServiceList from 'src/pages/ServiceList';
 import ServiceRequest from 'src/pages/ServiceRequest';
 import AccountManagement from 'src/pages/AccountManagement';
@@ -24,7 +24,7 @@ export const Router = (): ReactElement => {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="dashboard" element={<DashboardViewPage />} />
                 <Route path="accountmanagement" element={<AccountManagement />} />
                 <Route path="accountcreate" element={<AccountCreate />} />
                 <Route path="accountupdate" element={<AccountUpdate />} />
@@ -36,7 +36,8 @@ export const Router = (): ReactElement => {
                 <Route path="reportlist" element={<ReportList />} />
                 <Route path="notice" element={<Notice />} />
                 <Route path="404" element={<NotFound />} />
-                <Route path="" element={<Navigate to="/dashboard" />} />
+                {/* <Route path="" element={<Navigate to="/dashboard" />} /> */}
+                <Route path="" element={<Navigate to="index/login" />} />
                 <Route path="*" element={<Navigate to="/404" />} />
             </Route>
             <Route path="/service" element={<Layout />}>

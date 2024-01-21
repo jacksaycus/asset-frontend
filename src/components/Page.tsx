@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import React, { forwardRef } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+// import 'src/globalStyles/global.scss';
 
 interface Props {
     children?;
@@ -14,7 +15,7 @@ const Page = forwardRef(function Page(props: Props, ref) {
         display: 'flex',
         width: '1230px',
         // maxwidth: '1250px',
-        minWidth: '1180px',
+        minWidth: '1080px',
         padding: '32px',
         flexDirection: 'column',
         alignItems: 'flexStart',

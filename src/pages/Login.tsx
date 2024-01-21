@@ -1,11 +1,16 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import React from 'react';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Link, Container, Typography, Grid , TextField, Button } from '@mui/material';
 import Page from 'src/components/Page';
 import { MHidden } from 'src/components/@material-extend';
 import { LoginForm } from 'src/components/authentication/login';
 import LoginleftImage from 'src/assets/images/loginbackground.png';
+import Snackbar from '@mui/material/Snackbar';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import DashboardViewPage from './DashboardViewPage';
+import {User} from 'src/types'
 
 const RootStyle = styled('div')({
     display: 'inline-flex',
@@ -39,22 +44,60 @@ const LoginBoxStyle = styled('div')({
 
 function Login() {
   const navigate = useNavigate();
-  const [values, setValues] = React.useState({ userid: '', password: '' })
+  const [user, setUser] = React.useState<User>({
+    userid: '',
+    password: ''
+  });
+  const [isAuthenticated, setAuth] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  const handleChange = ({ target: { name, value } }) => {
-    setValues({
-    [name]: value
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({...user, [event.target.name] : event.target.value});
+  }
+  const handleLogin = () => {
+    axios.post(import.meta.env.VITE_API_URL + "/login", user, {
+      headers: { 'Content-Type': 'application/json' }
     })
-    }
+    .then(res => {
+      const jwtToken = res.headers.authorization;
+      if (jwtToken !== null) {
+        sessionStorage.setItem("jwt", jwtToken);
+        setAuth(true);
+      }
+    })
+    .catch(() => setOpen(true));
+  }  
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(`${values.userid} ${values.password}`)
-    navigate('/', { replace: true });
-    }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+} = useForm<User>();
 
+  // const handleChange = ({ target: { name, value } }) => {
+  //   setValues({
+  //   [name]: value
+  //   })
+  //   }
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+  //   console.log(`${values.userid} ${values.password}`)
+  //   navigate('/', { replace: true });
+  //   }
+  const onSubmit = (data: User) => {
+   // alert(JSON.stringify(data));
+   // handleLogin();
+   navigate('/dashboard');
+};
+if (isAuthenticated) {
+    return <DashboardViewPage />;
+}
+else {
     return (
         <RootStyle>
+          <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
                 <Grid container>
                   <Grid item xs={6}>
                     <LoginBoxStyle>
@@ -94,7 +137,10 @@ function Login() {
                          }}
                          >
                           <TextField
+                          {...register('userid', { required: true} )}
                             fullWidth
+                            variant="standard"
+                            InputProps={{disableUnderline:true}}
                             sx={{
                               display: 'flex',
                               width: '400px',
@@ -106,13 +152,17 @@ function Login() {
                               // borderRadius: '4px',
                               // border: '1px solid var(--Gray-Gray-200, #EEE)'
                           }}
-                              name="username"
+                              name="userid"
                               onChange={handleChange}
-                              value={values.userid}
+                              value={user.userid}
                               />
+                               {errors.userid?.type === "required" && <p>아이디를 입력하세요</p>}
                           비밀번호
                          </Typography>
                          <TextField
+                         {...register('password', { required: true} )}
+                          variant="standard"
+                          InputProps={{disableUnderline:true}}
                             fullWidth
                             sx={{
                               display: 'flex',
@@ -127,11 +177,14 @@ function Login() {
                           }}
                               type="password"
                               name="password"
+                              value={user.password}
                               />
+                              {errors.password?.type === "required" && <span>비밀번호를 입력하세요</span>}
                               <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={handleSubmit}
+                                // onClick={handleSubmit}
+                                type='submit'
                                 sx={{
                                     display: 'flex',
                                     width: '400px',
@@ -147,6 +200,13 @@ function Login() {
                                 >
                                   로그인하기
                               </Button>
+                              <Snackbar
+                                  open={open}
+                                  autoHideDuration={3000}
+                                  onClose={() => setOpen(false)}
+                                  message="로그인 실패: 아이디 비밀번호를 확인하세요"
+                                />
+                              
                               <Grid container spacing={0}>
                                 <Grid item>
                                     <Typography
@@ -195,8 +255,10 @@ function Login() {
                    <SectionStyle/>
                  </Grid>
            </Grid>
+           </form>
         </RootStyle>
     );
+  }
 }
 
 export default Login;

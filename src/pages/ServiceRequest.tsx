@@ -67,10 +67,10 @@ function ServiceRequest() {
                 
              
              <form  autoComplete="off" noValidate onSubmit={methods.handleSubmit(onSubmit)}>
-                <Stack direction="row" spacing={0} sx={{ width: '1550px' }}>
+                <Stack direction="row" spacing={0} sx={{ width: '1450px' }}>
                     <div
                         style={{
-                            width: '1500px',
+                            width: '1410px',
                             display: 'flex',
                             // padding: '12px 117.5px 12px 118.5px',
                             justifyContent: 'flex-start',
@@ -151,7 +151,7 @@ function ServiceRequest() {
                 <div
                     style={{
                         display: 'flex',
-                        width: '1596px',
+                        width: '1346px',
                         padding: '28px',
                         marginTop: '20px',
                         flexDirection: 'column',
@@ -167,14 +167,14 @@ function ServiceRequest() {
                     <div
                         style={{
                             display: 'flex',
-                            width: '1596px',
+                            width: '1316px',
                             padding: '28px',
                             marginTop: '20px',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
                             gap: '32px',
-                            borderRadius: '12px',
-                            border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                            // borderRadius: '12px',
+                            // border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
                             background: 'var(--White, #FFF)'
                         }}
                     >

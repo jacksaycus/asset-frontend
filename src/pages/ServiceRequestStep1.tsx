@@ -14,6 +14,7 @@ import {
 import group from 'src/assets/images/icons/group.png';
 import {Service} from 'src/types'
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import './page.css'
 
 type RequestFormProps = {
     values: any;
@@ -59,18 +60,21 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 >
                     *
                 </Typography>
-                <input
+                <TextField
+                    fullWidth
+                    variant="standard"
+                    InputProps={{disableUnderline:true}}
                     {...register('servicename', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '890px',
                         height: '48px',
-                        padding: '16px 20px',
+                        // padding: '16px 20px',
                         marginLeft: '29px',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flex: '1 0 0',
-                        borderRadius: '4px',
+                        // borderRadius: '4px',
                         background: 'var(--Gray-Gray-100, #F5F5F5)'
                     }}
                     onChange={handleChange}
@@ -116,14 +120,17 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 >
                     *
                 </Typography>
-                <input
+                <TextField
+                    fullWidth
+                    variant="standard"
+                    InputProps={{disableUnderline:true}}
                    {...register('servicecontent', { required: true} )}
                     style={{
                         display: 'flex',
                         marginLeft: '14px',
                         width: '890px',
                         height: '48px',
-                        padding: '16px 20px',
+                        // padding: '16px 20px',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flex: '1 0 0',
@@ -173,14 +180,17 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 >
                     *
                 </Typography>
-                <input
+                <TextField
+                    fullWidth
+                    variant="standard"
+                    InputProps={{disableUnderline:true}}
                     {...register('servicetype', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '890px',
                         marginLeft: '10px',
                         height: '48px',
-                        padding: '16px 20px',
+                        // padding: '16px 20px',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flex: '1 0 0',
@@ -230,13 +240,16 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 >
                     *
                 </Typography>
-                <input
+                <TextField
+                    fullWidth
+                    variant="standard"
+                    InputProps={{disableUnderline:true}}
                     {...register('pridicttime', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '340px',
                         height: '48px',
-                        padding: '16px 20px',
+                        // padding: '16px 20px',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         flex: '1 0 0',
@@ -276,23 +289,26 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 </Typography>
                 <div
                     style={{
-                        display: 'flex',
-                        height: '48px',
-                        alignItems: 'center',
-                        gap: '20px',
-                        flex: '1 0 0'
+                        // display: 'flex',
+                        // height: '48px',
+                        // alignItems: 'center',
+                        // gap: '20px',
+                        // flex: '1 0 0'
                     }}
                 >
+                    
                     <RadioGroup
                         row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="priority"
                         {...register('priority', { required: true} )}
+                        name="priority"
+                        value={values.priority}
+                        onChange={handleChange}
                     >
-                        <FormControlLabel value="toprange" onClick={handleChange} control={<Radio />} label="상" />
-                        <FormControlLabel value="midrange" onClick={handleChange} control={<Radio />} label="중" />
-                        <FormControlLabel value="rowrange" onClick={handleChange} control={<Radio />} label="하" />
+                        <FormControlLabel value="toprange" control={<Radio />} label="상" />
+                        <FormControlLabel value="midrange" control={<Radio />} label="중" />
+                        <FormControlLabel value="rowrange" control={<Radio />} label="하" />
                     </RadioGroup>
+                    
                 </div>
             </div>
             {formState.errors.pridicttime?.type === "required" && <span>예상소요시간을 입력하세요</span>}

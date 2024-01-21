@@ -20,6 +20,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "allowJs": true,
+    "experimentalDecorators": true,
+    
     "paths": {
       "src": ["./src"],
       "src/*": ["./src/*"],

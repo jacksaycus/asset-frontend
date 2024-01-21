@@ -16,7 +16,7 @@ import AccountManagementDetail from './AccountManagementDetail';
 function AccountManagement() {
     const navigate = useNavigate();
 
-    const [detail, setDetail] = React.useState(true);
+    const [detail, setDetail] = React.useState(false);
     const [open, setOpen] = React.useState(false);
 
     const moveRequest = (e) => {
@@ -91,16 +91,22 @@ function AccountManagement() {
             }}
             >
               
-            <Stack direction="row" spacing={2} style={{marginLeft:'20px'}}>
+            <Stack direction="row" spacing={2} style={{marginLeft:'20px', width:'auto',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '20px',
+            alignSelf: 'stretch',
+          }}>
               <TextField
                 name="condition"
                 variant="standard"
+                InputProps={{disableUnderline:true}}
                 select
                 sx={{
                   ".MuiInputBase-input": {
                     display: 'flex',
-                    width: '192px',
-                    height: '24px',
+                    width: '200px',
+                    height: '36px',
                     // padding: '8px 4px',
                     // alignItems: 'center',
                     gap: '4px',
@@ -118,6 +124,7 @@ function AccountManagement() {
                     fullWidth
                     name="condition1"
                     variant="standard"
+                    InputProps={{disableUnderline:true}}
                     sx={{
                         '.MuiInputBase-input': {
                             width: '650px',

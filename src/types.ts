@@ -46,3 +46,7 @@ export type Service = {
   bigo: string;
 }
 
+export type User = {
+  userid:string;
+  password:string;
+}

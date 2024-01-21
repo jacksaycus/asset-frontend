@@ -336,7 +336,9 @@ function AccountCreate() {
                         direction="row"
                         spacing={0}
                         sx={{
-                            paddingTop: '20px'
+                            paddingTop: '20px',
+                            paddingBottom:'0px',
+                            marginBottom:'0px'
                         }}
                     >
                         <Typography
@@ -367,9 +369,11 @@ function AccountCreate() {
                     <TextField
                         {...register('userid', { required: true} )}
                         fullWidth
+                        variant="standard"
+                        InputProps={{disableUnderline:true}}
                         sx={{
                             display: 'flex',
-                            height: '56px',
+                            height: '46px',
                             padding: '0px',
                             flexDirection: 'column',
                             justifycontent: 'left',
@@ -454,10 +458,12 @@ function AccountCreate() {
                             <TextField
                                {...register('password', { required: true} )}
                                 fullWidth
+                                variant="standard"
+                                InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     display: 'flex',
-                                    height: '48px',
+                                    height: '38px',
                                     padding: '0px',
                                     flexDirection: 'column',
                                     justifycontent: 'left',
@@ -478,10 +484,12 @@ function AccountCreate() {
                                   validate: (value) => value === watch("password") || "패스워드가 일치하지 않습니다"
                                 } )}
                                 fullWidth
+                                variant="standard"
+                                InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     display: 'flex',
-                                    height: '48px',
+                                    height: '38px',
                                     padding: '0px',
                                     flexDirection: 'column',
                                     justifycontent: 'left',
@@ -559,10 +567,12 @@ function AccountCreate() {
                         <Grid item>
                             <TextField
                                 fullWidth
+                                variant="standard"
+                                InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     display: 'flex',
-                                    height: '48px',
+                                    height: '38px',
                                     padding: '0px',
                                     flexDirection: 'column',
                                     justifycontent: 'left',
@@ -579,10 +589,12 @@ function AccountCreate() {
                             <TextField
                                 {...register('phone', { required: true,  pattern: /^\d{3}-\d{3,4}-\d{4}$/ } )}
                                 fullWidth
+                                variant="standard"
+                                InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     display: 'flex',
-                                    height: '48px',
+                                    height: '38px',
                                     padding: '0px',
                                     flexDirection: 'column',
                                     justifycontent: 'left',
@@ -620,9 +632,11 @@ function AccountCreate() {
                     </Stack>
                     <TextField
                         fullWidth
+                        variant="standard"
+                        InputProps={{disableUnderline:true}}
                         sx={{
                             display: 'flex',
-                            height: '56px',
+                            height: '46px',
                             padding: '0px',
                             flexDirection: 'column',
                             justifycontent: 'left',
@@ -751,9 +765,11 @@ function AccountCreate() {
                     >
                         <TextField
                             fullWidth
+                            variant="standard"
+                            InputProps={{disableUnderline:true}}
                             sx={{
                                 display: 'flex',
-                                height: '56px',
+                                height: '46px',
                                 padding: '0px',
                                 flexDirection: 'column',
                                 justifycontent: 'left',

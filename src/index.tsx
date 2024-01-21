@@ -10,7 +10,7 @@ import Router from 'src/routes';
 import route from './route';
 import findActivePage from 'src/utils/findActivePage';
 import PageContext from 'src/components/PageContext';
-import CssBaseline from '@mui/material/CssBaseline';
+// import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   React.useEffect(() => {

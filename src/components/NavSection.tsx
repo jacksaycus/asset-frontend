@@ -5,11 +5,9 @@ import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton, Stack, Typography } from '@mui/material';
-// import { NavItemConfig } from 'src/models';
 import { MuiPage } from 'src/MuiPage';
 import PageContext from 'src/components/PageContext';
 import Divider from 'src/components/Divider';
-import SvgIconStyle from 'src/SvgIconStyle';
 import GroupIcon from 'src/assets/images/icons/group.png';
 
 addIcon('account', {
@@ -105,7 +103,6 @@ const ExpandDiv = styled('div')({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    // borderRight: '1px solid var(--Gray-Gray-300, #E0E0E0)',
     background: 'var(--White, #FFF)'
 })
 const SideBottomDiv = styled('div')({
@@ -138,23 +135,16 @@ const BottomSVGLAYOUTDiv = styled('div')({
 
 interface NavItemProps {
      item:  MuiPage;
-//     activePage:  MuiPage;
-//     activePageParents: MuiPage[];
-//     // active: (path: string) => boolean;
 }
 
  function NavItem(props: NavItemProps) {
     const { activePage={} } = React.useContext(PageContext); 
-    // const { item, activePage={}, activePageParents } = props;
     const { item } = props;
     const theme = useTheme();
     let isActiveRoot = false;
-    //const isActiveRoot = active(item.path);
-    // if(activePage.children && activePage.children.length>0){
-    //     isActiveRoot = true;    
-    // }
+
     const { title, pathname, icon , children} = item;
-    // if(item.children.length>0){
+
     if( item.pathname === activePage.pathname){    
         isActiveRoot = true;    
     }
@@ -199,8 +189,6 @@ interface NavItemProps {
                     <List component="div" disablePadding>
                         {children.map((item) => {
                             const { title, pathname } = item;
-                            // const isActiveSub = active(pathname);
-                            const isActiveSub = false;
                             isActiveRoot = false;
                             if( item.pathname === activePage.pathname){    
                                 isActiveRoot = true;    
@@ -210,12 +198,7 @@ interface NavItemProps {
                                     key={title}
                                     component={RouterLink}
                                     to={pathname}
-                                    // sx={{
-                                    //     ...(isActiveSub && activeSubStyle)
-                                    // }}
-                                    sx={{
-                                        ...(isActiveRoot && activeRootStyle)
-                                    }}
+                                    
                                 >
                                     <ListItemIconStyle>
                                         <Box
@@ -230,13 +213,7 @@ interface NavItemProps {
                                                 bgcolor: 'text.disabled',
                                                 transition: (theme) =>
                                                     theme.transitions.create('transform'),
-                                                // ...(isActiveSub && {
-                                                //     transform: 'scale(2)',
-                                                //     bgcolor: 'primary.main'
-                                                // })
-                                                
                                                     transform: 'scale(2)',
-                                                    // bgcolor: 'primary.main'
                                                 
                                             }}
                                         />
@@ -290,19 +267,7 @@ function NavSection() {
             </List>
             <ExpandDiv/>
             <SideBottomDiv>
-              {/* <BottomSVGLAYOUTDiv>
-              </BottomSVGLAYOUTDiv> */}
-              {/* <SvgIconStyle
-                        src={GroupIcon}
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            zIndex: 9,
-                            bottom: -15,
-                            position: 'absolute',
-                            
-                        }}
-                    /> */}
+              
               <GroupStyle/>
               <Typography
                 sx={{
