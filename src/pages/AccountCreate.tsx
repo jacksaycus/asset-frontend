@@ -111,6 +111,14 @@ function AccountCreate() {
         branch: ''
     });
     
+    const [file, setFile] = React.useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
     const [commpanyname, setCompanyname] = React.useState('');
     const [branchname, setBranchname] = React.useState('');
 
@@ -124,6 +132,31 @@ function AccountCreate() {
         e.preventDefault();
         console.log(`${values.userid} ${values.password}`);
         // navigate('/', { replace: true });
+
+    //   const formData = new FormData();
+    //   formData.append('_method', 'put');
+    //   formData.append('first_name', values.first_name);
+    //   formData.append('last_name', values.last_name);
+    //   formData.append('phone_no', values.phone_no);
+    //   formData.append('profile_picture', values.profile_picture, 'bermuda.png');
+    //   formData.append('password', values.password);
+
+    //   await axios
+    //     .post(`/api/v1/users/${user.member_no}`, formData, 
+    //      {
+    //        headers: {'Content-Type': 'multipart/form-data'}
+    //      })
+    //     .then((res) => {
+    //       console.log(res.data);
+    //       if (res.status === 201) {
+    //         console.log('success');
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.response.data.message);
+    //     });
+    // },
+
     };
 
     const onSubmit = (data: Profile) => {
@@ -698,7 +731,21 @@ function AccountCreate() {
                     </Typography>
 
                     <Stack direction="row" spacing={0}>
-                        <SearchButton>
+                        {/* <SearchButton> */}
+                        <input id="file" type="file" accept='.JPEG, PNG, GIF' onChange={handleFileChange} hidden />
+                        <label htmlFor='file'
+                             style={{
+                                cursor: 'pointer',
+                                display: 'flex',
+                                padding: '8px 16px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '16px',
+                                borderRadius: '100px',
+                                border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
+                                background: 'var(--White, #FFF)',
+                             }}
+                             >
                             <Typography
                                 sx={{
                                     color: 'var(--Main-Blue-Blue-500, #067DFD)',
@@ -713,7 +760,9 @@ function AccountCreate() {
                                 파일선택
                             </Typography>
                             {getIcon('attach')}
-                        </SearchButton>
+                        </label>
+                        
+                        {/* </SearchButton> */}
                         <div
                             style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px' }}
                         ></div>

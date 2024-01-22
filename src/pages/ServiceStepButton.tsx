@@ -43,7 +43,9 @@ function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps
                         padding: '8px 16px',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        borderRadius: '4px',
+                        background: 'var(--Main-Blue-Blue-50, #EEF7FF)'
                     }}
                     onClick={handleNextStep}
                 >

@@ -54,6 +54,7 @@ export const Router = (): ReactElement => {
             </Route>
             <Route path="/" >
                 <Route path="login" element={<Login />} />  
+                <Route path="" element={<Navigate to="/login" replace />} />
             </Route>
          </Routes>
     );
