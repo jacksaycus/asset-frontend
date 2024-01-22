@@ -123,13 +123,20 @@ function PersonalInfoForm() {
                                 alignSelf: 'stretch',
                                 borderRadius: '4px',
                                 border: '1px solid var(--Gray-Gray-200, #EEE)'
+
+                                ,background : errors.name?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                marginBottom: errors.name?.type === "required" ?'20px' : '',    
+                                borderWidth: errors.name?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                borderStyle: errors.name?.type === "required" ? 'solid' : '',
+                                borderColor: errors.name?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                borderImage: errors.name?.type === "required" ? 'initial' : '',
                               }}   
                               name='name'
                               value={profile.name}
                               onChange={handleChange}
                               >
                             </TextField>
-                            {errors.name?.type === "required" && <span>이름을 입력하세요</span>}
+                            {/* {errors.name?.type === "required" && <span>이름을 입력하세요</span>} */}
                             {errors?.name?.type === "maxLength" && (
                                 <p>초과입력하였습니다</p>
                             )}
@@ -408,10 +415,17 @@ function PersonalInfoForm() {
                                 alignSelf: 'stretch',
                                 borderRadius: '4px',
                                 border: '1px solid var(--Gray-Gray-200, #EEE)'
+
+                                ,background : errors.phone?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                marginBottom: errors.phone?.type === "required" ?'20px' : '',    
+                                borderWidth: errors.phone?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                borderStyle: errors.phone?.type === "required" ? 'solid' : '',
+                                borderColor: errors.phone?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                borderImage: errors.phone?.type === "required" ? 'initial' : '',
                               }}    
                               >
                             </TextField>
-                            {errors.phone?.type === "required" && <span>연락처를 입려하세요</span>}
+                            {/* {errors.phone?.type === "required" && <span>연락처를 입려하세요</span>} */}
                             {errors?.phone?.type === "pattern" && (<p>휴대폰번호를제대로 입력하세요</p> )}
                     </div>
                   </div>

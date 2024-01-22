@@ -9,7 +9,7 @@ import { LoginForm } from 'src/components/authentication/login';
 import LoginleftImage from 'src/assets/images/loginbackground.png';
 import Snackbar from '@mui/material/Snackbar';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import DashboardViewPage from './DashboardViewPage';
+import DashboardApp from './DashboardApp';
 import {User} from 'src/types'
 
 const RootStyle = styled('div')({
@@ -89,14 +89,21 @@ function Login() {
   const onSubmit = (data: User) => {
    // alert(JSON.stringify(data));
    // handleLogin();
-   navigate('/dashboard');
+   navigate('/dashboard/app');
 };
 if (isAuthenticated) {
-    return <DashboardViewPage />;
+    return <DashboardApp />;
 }
 else {
     return (
-        <RootStyle>
+        <div style={{
+          display: 'flex',
+          width: '328px',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '20px'
+        }}>
+
           <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
                 <Grid container>
                   <Grid item xs={6}>
@@ -126,6 +133,34 @@ else {
                          >
                           아이디
                          </Typography>
+                         
+                          <TextField
+                          {...register('userid', { required: true} )}
+                            fullWidth
+                            variant="standard"
+                            // InputProps={{disableUnderline:true}}
+                            sx={{
+                              display: 'flex',
+                              width: '400px',
+                              height: '52px',
+                              padding: '16px',
+                              flexDirection: 'column',
+                              justifyContent: 'center',
+                              alignItems: 'flex-start', 
+                              // borderRadius: '4px',
+                              // border: '1px solid var(--Gray-Gray-200, #EEE)'
+                              background : errors.userid?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                              marginBottom: errors.userid?.type === "required" ?'20px' : '',    
+                              borderWidth: errors.userid?.type === "required" ? '1px 1px 1px 10px': '' ,
+                              borderStyle: errors.userid?.type === "required" ? 'solid' : '',
+                              borderColor: errors.userid?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                              borderImage: errors.userid?.type === "required" ? 'initial' : '',
+                          }}
+                              name="userid"
+                              onChange={handleChange}
+                              value={user.userid}
+                              />
+                               {/* {errors.userid?.type === "required" && <p>아이디를 입력하세요</p>} */}
                          <Typography
                          sx={{
                           color: 'var(--Gray-Gray-700, #616161)',
@@ -136,34 +171,14 @@ else {
                           lineHeight: '28px', 
                          }}
                          >
-                          <TextField
-                          {...register('userid', { required: true} )}
-                            fullWidth
-                            variant="standard"
-                            InputProps={{disableUnderline:true}}
-                            sx={{
-                              display: 'flex',
-                              width: '400px',
-                              height: '52px',
-                              padding: '16px',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              alignItems: 'flex-start', 
-                              // borderRadius: '4px',
-                              // border: '1px solid var(--Gray-Gray-200, #EEE)'
-                          }}
-                              name="userid"
-                              onChange={handleChange}
-                              value={user.userid}
-                              />
-                               {errors.userid?.type === "required" && <p>아이디를 입력하세요</p>}
                           비밀번호
                          </Typography>
                          <TextField
-                         {...register('password', { required: true} )}
-                          variant="standard"
-                          InputProps={{disableUnderline:true}}
+                          {...register('password', { required: true} )}
                             fullWidth
+                            type='password'
+                            variant="standard"
+                            // InputProps={{disableUnderline:true}}
                             sx={{
                               display: 'flex',
                               width: '400px',
@@ -174,12 +189,19 @@ else {
                               alignItems: 'flex-start', 
                               // borderRadius: '4px',
                               // border: '1px solid var(--Gray-Gray-200, #EEE)'
+                              background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                              marginBottom: errors.password?.type === "required" ?'20px' : '',    
+                              borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
+                              borderStyle: errors.password?.type === "required" ? 'solid' : '',
+                              borderColor: errors.password?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                              borderImage: errors.password?.type === "required" ? 'initial' : '',
                           }}
-                              type="password"
+                              
                               name="password"
+                              onChange={handleChange}
                               value={user.password}
                               />
-                              {errors.password?.type === "required" && <span>비밀번호를 입력하세요</span>}
+                              {/* {errors.password?.type === "required" && <span>비밀번호를 입력하세요</span>} */}
                               <Button
                                 variant="outlined"
                                 color="primary"
@@ -256,7 +278,7 @@ else {
                  </Grid>
            </Grid>
            </form>
-        </RootStyle>
+        </div>
     );
   }
 }

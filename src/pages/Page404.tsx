@@ -30,9 +30,9 @@ const Page404 = (): JSX.Element => {
                                 sx={{ height: 260, mx: 'auto', my: { xs: 5, sm: 10 } }}
                             />
 
-                        <Button to="/" size="large" variant="contained" component={RouterLink}>
+                        {/* <Button to="/" size="large" variant="contained" component={RouterLink}>
                             홈
-                        </Button>
+                        </Button> */}
                     </Box>
                 
             </Container>

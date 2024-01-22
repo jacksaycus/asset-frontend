@@ -13,8 +13,7 @@ import {
     Button,
     MenuItem
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import Page from 'src/components/Page';
+import {Service } from 'src/types';
 
 const branch = [
     {
@@ -62,11 +61,13 @@ const company = [
 ]
 
 type RequestFormProps = {
-    values: any;
+    values: Service;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    formState: Service;
 };
 
-function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
+function ServiceRequestStep2({ values, handleChange, formState }: RequestFormProps) {
+    
     return (
         <React.Fragment>
             <div
@@ -77,7 +78,8 @@ function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -109,7 +111,7 @@ function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
                     fullWidth
                     name="branch"
                     value={values.branch}
-                    variant="standard"
+                    variant='standard'
                     select
                     sx={{
                         '.MuiInputBase-input': {
@@ -120,7 +122,15 @@ function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
                             justifyContent: 'space-between',
                             alignitems: 'center',
                             flex: '1 0 0',
-                            paddingLeft: '20px'
+                            paddingLeft: '20px',
+                            borderRadius: '4px'
+                           
+                            ,marginBottom : formState.branch === 'required' ? '20px' :'',
+                            borderWidth : formState.branch === 'required' ? '1px 1px 1px 10px':'',
+                            borderStyle : formState.branch === 'required' ?  'solid':'',
+                            borderColor : formState.branch === 'required' ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)':'',
+                            borderImage : formState.branch === 'required' ? 'initial':'',
+                            background : formState.branch === 'required' ? 'rgb(251, 236, 242)':'var(--Gray-Gray-100, #F5F5F5)'
                         }
                     }}
                     onChange={handleChange}

@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { CssBaseline, ThemeOptions } from '@mui/material';
 import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
-import shape from 'src/theme/shape';
-import palette from 'src/theme/palette';
-// import typography from 'src/theme/typography';
-import GlobalStyles from 'src/theme/globalStyles';
-import componentsOverride from 'src/theme/overrides';
-import shadows, { customShadows } from 'src/theme/shadows';
+import shape from '@/theme/shape';
+import palette from '@/theme/palette';
+import typography from '@/theme/typography';
+import GlobalStyles from '@/theme/globalStyles';
+import componentsOverride from '@/theme/overrides';
+import shadows, { customShadows } from '@/theme/shadows';
 
 interface Props {
     children;
@@ -32,7 +32,7 @@ export const ThemeConfig = (props: Props): JSX.Element => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                {/* <GlobalStyles /> */}
+                <GlobalStyles />
                 {children}
             </ThemeProvider>
         </StyledEngineProvider>

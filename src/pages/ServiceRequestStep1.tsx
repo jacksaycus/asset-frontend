@@ -13,18 +13,18 @@ import {
 } from '@mui/material';
 import group from 'src/assets/images/icons/group.png';
 import {Service} from 'src/types'
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import './page.css'
 
 type RequestFormProps = {
-    values: any;
+    values: Service;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  }
-function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
-    const { register, formState } = useFormContext();
+    formState: Service;
+}
+function ServiceRequestStep1({ values, handleChange, formState }: RequestFormProps) {
+      
     return (
         <React.Fragment>
-            {/* <form  autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}> */}
+            <form  autoComplete="off" noValidate >
             <div
                 style={{
                     display: 'flex',
@@ -33,7 +33,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -62,9 +63,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 </Typography>
                 <TextField
                     fullWidth
-                    variant="standard"
+                    variant='standard'
                     InputProps={{disableUnderline:true}}
-                    {...register('servicename', { required: true} )}
                     style={{
                         display: 'flex',
                         width: '890px',
@@ -75,7 +75,13 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         alignItems: 'center',
                         flex: '1 0 0',
                         // borderRadius: '4px',
-                        background: 'var(--Gray-Gray-100, #F5F5F5)'
+                        // background: 'var(--Gray-Gray-100, #F5F5F5)',
+                        background : formState.servicename === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.servicename === "required" ?'20px' : '',    
+                        borderWidth: formState.servicename === "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.servicename ===  "required" ? 'solid' : '',
+                        borderColor: formState.servicename ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.servicename ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
@@ -84,7 +90,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicename}
                 />
             </div>
-            {formState.errors.servicename?.type === "required" && <span>서비스명을 입력하세요</span>}
+            {/* {formState.errors.servicename?.type === "required" && <span>서비스명을 입력하세요</span>} */}
             <div
                 style={{
                     display: 'flex',
@@ -93,7 +99,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -124,8 +131,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
-                   {...register('servicecontent', { required: true} )}
-                    style={{
+                       style={{
                         display: 'flex',
                         marginLeft: '14px',
                         width: '890px',
@@ -135,7 +141,14 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         alignItems: 'center',
                         flex: '1 0 0',
                         borderRadius: '4px',
-                        background: 'var(--Gray-Gray-100, #F5F5F5)'
+                        // background: 'var(--Gray-Gray-100, #F5F5F5)',
+
+                        background : formState.servicecontent ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.servicecontent === "required" ?'20px' : '',    
+                        borderWidth: formState.servicecontent ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.servicecontent ===  "required" ? 'solid' : '',
+                        borderColor: formState.servicecontent ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.servicecontent ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
@@ -144,7 +157,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicecontent}
                 />
             </div>
-            {formState.errors.servicecontent?.type === "required" && <span>서비스명을 입력하세요</span>}        
+            {/* {formState.errors.servicecontent?.type === "required" && <span>서비스내용을 입력하세요</span>}         */}
             <div
                 style={{
                     display: 'flex',
@@ -153,7 +166,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -184,7 +198,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
-                    {...register('servicetype', { required: true} )}
+                    
                     style={{
                         display: 'flex',
                         width: '890px',
@@ -195,7 +209,14 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         alignItems: 'center',
                         flex: '1 0 0',
                         borderRadius: '4px',
-                        background: 'var(--Gray-Gray-100, #F5F5F5)'
+                        // background: 'var(--Gray-Gray-100, #F5F5F5)'
+
+                        background : formState.servicetype ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.servicetype ===  "required" ?'20px' : '',    
+                        borderWidth: formState.servicetype ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.servicetype ===  "required" ? 'solid' : '',
+                        borderColor: formState.servicetype ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.servicetype ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
@@ -204,7 +225,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     value={values.servicetype}
                 />
             </div>
-            {formState.errors.servicetype?.type === "required" && <span>서비스유형을 입력하세요</span>}       
+            {/* {formState.errors.servicetype?.type === "required" && <span>서비스유형을 입력하세요</span>}        */}
             <div
                 style={{
                     display: 'flex',
@@ -213,7 +234,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -244,7 +266,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
-                    {...register('pridicttime', { required: true} )}
+                    
                     style={{
                         display: 'flex',
                         width: '340px',
@@ -254,7 +276,15 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         alignItems: 'center',
                         flex: '1 0 0',
                         borderRadius: '4px',
-                        background: 'var(--Gray-Gray-100, #F5F5F5)'
+                        // background: 'var(--Gray-Gray-100, #F5F5F5)'
+
+                        background : formState.pridicttime ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.pridicttime ===  "required" ?'20px' : '',    
+                        borderWidth: formState.pridicttime ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.pridicttime ===  "required" ? 'solid' : '',
+                        borderColor: formState.pridicttime ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.pridicttime ===  "required" ? 'initial' : '',
+
                     }}
                     onChange={handleChange}
                     type="text"
@@ -299,10 +329,18 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     
                     <RadioGroup
                         row
-                        {...register('priority', { required: true} )}
+                        
                         name="priority"
                         value={values.priority}
                         onChange={handleChange}
+                        sx={{
+                        background : formState.priority ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.priority ===  "required" ?'20px' : '',    
+                        borderWidth: formState.priority ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.priority ===  "required" ? 'solid' : '',
+                        borderColor: formState.priority ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.priority ===  "required" ? 'initial' : '',
+                        }}
                     >
                         <FormControlLabel value="toprange" control={<Radio />} label="상" />
                         <FormControlLabel value="midrange" control={<Radio />} label="중" />
@@ -311,8 +349,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     
                 </div>
             </div>
-            {formState.errors.pridicttime?.type === "required" && <span>예상소요시간을 입력하세요</span>}
-            {formState.errors.priority?.type === "required" && <span>중요도를 입력하세요</span>}
+            {/* {formState.errors.pridicttime?.type === "required" && <span>예상소요시간을 입력하세요</span>}
+            {formState.errors.priority?.type === "required" && <span>중요도를 입력하세요</span>} */}
             <div
                 style={{
                     display: 'flex',
@@ -320,7 +358,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     height: '48px',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    gap: '20px'
+                    gap: '20px',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -347,8 +386,11 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 >
                     *
                 </Typography>
-                <input
-                {...register('servicehopedate', { required: true} )}
+                <TextField
+                variant="standard"
+                fullWidth
+                InputProps={{disableUnderline:true}}
+                
                     style={{
                         display: 'flex',
                         width: '340px',
@@ -358,7 +400,14 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                         alignItems: 'center',
                         flex: '1 0 0',
                         borderRadius: '4px',
-                        background: 'var(--Gray-Gray-100, #F5F5F5)'
+                        // background: 'var(--Gray-Gray-100, #F5F5F5)'
+
+                        background : formState.servicehopedate ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: formState.servicehopedate ===  "required" ?'20px' : '',    
+                        borderWidth: formState.servicehopedate ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: formState.servicehopedate ===  "required" ? 'solid' : '',
+                        borderColor: formState.servicehopedate ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: formState.servicehopedate ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
@@ -367,14 +416,15 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     
                 />
             </div>
-            {formState.errors.servicehopedate?.type === "required" && <span>서비스희망일을 입력하세요</span>}        
+            {/* {formState.errors.servicehopedate?.type === "required" && <span>서비스희망일을 입력하세요</span>}         */}
             <div
                 style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -391,6 +441,9 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                 </Typography>
 
                 <TextField
+                variant="standard"
+                fullWidth
+                InputProps={{disableUnderline:true}}
                     sx={{
                         display: 'flex',
                         marginLeft: '90px',
@@ -423,7 +476,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     height: '1px',
                     justifyContent: 'left',
                     alignItems: 'left',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Divider
@@ -443,7 +497,8 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '20px',
-                    alignSelf: 'stretch'
+                    alignSelf: 'stretch',
+                    padding: '28px'
                 }}
             >
                 <Typography
@@ -478,7 +533,7 @@ function ServiceRequestStep1({ values, handleChange }: RequestFormProps) {
                     <img src={group} width="40px" height="40px" />
                 </div>
             </div>
-            {/* </form> */}
+            </form>
         </React.Fragment>
     );
 }

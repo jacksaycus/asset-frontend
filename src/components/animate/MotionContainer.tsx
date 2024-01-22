@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Box } from '@mui/material';
-import { varWrapEnter } from 'src/components/animate/variants';
+import { varWrapEnter } from '@/components/animate/variants';
 
 interface Props {
     open: boolean;

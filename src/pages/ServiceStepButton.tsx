@@ -31,7 +31,9 @@ function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps
                     flexDirection: 'row',
                     alignItems: 'flex-start',
                     gap: '20px',
-                    background: 'var(--Gray-Gray-50, #FAFAFA)'
+                    background: 'var(--Gray-Gray-50, #FAFAFA)',
+                    marginTop:'20px',
+                    marginLeft:'-60px'
                 }}
             >
                 <Button
@@ -43,8 +45,7 @@ function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}
-                    type='submit'
-                    // onClick={handleNextStep}
+                    onClick={handleNextStep}
                 >
                     <Typography
                         sx={{

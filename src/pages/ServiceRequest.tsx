@@ -17,30 +17,72 @@ import Page from 'src/components/Page';
 import ServiceRequestForm from './ServiceRequestForm';
 import ServiceStepButton from './ServiceStepButton';
 import group from 'src/assets/images/icons/group.png';
-import { useForm, FormProvider, useFormContext } from "react-hook-form"
+// import { useForm, FormProvider, useFormContext } from "react-hook-form"
 import {Service} from 'src/types'
 
 function ServiceRequest() {
-    const methods = useForm();
-//   const {
-//     register,
-//     handleSubmit,
-//     watch,
-//     formState: { errors },
-//   } = useForm<Service>()
-
-  const onSubmit = (data: Service) => {
-    alert(JSON.stringify(data));
-    handleNextStep();
-  };
+  
+    const [values, setValues] = React.useState({
+        servicename: '',
+        servicecontent: '',
+        servicetype: '',
+        pridicttime: '',
+        priority: '',
+        servicehopedate: '',
+        bigo: '',
+        branch:'',
+        contract:'',
+        asset:'',
+        requester:'',
+    });
+    const [formState, setFormState] = React.useState({
+        servicename: '',
+        servicecontent: '',
+        servicetype: '',
+        pridicttime: '',
+        priority: '',
+        servicehopedate: '',
+        bigo: '',
+        branch:'',
+        contract:'',
+        asset:'',
+        requester:'',
+    });
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setValues({ ...values, [event.target.name]: event.target.value });
+    };
 
   const [step, setStep] = React.useState(1);
   
   const handleNextStep = () => {
+    if(step===1){
+        (values.servicename.trim() === '') ? ( setFormState( formState => ({ ...formState, servicename: 'required' })) ,setStep(0)):'';
+        (values.servicecontent.trim() === '') ? ( setFormState( formState => ({ ...formState, servicecontent: 'required' })) ,setStep(0)):'';
+        (values.servicetype.trim() === '') ? ( setFormState( formState => ({ ...formState, servicetype: 'required' })) ,setStep(0)):'';
+        (values.pridicttime.trim() === '') ? ( setFormState( formState => ({ ...formState, pridicttime: 'required' })) ,setStep(0)):'';
+        (values.priority.trim() === '') ? ( setFormState( formState => ({ ...formState, priority: 'required' })) ,setStep(0)):'';
+        (values.servicehopedate.trim() === '') ? ( setFormState( formState => ({ ...formState, servicehopedate: 'required' })) ,setStep(0)):'';
+    }
+        ( values.branch.trim() === '' && Number(step)===2 ) ? ( setFormState( formState => ({ ...formState, branch: 'required' })) ,setStep(1)):'';
+
+        (values.contract.trim() === '' && Number(step)===3) ? ( setFormState( formState => ({ ...formState, contract: 'required' })) ,setStep(2)):'';
+
+        (values.asset.trim() === '' && Number(step)===4 ) ? ( setFormState( formState => ({ ...formState, asset: 'required' })) ,setStep(3)):'';
+
+        if(values.requester.trim() === ''  && Number(step)===5 ) { 
+            setFormState( formState => ({ ...formState, requester: 'required' }));
+            setStep(4);
+         }else{
+            alert(JSON.stringify(values));
+         }
+        
+
       setStep(
              value => value + 1
             )
             console.log('step', step);
+            
+           
   };
   const handleCancelStep = ()=> {
     setStep(1);
@@ -63,10 +105,10 @@ function ServiceRequest() {
                     marginLeft: '38px'
                 }}
             >
-             <FormProvider {...methods}>   
+             {/* <FormProvider {...methods}>    */}
                 
              
-             <form  autoComplete="off" noValidate onSubmit={methods.handleSubmit(onSubmit)}>
+             {/* <form  autoComplete="off" noValidate onSubmit={methods.handleSubmit(onSubmit)}> */}
                 <Stack direction="row" spacing={0} sx={{ width: '1450px' }}>
                     <div
                         style={{
@@ -168,11 +210,10 @@ function ServiceRequest() {
                         style={{
                             display: 'flex',
                             width: '1316px',
-                            padding: '28px',
                             marginTop: '20px',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
-                            gap: '32px',
+                            padding: '32px',
                             // borderRadius: '12px',
                             // border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
                             background: 'var(--White, #FFF)'
@@ -191,15 +232,15 @@ function ServiceRequest() {
                             서비스 요청
                         </Typography>
 
-                        
-                        <ServiceRequestForm step={step} />
+                        <div style={{marginBottom:'32px'}}></div>
+                        <ServiceRequestForm step={step} values={values} handleChange={handleChange} formState={formState}/>
 
                     </div>
-                    <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} />
-                    
                 </div>
-                </form>
-                </FormProvider>
+
+                <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} />
+                {/* </form>
+                </FormProvider> */}
             </Container>
         </Page>
     );

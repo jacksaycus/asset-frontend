@@ -95,17 +95,22 @@ function AccountCreate() {
         formState: { errors }
     } = useForm<Account>();
 
-    const [values, setValues] = React.useState({
-        userid: '',
-        password: '',
-        email: '',
-        tel: '',
+    const [values, setValues] = React.useState<Account>({
+        company: '',
+        userid:  '',
+        authority:  '',
+        name :  '',
+        tel :  '',
+        phone:  '',
+        email :  '',
+        rating:  '0',
+        password:  '',
+        repassword:  '',
         priority: '',
         bigo: '',
-        company: '',
         branch: ''
     });
-
+    
     const [commpanyname, setCompanyname] = React.useState('');
     const [branchname, setBranchname] = React.useState('');
 
@@ -118,7 +123,7 @@ function AccountCreate() {
     const handleSubmit1 = (e) => {
         e.preventDefault();
         console.log(`${values.userid} ${values.password}`);
-        navigate('/', { replace: true });
+        // navigate('/', { replace: true });
     };
 
     const onSubmit = (data: Profile) => {
@@ -369,24 +374,32 @@ function AccountCreate() {
                     <TextField
                         {...register('userid', { required: true} )}
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
                         InputProps={{disableUnderline:true}}
                         sx={{
-                            display: 'flex',
-                            height: '46px',
-                            padding: '0px',
-                            flexDirection: 'column',
-                            justifycontent: 'left',
-                            alignItems: 'flex-start',
-                            alignSelf: 'stretch',
-                            borderRadius: '4px',
-                            paddingTop: '20px'
+                            // display: 'flex',
+                            // height: '48px',
+                            // padding: '16px',
+                            // flexDirection: 'column',
+                            // justifycontent: 'left',
+                            // alignItems: 'flex-start',
+                            // alignSelf: 'stretch',
+                            // borderRadius: '4px',
+                            // paddingTop: '20px'
                             // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+
+                            background : errors.userid?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                            marginBottom: errors.userid?.type === "required" ?'20px' : '',    
+                            borderWidth: errors.userid?.type === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: errors.userid?.type === "required" ? 'solid' : '',
+                            borderColor: errors.userid?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: errors.userid?.type === "required" ? 'initial' : '',
                         }}
                         name="userid"
+                        value={values.userid}
                         onChange={handleChange}
                     />
-                    {errors.userid?.type === "required" && <span>아이디를 입력하세요</span>}
+                    {/* {errors.userid?.type === "required" && <span>아이디를 입력하세요</span>} */}
                     <Grid
                         container
                         spacing={61}
@@ -458,25 +471,32 @@ function AccountCreate() {
                             <TextField
                                {...register('password', { required: true} )}
                                 fullWidth
-                                variant="standard"
+                                variant="outlined"
                                 InputProps={{disableUnderline:true}}
                                 sx={{
-                                    width: '535px',
-                                    display: 'flex',
-                                    height: '38px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px'
-                                    // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                                     width: '535px',
+                                    // display: 'flex',
+                                    // height: '38px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px'
+                                      // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                                    background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                    marginBottom: errors.password?.type === "required" ?'20px' : '',    
+                                    borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                    borderStyle: errors.password?.type === "required" ? 'solid' : '',
+                                    borderColor: errors.password?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                    borderImage: errors.password?.type === "required" ? 'initial' : '',
                                 }}
                                 type="password"
                                 name="password"
+                                value={values.password}
                                 onChange={handleChange}
                             />
-                            {errors.password?.type === "required" && <p>비밀번호를 입력하세요</p>}
+                            {/* {errors.password?.type === "required" && <p>비밀번호를 입력하세요</p>} */}
                         </Grid>
                         <Grid item>
                             <TextField
@@ -484,26 +504,32 @@ function AccountCreate() {
                                   validate: (value) => value === watch("password") || "패스워드가 일치하지 않습니다"
                                 } )}
                                 fullWidth
-                                variant="standard"
+                                variant="outlined"
                                 InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
-                                    display: 'flex',
-                                    height: '38px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px'
+                                    // display: 'flex',
+                                    // height: '38px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px'
+                                    background : errors.repassword?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                    marginBottom: errors.repassword?.type === "required" ?'20px' : '',    
+                                    borderWidth: errors.repassword?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                    borderStyle: errors.repassword?.type === "required" ? 'solid' : '',
+                                    borderColor: errors.repassword?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                    borderImage: errors.repassword?.type === "required" ? 'initial' : '',
                                 }}
                                 type="password"
                                 name="repassword"
-                                onChange={handleChange}
+                                
                             />
                      <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
-                    {errors.repassword?.type === "required" && <p>비밀번호확인을 입력하세요</p>}
-                    {errors.repassword && <p>{errors.repassword?.message}</p>}
+                    {/* {errors.repassword?.type === "required" && <p>비밀번호확인을 입력하세요</p>}
+                    {errors.repassword && <p>{errors.repassword?.message}</p>} */}
                     </div>
                         </Grid>
                     </Grid>
@@ -567,21 +593,22 @@ function AccountCreate() {
                         <Grid item>
                             <TextField
                                 fullWidth
-                                variant="standard"
+                                variant="outlined"
                                 InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
-                                    display: 'flex',
-                                    height: '38px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px'
-                                    // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                                    // display: 'flex',
+                                    // height: '38px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px'
+                                      // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                                 }}
-                                name="tel"
+                                name='tel'
+                                value={values.tel}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -589,24 +616,31 @@ function AccountCreate() {
                             <TextField
                                 {...register('phone', { required: true,  pattern: /^\d{3}-\d{3,4}-\d{4}$/ } )}
                                 fullWidth
-                                variant="standard"
+                                variant="outlined"
                                 InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
-                                    display: 'flex',
-                                    height: '38px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px'
+                                    // display: 'flex',
+                                    // height: '38px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px'
+                                    background : errors.phone?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                    marginBottom: errors.phone?.type === "required" ?'20px' : '',    
+                                    borderWidth: errors.phone?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                    borderStyle: errors.phone?.type === "required" ? 'solid' : '',
+                                    borderColor: errors.phone?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                    borderImage: errors.phone?.type === "required" ? 'initial' : '',  
                                 }}
                                 name="phone"
+                                value={values.phone}
                                 onChange={handleChange}
                             />
-                            {errors.phone?.type === "required" && <p>핸드폰 연락처를 입력하세요</p>}
-                            {errors?.phone?.type === "pattern" && (<p>휴대폰번호를제대로 입력하세요</p> )}
+                            {/* {errors.phone?.type === "required" && <p>핸드폰 연락처를 입력하세요</p>}
+                            {errors?.phone?.type === "pattern" && (<p>휴대폰번호를제대로 입력하세요</p> )} */}
                         </Grid>
                     </Grid>
                     
@@ -646,6 +680,7 @@ function AccountCreate() {
                             // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                         }}
                         name="priority"
+                        value={values.priority}
                         onChange={handleChange}
                     />
 
@@ -765,7 +800,7 @@ function AccountCreate() {
                     >
                         <TextField
                             fullWidth
-                            variant="standard"
+                            variant="outlined"
                             InputProps={{disableUnderline:true}}
                             sx={{
                                 display: 'flex',
@@ -779,6 +814,7 @@ function AccountCreate() {
                                 // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                             }}
                             name="bigo"
+                            value={values.bigo}
                             onChange={handleChange}
                         />
                     </div>

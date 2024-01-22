@@ -1,14 +1,14 @@
 import { merge } from 'lodash';
-import Card from 'src/theme/overrides/Card';
-import Lists from 'src/theme/overrides/Lists';
-import Paper from 'src/theme/overrides/Paper';
-import Input from 'src/theme/overrides/Input';
-import Button from 'src/theme/overrides/Button';
-import Tooltip from 'src/theme/overrides/Tooltip';
-import Backdrop from 'src/theme/overrides/Backdrop';
-import Typography from 'src/theme/overrides/Typography';
-import IconButton from 'src/theme/overrides/IconButton';
-import Autocomplete from 'src/theme/overrides/Autocomplete';
+import Card from '@/theme/overrides/Card';
+import Lists from '@/theme/overrides/Lists';
+import Paper from '@/theme/overrides/Paper';
+import Input from '@/theme/overrides/Input';
+import Button from '@/theme/overrides/Button';
+import Tooltip from '@/theme/overrides/Tooltip';
+import Backdrop from '@/theme/overrides/Backdrop';
+import Typography from '@/theme/overrides/Typography';
+import IconButton from '@/theme/overrides/IconButton';
+import Autocomplete from '@/theme/overrides/Autocomplete';
 import { Theme } from '@mui/material';
 
 const ComponentsOverrides = (theme: Theme) => {

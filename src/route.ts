@@ -2,7 +2,7 @@ import { MuiPage } from 'src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/dashboard',
+    pathname: '/dashboard/app',
     title: '메인',
     icon: 'home',
     children: []
@@ -18,7 +18,7 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/accountmanagement',
+    pathname: '/dashboard/accountmanagement',
     title: '계정관리',
     icon: 'account',
     children: [
@@ -26,7 +26,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/accountcreate',
+    pathname: '/dashboard/accountcreate',
     title: '계정생성',
     icon: '',
     children: [
@@ -34,7 +34,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/accountupdate',
+    pathname: '/dashboard/accountupdate',
     title: '계정수정',
     icon: '',
     children: [
@@ -42,7 +42,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/assetmanagement',
+    pathname: '/dashboard/assetmanagement',
     title: '자산관리',
     icon: 'assets',
     children: [
@@ -50,7 +50,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/assetcreate',
+    pathname: '/dashboard/assetcreate',
     title: '자산생성',
     icon: '',
     children: [
@@ -58,7 +58,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/profile',
+    pathname: '/dashboard/profile',
     title: '프로필',
     icon: '',
     children: [
@@ -66,7 +66,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/contract',
+    pathname: '/dashboard/contract',
     title: '계약',
     icon: 'contract',
     children: [
@@ -84,7 +84,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/stat',
+    pathname: '/dashboard/stat',
     title: '통계',
     icon: 'statistics',
     children: [
@@ -92,7 +92,7 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/reportlist',
+    pathname: '/dashboard/reportlist',
     title: '보고서조회',
     icon: 'report',
     children: [
@@ -100,9 +100,17 @@ const pages: MuiPage[] = [
   }
   ,
   {
-    pathname: '/notice',
+    pathname: '/dashboard/notice',
     title: '공지사항',
     icon: 'board',
+    children: [
+    ]
+  }
+  ,
+  {
+    pathname: '/dashboard/404',
+    title: '',
+    icon: '',
     children: [
     ]
   }

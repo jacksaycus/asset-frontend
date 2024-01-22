@@ -13,6 +13,7 @@ import {
     Button,
     MenuItem
 } from '@mui/material';
+import {Service} from 'src/types'
 
 const contract = [
     {
@@ -34,11 +35,13 @@ const contract = [
 ];
 
 type RequestFormProps = {
-    values: any;
+    values: Service;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    formState: Service;
 };
 
-function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
+function ServiceRequestStep2({ values, handleChange, formState }: RequestFormProps) {
+    
     return (
         <React.Fragment>
             <div
@@ -80,7 +83,7 @@ function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
                 <TextField
                     fullWidth
                     name="contract"
-                    value={values.branch}
+                    value={values.contract}
                     variant="standard"
                     select
                     sx={{
@@ -93,6 +96,13 @@ function ServiceRequestStep2({ values, handleChange }: RequestFormProps) {
                             alignitems: 'center',
                             flex: '1 0 0',
                             paddingLeft: '20px'
+
+                            ,background : formState.contract === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '', 
+                            marginBottom: formState.contract === "required" ?'20px' : '',    
+                            borderWidth: formState.contract === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: formState.contract === "required" ? 'solid' : '',
+                            borderColor: formState.contract === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: formState.contract === "required" ? 'initial' : '',
                         }
                     }}
                     onChange={handleChange}

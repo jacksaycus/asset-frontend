@@ -21,7 +21,7 @@ function AccountManagement() {
 
     const moveRequest = (e) => {
         e.preventDefault();
-        navigate('/accountcreate', { replace: true });
+        navigate('/dashboard/accountcreate', { replace: true });
     };
 
     const condition = [
@@ -34,7 +34,7 @@ function AccountManagement() {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      navigate("/accountcreate");
+      navigate("/dashboard/accountcreate");
     };
   
     
@@ -86,7 +86,7 @@ function AccountManagement() {
                     flex: '1 0 0',
                     background: 'var(--Gray-Gray-50, #FAFAFA)',
                     marginLeft:'0px',
-                    paddingLeft:'0px',
+                    paddingLeft:'32px',
                     justifyContent: 'flex-start'
             }}
             >

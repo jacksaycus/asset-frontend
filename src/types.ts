@@ -21,9 +21,12 @@ export type Account = {
   tel : string;
   phone: string;
   email : string;
-  rating: number;
+  rating: string;
   password: string;
   repassword: string;
+  priority:string;
+  bigo:string;
+  branch:string;
 }
 
 export type Profile = {
@@ -44,6 +47,10 @@ export type Service = {
   priority: string;
   servicehopedate: string;
   bigo: string;
+  branch:string;
+  contract:string;
+  requester:string;
+  asset: string;
 }
 
 export type User = {

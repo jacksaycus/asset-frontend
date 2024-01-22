@@ -7,6 +7,8 @@ import { Icon , addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
 import SignImage from 'src/assets/images/sign.png';
 import CompanyDialog from './CompanyDialog';
+import {Account} from 'src/types';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
 
@@ -91,7 +93,29 @@ const AttachCommentStyle = styled('div')({
 
 function AccountUpdate() {
   const navigate = useNavigate();
-  const [values, setValues] = React.useState({ userid: '', password: '' , email:'', tel:'', priority:'', bigo:'', company:'', branch:'' })
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+} = useForm<Account>();
+
+const [values, setValues] = React.useState<Account>({
+  company: '',
+  userid:  '',
+  authority:  '',
+  name :  '',
+  tel :  '',
+  phone:  '',
+  email :  '',
+  rating:  '0',
+  password:  '',
+  repassword:  '',
+  priority: '',
+  bigo: '',
+  branch: ''
+});
 
   const [commpanyname, setCompanyname] = React.useState('');
   const [branchname, setBranchname] = React.useState('');
@@ -102,10 +126,10 @@ function AccountUpdate() {
     })
     }
 
-  const handleSubmit = (e) => {
+  const handleSubmit1 = (e) => {
     e.preventDefault()
     console.log(`${values.userid} ${values.password}`)
-    navigate('/', { replace: true });
+    // navigate('/', { replace: true });
     }
 
     const [open, setOpen] = React.useState(false);
@@ -294,18 +318,25 @@ function AccountUpdate() {
                    <TextField
                             fullWidth
                             sx={{
-                              display: 'flex',
-                              height: '56px',
-                              padding: '0px',
-                              flexDirection: 'column',
-                              justifycontent: 'left',
-                              alignItems: 'flex-start',
-                              alignSelf: 'stretch',
-                              borderRadius: '4px',
-                              paddingTop:'20px'
-                              // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                              // display: 'flex',
+                              // height: '56px',
+                              // padding: '0px',
+                              // flexDirection: 'column',
+                              // justifycontent: 'left',
+                              // alignItems: 'flex-start',
+                              // alignSelf: 'stretch',
+                              // borderRadius: '4px',
+                              // paddingTop:'20px'
+                                // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                                background : errors.userid?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                marginBottom: errors.userid?.type === "required" ?'20px' : '',    
+                                borderWidth: errors.userid?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                borderStyle: errors.userid?.type === "required" ? 'solid' : '',
+                                borderColor: errors.userid?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                borderImage: errors.userid?.type === "required" ? 'initial' : '',  
                            }}
                             name="userid"
+                            value={values.userid}
                             onChange={handleChange}
                     />
                             
@@ -377,18 +408,25 @@ function AccountUpdate() {
                             fullWidth
                             sx={{
                               width:'535px',
-                              display: 'flex',
-                              height: '48px',
-                              padding: '0px',
-                              flexDirection: 'column',
-                              justifycontent: 'left',
-                              alignItems: 'flex-start',
-                              alignSelf: 'stretch',
-                              borderRadius: '4px',
-                              // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                              // display: 'flex',
+                              // height: '48px',
+                              // padding: '0px',
+                              // flexDirection: 'column',
+                              // justifycontent: 'left',
+                              // alignItems: 'flex-start',
+                              // alignSelf: 'stretch',
+                              // borderRadius: '4px',
+                                // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                              background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                              marginBottom: errors.password?.type === "required" ?'20px' : '',    
+                              borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
+                              borderStyle: errors.password?.type === "required" ? 'solid' : '',
+                              borderColor: errors.password?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                              borderImage: errors.password?.type === "required" ? 'initial' : '', 
                            }}
                             type='password'
                             name='password'
+                            value={values.password}
                             onChange={handleChange}
                           />
                             </Grid>
@@ -397,17 +435,24 @@ function AccountUpdate() {
                                   fullWidth
                                   sx={{
                                     width:'535px',
-                                    display: 'flex',
-                                    height: '48px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px',
+                                    // display: 'flex',
+                                    // height: '48px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px',
+                                    background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                    marginBottom: errors.password?.type === "required" ?'20px' : '',    
+                                    borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                    borderStyle: errors.password?.type === "required" ? 'solid' : '',
+                                    borderColor: errors.password?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                    borderImage: errors.password?.type === "required" ? 'initial' : '', 
                                 }}
                                     type="password"
                                     name="repassword"
+                                    value={values.repassword}
                                     onChange={handleChange}
                                     />
                             </Grid>
@@ -480,6 +525,7 @@ function AccountUpdate() {
                               // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                            }}
                             name='tel'
+                            value={values.tel}
                             onChange={handleChange}
                           />
                             </Grid>
@@ -488,16 +534,23 @@ function AccountUpdate() {
                                   fullWidth
                                   sx={{
                                     width:'535px',
-                                    display: 'flex',
-                                    height: '48px',
-                                    padding: '0px',
-                                    flexDirection: 'column',
-                                    justifycontent: 'left',
-                                    alignItems: 'flex-start',
-                                    alignSelf: 'stretch',
-                                    borderRadius: '4px',
+                                    // display: 'flex',
+                                    // height: '48px',
+                                    // padding: '0px',
+                                    // flexDirection: 'column',
+                                    // justifycontent: 'left',
+                                    // alignItems: 'flex-start',
+                                    // alignSelf: 'stretch',
+                                    // borderRadius: '4px',
+                                    background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                                    marginBottom: errors.password?.type === "required" ?'20px' : '',    
+                                    borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
+                                    borderStyle: errors.password?.type === "required" ? 'solid' : '',
+                                    borderColor: errors.password?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                                    borderImage: errors.password?.type === "required" ? 'initial' : '',
                                 }}
-                                    name='cellphone'
+                                    name='phone'
+                                    value={values.phone}
                                     onChange={handleChange}
                                     />
                             </Grid>
@@ -533,6 +586,7 @@ function AccountUpdate() {
                                           // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                                       }}
                                         name="priority"
+                                        value={values.priority}
                                         onChange={handleChange}
                                 />
                             
@@ -613,6 +667,7 @@ function AccountUpdate() {
                                           // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                                          }}
                                         name="bigo"
+                                        value={values.bigo}
                                         onChange={handleChange}
                                        />
                               </div>    

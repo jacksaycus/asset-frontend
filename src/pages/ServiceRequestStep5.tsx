@@ -13,6 +13,7 @@ import {
     Button,
     MenuItem
 } from '@mui/material';
+import {Service} from 'src/types'
 
 const requester = [
     {
@@ -36,9 +37,11 @@ const requester = [
 type RequestFormProps = {
     values: any;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    formState: Service;
 };
 
-function ServiceRequestStep5({ values, handleChange }: RequestFormProps) {
+function ServiceRequestStep5({ values, handleChange, formState }: RequestFormProps) {
+    
     return (
         <React.Fragment>
             <div
@@ -80,7 +83,7 @@ function ServiceRequestStep5({ values, handleChange }: RequestFormProps) {
                 <TextField
                     fullWidth
                     name="requester"
-                    value={values.branch}
+                    value={values.requester}
                     variant="standard"
                     select
                     sx={{
@@ -93,6 +96,13 @@ function ServiceRequestStep5({ values, handleChange }: RequestFormProps) {
                             alignitems: 'center',
                             flex: '1 0 0',
                             paddingLeft: '20px'
+
+                            ,background : formState.requester === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '', 
+                            marginBottom: formState.requester === "required" ?'20px' : '',    
+                            borderWidth: formState.requester === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: formState.requester === "required" ? 'solid' : '',
+                            borderColor: formState.requester === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: formState.requester === "required" ? 'initial' : '',
                         }
                     }}
                     onChange={handleChange}

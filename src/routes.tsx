@@ -1,9 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import React, { ReactElement } from 'react';
-import Layout from 'src/appShell/index';
-import SimpleLayout from 'src/appShell/SimpleLayout';
-import NotFound from 'src/pages/Page404';
-import DashboardViewPage from 'src/pages/DashboardViewPage';
+import DashboardLayout from '@/layouts/dashboard';
+// import LogoOnlyLayout from '@/layouts/LogoOnlyLayout';
+import NotFound from '@/pages/Page404';
 import ServiceList from 'src/pages/ServiceList';
 import ServiceRequest from 'src/pages/ServiceRequest';
 import AccountManagement from 'src/pages/AccountManagement';
@@ -19,12 +18,15 @@ import CompanyManagement from 'src/pages/CompanyManagement';
 import CompanyReport from 'src/pages/CompanyReport';
 import Login from 'src/pages/Login';
 import Profile from 'src/pages/PersonalInfo';
+import DashboardApp from '@/pages/DashboardApp';
 
 export const Router = (): ReactElement => {
     return (
         <Routes>
-            <Route path="/" element={<Layout />}>
-                <Route path="dashboard" element={<DashboardViewPage />} />
+            <Route path="/dashboard" element={<DashboardLayout />}>
+                {/* <Route path="dashboard" element={<DashboardViewPage />} /> */}
+                <Route path="" element={<Navigate to="/dashboard/app" replace />} />
+                <Route path="app" element={<DashboardApp />} />
                 <Route path="accountmanagement" element={<AccountManagement />} />
                 <Route path="accountcreate" element={<AccountCreate />} />
                 <Route path="accountupdate" element={<AccountUpdate />} />
@@ -40,17 +42,17 @@ export const Router = (): ReactElement => {
                 <Route path="" element={<Navigate to="index/login" />} />
                 <Route path="*" element={<Navigate to="/404" />} />
             </Route>
-            <Route path="/service" element={<Layout />}>
+            <Route path="/service" element={<DashboardLayout />}>
                 <Route path="" element={<Navigate to="/service/request" replace />} />
                 <Route path="request" element={<ServiceRequest />} />
                 <Route path="list" element={<ServiceList />} />
             </Route>
-            <Route path="/company" element={<Layout />}>
+            <Route path="/company" element={<DashboardLayout />}>
                 <Route path="" element={<Navigate to="/company/management" replace />} />
                 <Route path="management" element={<CompanyManagement />} />
                 <Route path="report" element={<CompanyReport />} />
             </Route>
-            <Route path="/index" element={<SimpleLayout />}>
+            <Route path="/" >
                 <Route path="login" element={<Login />} />  
             </Route>
          </Routes>
