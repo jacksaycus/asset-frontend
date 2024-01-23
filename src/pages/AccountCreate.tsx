@@ -651,6 +651,7 @@ function AccountCreate() {
                                 fullWidth
                                 variant="outlined"
                                 InputProps={{disableUnderline:true}}
+                                helperText='ex) 000-0000-0000'
                                 sx={{
                                     width: '535px',
                                     // display: 'flex',
@@ -810,6 +811,7 @@ function AccountCreate() {
                                 PNG 파일 업로드만 가능합니다.
                             </Typography>
                         </div>
+                        {file && file.name}
                     </Stack>
                     <div
                         style={{

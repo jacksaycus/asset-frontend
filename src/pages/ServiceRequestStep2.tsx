@@ -113,10 +113,11 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                     value={values.branch}
                     variant='standard'
                     select
+                    InputProps={{disableUnderline:true}}
                     sx={{
                         '.MuiInputBase-input': {
                             display: 'flex',
-                            height:'48px',
+                            height:'28px',
                             width:'860px',
                             padding: '16px 20px',
                             justifyContent: 'space-between',

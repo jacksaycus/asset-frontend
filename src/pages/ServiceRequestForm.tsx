@@ -21,17 +21,19 @@ import ServiceRequestStep5 from './ServiceRequestStep5'
 type RequestFormProps = {
     step: number;
     values: Service;
+    file: any;
     formState: Service;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   }
 
-function ServiceRequestForm({ step ,values, formState, handleChange}: RequestFormProps ) {
+function ServiceRequestForm({ step ,values, file, formState, handleChange, handleFileChange }: RequestFormProps ) {
    
 
     return (
         <React.Fragment>
 
-            {step===1 && <ServiceRequestStep1 values={values} handleChange={handleChange} formState={formState} /> }
+            {step===1 && <ServiceRequestStep1 values={values} file={file} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} /> }
             {step===2 && <ServiceRequestStep2 values={values} handleChange={handleChange} formState={formState}/> }
             {step===3 && <ServiceRequestStep3 values={values} handleChange={handleChange} formState={formState}/> }
             {step===4 && <ServiceRequestStep4 values={values} handleChange={handleChange} formState={formState}/> }

@@ -75,26 +75,16 @@ function Login() {
     formState: { errors }
 } = useForm<User>();
 
-  // const handleChange = ({ target: { name, value } }) => {
-  //   setValues({
-  //   [name]: value
-  //   })
-  //   }
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault()
-  //   console.log(`${values.userid} ${values.password}`)
-  //   navigate('/', { replace: true });
-  //   }
-  const onSubmit = (data: User) => {
+const onSubmit1 = (data: User) => {
    // alert(JSON.stringify(data));
    // handleLogin();
    navigate('/dashboard/app');
 };
-if (isAuthenticated) {
-    return <DashboardApp />;
-}
-else {
+  const onSubmit = (e: React.SyntheticEvent) => {
+    console.log(e);
+   navigate('/dashboard/app');
+  }
+
     return (
         <div style={{
           display: 'flex',
@@ -281,6 +271,6 @@ else {
         </div>
     );
   }
-}
+// }
 
 export default Login;

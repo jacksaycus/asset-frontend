@@ -18,7 +18,7 @@ import {
 
 const DashboardApp = (): JSX.Element => {
     return (
-        <Page title="Dashboard | Minimal-UI">
+        <Page title="대시보드">
             <Container maxWidth="xl">
                 <Box sx={{ pb: 5 }}>
                     <Typography variant="h4">대시보드</Typography>

@@ -50,7 +50,7 @@ export type Service = {
   branch:string;
   contract:string;
   requester:string;
-  asset: string;
+  asset[]: string;
 }
 
 export type User = {

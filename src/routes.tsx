@@ -39,7 +39,7 @@ export const Router = (): ReactElement => {
                 <Route path="notice" element={<Notice />} />
                 <Route path="404" element={<NotFound />} />
                 {/* <Route path="" element={<Navigate to="/dashboard" />} /> */}
-                <Route path="" element={<Navigate to="index/login" />} />
+                {/* <Route path="" element={<Navigate to="index/login" />} /> */}
                 <Route path="*" element={<Navigate to="/404" />} />
             </Route>
             <Route path="/service" element={<DashboardLayout />}>

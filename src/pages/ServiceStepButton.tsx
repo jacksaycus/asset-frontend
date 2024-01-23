@@ -18,9 +18,10 @@ import { styled } from '@mui/material/styles';
 type RequestFormProps = {
     handleNextStep: () => void;
     handleCancelStep: () => void;
+    step:number;
   }
 
-function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps) {
+function ServiceStepButton({handleNextStep, handleCancelStep, step }: RequestFormProps) {
     return (
         <React.Fragment>
             <div
@@ -59,7 +60,12 @@ function ServiceStepButton({handleNextStep, handleCancelStep }: RequestFormProps
                             lineHeight: '20px'
                         }}
                     >
-                        다음단계
+                        {step<5&&
+                        <span>다음단계</span>
+                        }
+                        {step>4&&
+                        <span>저장하기</span>
+                        }
                     </Typography>
                 </Button>
                 <Button

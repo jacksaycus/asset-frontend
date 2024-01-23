@@ -17,10 +17,12 @@ import './page.css'
 
 type RequestFormProps = {
     values: Service;
+    file: any;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     formState: Service;
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-function ServiceRequestStep1({ values, handleChange, formState }: RequestFormProps) {
+function ServiceRequestStep1({ values, file, handleChange, formState, handleFileChange }: RequestFormProps) {
       
     return (
         <React.Fragment>
@@ -530,7 +532,11 @@ function ServiceRequestStep1({ values, handleChange, formState }: RequestFormPro
                         background: 'var(--Gray-Gray-50, #FAFAFA)'
                     }}
                 >
+                    <input id="file" type="file" onChange={handleFileChange} hidden />
+                    <label htmlFor='file' style={{cursor: 'pointer'}}>
                     <img src={group} width="40px" height="40px" />
+                    </label>
+                    {file && file.name}
                 </div>
             </div>
             </form>

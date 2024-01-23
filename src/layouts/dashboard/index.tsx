@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import DashboardNavbar from '@/layouts/dashboard/DashboardNavbar';
 import DashboardSidebar from '@/layouts/dashboard/DashboardSidebar';
+import { isUndefined } from 'lodash';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -28,6 +29,17 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 const DashboardLayout = () => {
     const [open, setOpen] = useState(false);
+
+    // const navigate = useNavigate();
+    // React.useEffect(() => {
+    //     const jwt = sessionStorage.getItem('jwt');
+    //     if (jwt===''||jwt===null || isUndefined(jwt)) {
+    //         alert(jwt);
+    //       navigate("/login");
+    //     }    
+    // }, []);
+
+    
 
     return (
         <RootStyle>

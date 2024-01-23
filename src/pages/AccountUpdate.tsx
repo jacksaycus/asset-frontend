@@ -532,6 +532,7 @@ const [values, setValues] = React.useState<Account>({
                             <Grid item>
                                   <TextField
                                   fullWidth
+                                  helperText='ex) 000-0000-0000'
                                   sx={{
                                     width:'535px',
                                     // display: 'flex',

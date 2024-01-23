@@ -100,7 +100,7 @@ const ListItemIconStyle = styled(ListItemIcon)({
 const ExpandDiv = styled('div')({
     display: 'flex',
     height: 'auto',
-    padding: '16px',
+    padding: '8px',
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -200,7 +200,9 @@ interface NavItemProps {
                                     key={title}
                                     component={RouterLink}
                                     to={pathname}
-                                    
+                                    sx={{
+                                        ...(isActiveRoot && activeRootStyle)
+                                    }}
                                 >
                                     <ListItemIconStyle>
                                         <Box
@@ -216,8 +218,7 @@ interface NavItemProps {
                                                 transition: (theme) =>
                                                     theme.transitions.create('transform'),
                                                     transform: 'scale(2)',
-                                                
-                                            }}
+                                             }}
                                         />
                                     </ListItemIconStyle>
                                     <ListItemText disableTypography primary={title} />
@@ -248,19 +249,21 @@ interface NavItemProps {
   }
 }
 
-const fileTypes = ["JPEG", "PNG", "GIF"];
+const fileTypes = ["jpeg", "png", "gif"];
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 function NavSection() {
     const [file, setFile] = useState<File | null>(null);
-    const handleChange =  (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const handleChange =  (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange =  (file:File) => {
+      console.log(file);
       setFile(file);
-      console.log('changes', file);
+      console.log('changes',file);
     };
-    const onDrop = (file) => {
+    const onDrop = (file:any) => {
         console.log('drop', file);
       };
-      const onSelect = (file) => {
-        console.log('test', file);
+      const onSelect = (file:any) => {
+        console.log('onSelect', file);
       };
 
     const handleUpload = async () => {
@@ -293,7 +296,7 @@ function NavSection() {
                    pages.map((item) => (
                     <React.Fragment key={item.pathname}>
                     <NavItem key={item.pathname} item={item} />
-                      { (item.pathname==='/assetmanagement' || item.pathname==='/company')&&(
+                      { (item.pathname==='/dashboard/assetmanagement' || item.pathname==='/company')&&(
                        <>
                         <Divider />
                        </>
@@ -306,9 +309,9 @@ function NavSection() {
             <ExpandDiv/>
 
             <FileUploader
-            multiple={true}
             handleChange={handleChange}
             name="file"
+            multiple={true}
             types={fileTypes}
            >
             <SideBottomDiv>

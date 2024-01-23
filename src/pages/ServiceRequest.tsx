@@ -32,7 +32,7 @@ function ServiceRequest() {
         bigo: '',
         branch:'',
         contract:'',
-        asset:'',
+        asset:[],
         requester:'',
     });
     const [formState, setFormState] = React.useState({
@@ -48,6 +48,15 @@ function ServiceRequest() {
         asset:'',
         requester:'',
     });
+    
+    const [file, setFile] = React.useState<File | null>(null);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            console.log(e.target.files[0]);
+          setFile(e.target.files[0]);
+        }
+      };
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setValues({ ...values, [event.target.name]: event.target.value });
     };
@@ -67,16 +76,17 @@ function ServiceRequest() {
 
         (values.contract.trim() === '' && Number(step)===3) ? ( setFormState( formState => ({ ...formState, contract: 'required' })) ,setStep(2)):'';
 
-        (values.asset.trim() === '' && Number(step)===4 ) ? ( setFormState( formState => ({ ...formState, asset: 'required' })) ,setStep(3)):'';
+        (values.asset.length<1 && Number(step)===4 ) ? ( setFormState( formState => ({ ...formState, asset: 'required' })) ,setStep(3)):'';
 
         if(values.requester.trim() === ''  && Number(step)===5 ) { 
             setFormState( formState => ({ ...formState, requester: 'required' }));
             setStep(4);
-         }else{
+         }
+         
+         if(step===5 && values.requester.trim() !== ''){
             alert(JSON.stringify(values));
          }
-        
-
+         if(step>5)setStep(step-1);
       setStep(
              value => value + 1
             )
@@ -85,7 +95,10 @@ function ServiceRequest() {
            
   };
   const handleCancelStep = ()=> {
-    setStep(1);
+    if(step>1){
+        setStep(step-1);
+    }
+    // setStep(1);
     console.log('step', step);
   }
 
@@ -233,12 +246,12 @@ function ServiceRequest() {
                         </Typography>
 
                         <div style={{marginBottom:'32px'}}></div>
-                        <ServiceRequestForm step={step} values={values} handleChange={handleChange} formState={formState}/>
+                        <ServiceRequestForm step={step} values={values} file={file} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} />
 
                     </div>
                 </div>
 
-                <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} />
+                <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} step={step} />
                 {/* </form>
                 </FormProvider> */}
             </Container>

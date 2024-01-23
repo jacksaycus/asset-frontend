@@ -86,10 +86,11 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                     value={values.contract}
                     variant="standard"
                     select
+                    InputProps={{disableUnderline:true}}
                     sx={{
                         '.MuiInputBase-input': {
                             display: 'flex',
-                            height:'48px',
+                            height:'28px',
                             width:'860px',
                             padding: '16px 20px',
                             justifyContent: 'space-between',
@@ -97,7 +98,7 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                             flex: '1 0 0',
                             paddingLeft: '20px'
 
-                            ,background : formState.contract === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '', 
+                            ,background : formState.contract === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)', 
                             marginBottom: formState.contract === "required" ?'20px' : '',    
                             borderWidth: formState.contract === "required" ? '1px 1px 1px 10px': '' ,
                             borderStyle: formState.contract === "required" ? 'solid' : '',
