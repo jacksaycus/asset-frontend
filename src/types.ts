@@ -11,6 +11,7 @@ export type Asset = {
   checkperiod: string;
   assetprice: string;
   bigo:string;
+  status:string;
 }
 
 export type Account = {
@@ -40,6 +41,11 @@ export type Profile = {
 }
 
 export type Service = {
+  requestno:string;
+  company:string;
+  asmanager:string;
+  requestdate:string;
+  status:string;
   servicename: string;
   servicecontent: string;
   servicetype: string;
@@ -50,7 +56,7 @@ export type Service = {
   branch:string;
   contract:string;
   requester:string;
-  asset[]: string;
+  asset: string;
 }
 
 export type User = {

@@ -1,10 +1,24 @@
 import * as React from 'react'
-import { Container, Button, Stack, Typography, TextField, Grid , Paper, Box } from '@mui/material'
+import { Container, Button, Stack, Typography, TextField, Grid , Paper, Box ,Snackbar } from '@mui/material'
 import sign from 'src/assets/images/icons/sign.png'
 import {Profile} from 'src/types'
 import { useForm, SubmitHandler } from "react-hook-form"
 
 function PersonalInfoForm() {
+
+    const [open, setOpen] = React.useState(false);
+    const [disabled, setDisabled] = React.useState(true);
+    const [buttonText, setButtonText] = React.useState('비밀번호 변경');
+
+    const handlePaswordChange = () => {
+            setDisabled(!disabled);
+            let txt = disabled ? '비밀번호 변경':'변경 완료';
+            setButtonText(txt);
+        if(!disabled)    
+            setOpen(true);
+        
+    }
+
 
     const {
         register,
@@ -37,6 +51,7 @@ function PersonalInfoForm() {
         <React.Fragment>
             <form  autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
             <div style={{
+                     width:'1220px',
                      display: 'flex',
                      padding: '28px',
                      flexDirection: 'column',
@@ -190,20 +205,10 @@ function PersonalInfoForm() {
                             </TextField>
                     </div>
 
-
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: '4px',
-                        alignSelf: 'stretch'
-                    }}
-                    >
-                        <div style={{display:'flex',
-                                    flexDirection:'row'
-                                    }}
-                        >
-                            <Typography sx={{
+                    
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 48 }}>
+                        <Grid item xs={4}>
+                        <Typography sx={{
                                   color: 'var(--Gray-Gray-900, #222)',
                                   fontFamily: 'Pretendard',
                                   fontSize: '14px',
@@ -214,9 +219,8 @@ function PersonalInfoForm() {
                             >
                                 비밀번호
                             </Typography>
-                        </div>
-                        <div style={{display:'flex', flexDirection:'row'}}>
-                        <TextField
+                            <TextField
+                              disabled={disabled}
                               fullWidth
                               type="password"
                               variant='standard'
@@ -225,8 +229,9 @@ function PersonalInfoForm() {
                               value={profile.password}
                               onChange={handleChange}
                               sx={{
+                                marginTop:'4px',
                                 display: 'flex',
-                                width:'920px',
+                                width : '450px',
                                 height: '48px',
                                 padding: '16px',
                                 flexDirection: 'column',
@@ -238,8 +243,63 @@ function PersonalInfoForm() {
                               }}    
                               >
                             </TextField>
-                            <Button
+                        </Grid>
+                        <Grid item xs={4}>
+                        {!disabled &&
+                        <>
+                        <Typography sx={{
+                                  color: 'var(--Gray-Gray-900, #222)',
+                                  fontFamily: 'Pretendard',
+                                  fontSize: '14px',
+                                  fontStyle: 'normal',
+                                  fontWeight: '700',
+                                  lineHeight: '20px'
+                            }}
+                            >
+                                비밀번호 확인
+                            </Typography>
+                            <TextField
+                              disabled={disabled}
+                              fullWidth
+                              type="password"
+                              variant='standard'
+                              InputProps={{ disableUnderline: true }}
+                              name='password'
+                              value={profile.password}
+                              onChange={handleChange}
                               sx={{
+                                marginTop:'4px',
+                                display: 'flex',
+                                width : '450px',
+                                height: '48px',
+                                padding: '16px',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                flex: '1 0 0',
+                                borderRadius: '4px',
+                                border: '1px solid var(--Gray-Gray-200, #EEE)'
+                              }}    
+                              >
+                            </TextField>
+                            </>
+                          }
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography sx={{
+                                  color: 'var(--Gray-Gray-900, #222)',
+                                  fontFamily: 'Pretendard',
+                                  fontSize: '14px',
+                                  fontStyle: 'normal',
+                                  fontWeight: '700',
+                                  lineHeight: '20px'
+                            }}
+                            >
+                                &nbsp;
+                            </Typography>
+                        <Button
+                              sx={{
+                                width:'130px',
                                 display: 'flex',
                                 padding: '8px 16px',
                                 flexDirection: 'column',
@@ -250,12 +310,18 @@ function PersonalInfoForm() {
                                 background: 'var(--White, #FFF)',
                                 marginLeft:'12px'
                               }}
+                              onClick={handlePaswordChange}
                               >
-                                비밀번호 변경
+                                {buttonText}
                               </Button>
-                            </div>
-                    </div>
-
+                              <Snackbar
+                                open={open}
+                                autoHideDuration={2000}
+                                onClose={() => setOpen(false)}
+                                message="변경완료" />
+                        </Grid>
+                    </Grid>
+                    
                     
                     <div style={{
                         display: 'flex',
