@@ -1,7 +1,9 @@
+// @ts-nocheck
 import * as React from 'react'
 import { Container, Stack, Typography, Grid, Button , TextField, MenuItem, Popover, IconButton, Link } from '@mui/material'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridCellParams, GridToolbar,GridPagination,useGridApiContext,useGridSelector,gridPageCountSelector } from '@mui/x-data-grid'
+import CustomToolbar from './CustomToolbar';
 import { v4 as uuidv4 } from 'uuid'
 import frame from 'src/assets/images/icons/frame.png'
 import plusblack from 'src/assets/images/icons/plusblack.png'
@@ -9,9 +11,16 @@ import ServiceStatus from './ServiceStatus'
 import moment from 'moment'
 import down from 'src/assets/images/icons/down.png'
 import ServiceDetail from './ServiceDetail'
+import * as FileSaver from 'file-saver';
+import * as _ from "lodash";
+import MuiPagination from '@mui/material/Pagination';
+import CustomPagination from './CustomPagination'
+import ServiceEmpty from './ServiceEmpty'
 
 function Service() {
     
+    const [detail, setDetail] = React.useState(false);
+
     const condition = [
         {
             value: 'cond1',
@@ -19,20 +28,79 @@ function Service() {
           },
     ]
 
-    const data = [{
-        id:uuidv4(),
-        requestno:'#2342',
-        company:'노트북',
-        servicename:'모델명',
-        asmanager:'레노보',
-        priority:'중',
-        servicetype:'error',
-        servicedate:'20000101',
-        requester:'tester',
-        status:'요청'
-    }];
+    const excelcols = 
+              ["요청번호","회사","서비스명", "AS담당자", "중요도", "유형", "서비스일자",  "요청자", "상태"];
+
+    const maptocol = {
+        requestno:"요청번호",
+        company:"회사",
+        servicename:"서비스명",
+        asmanager:"AS담당자",
+        priority:"중요도",
+        servicetype:"유형",
+        servicedate:"서비스일자",
+        requester:"요청자",
+        status:"상태"
+    };
+
+    const data =
+        // id:uuidv4(),
+        [
+          {
+          requestno:"#2342",
+          company:"노트북",
+          servicename:"모델명",
+          asmanager:"레노보",
+          priority:"중",
+          servicetype:"error",
+          servicedate:"20000101",
+          requester:"tester",
+          status:"요청"
+        },
+        {
+          requestno:"#2343",
+          company:"노트북1",
+          servicename:"모델명1",
+          asmanager:"레노보1",
+          priority:"하",
+          servicetype:"normal",
+          servicedate:"20000102",
+          requester:"rrr",
+          status:"완료"
+        }
+      ];
+
+
+      let obj={}
+      let exceldata1 = []
+      for(let i=0;i<data.length;i++){
+        let j=0;
+        _.map(data[i], function(val, k) {
+            obj[excelcols[j]]=val;
+            ++j;
+        })
+        exceldata1.push(obj)
+        obj={}
+      }
+      console.log(exceldata1);
+        
+      const exceldata = [
+        {
+          요청번호:"#2342",
+          회사:"노트북",
+          서비스명:"모델명",
+          AS담당자:"레노보",
+          중요도:"중",
+          유형:"error",
+          서비스일자:"20000101",
+          요청자:"tester",
+          상태:"요청"
+        }
+      ]
+
+
     const columns: GridColDef[] = [
-      {field: 'id', headerName: '', width: 0 },
+      // {field: 'id', headerName: '', width: 0 },
       {field: 'requestno', headerName: '요청번호', width: 150},
       {field: 'company', headerName: '회사명', width: 150},
       {field: 'servicename', headerName: '서비스명', width: 100},
@@ -57,7 +125,36 @@ function Service() {
       {field: 'status', headerName: '상태', width: 100},
     ]; 
 
+    const [olddetail,setOlddetail] = React.useState('');
+    const handleRowClick: GridEventListener<'rowClick'> = (params) => {
+      // alert(`Movie "${params.row.requestno}" clicked`);
+      // alert(params.row.requestno===olddetail);
+      // alert(olddetail);
+      if(params.row.requestno===olddetail){
+         setDetail(false);
+         setOlddetail(''); 
+      }else{
+         setDetail(true);
+         setOlddetail(params.row.requestno); 
+      }
+    };
     
+    
+      const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      
+      const exportToExcel = async (fileName) => {
+        const ws = XLSX.utils.json_to_sheet(exceldata1,{header:excelcols});
+        const wb = { Sheets: { "data" : ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array"});
+        const data1 = new Blob([excelBuffer], {type: fileType});
+        // var worksheet = XLSX.utils.aoa_to_sheet(data);
+        // var new_workbook = XLSX.utils.book_new();
+        // XLSX.utils.book_append_sheet(new_workbook, worksheet, "SheetJS");
+        FileSaver.saveAs(data1, fileName + fileExtension);
+      }
+    
+
     return (
             <>
               <div style={{
@@ -159,15 +256,6 @@ function Service() {
               </div>   
               
               <div style={{
-                    //  display: 'flex',
-                    //  padding: '28px',
-                    //  flexDirection: 'row',
-                    //  alignItems: 'flex-start',
-                    //  gap: '20px',
-                    //  alignSelf: 'stretch',
-                    //  borderRadius: '12px',
-                    //  border: '1px solid var(--Gray-Gray-200, #EEE)',
-                    //  background: 'var(--White, #FFF)'
                     display: 'flex',
                     padding: '28px',
                     flexDirection: 'column',
@@ -241,6 +329,7 @@ function Service() {
                    
 
                      <div style={{
+                      height: 400, width: 'auto',
                         display: 'flex',
                         padding: '20px',
                         flexDirection: 'column',
@@ -256,17 +345,25 @@ function Service() {
                           columnVisibilityModel={{
                             id: false,
                           }}
+                          onRowClick={handleRowClick}
                           rows={data}
                           columns={columns}
                           disableRowSelectionOnClick={true}
-                          // getRowId={row => row._links.self.href}
-                          getRowId={(row: any) =>  uuidv4()}
-                          slots={{ toolbar: GridToolbar }}
+                          // getRowId={(row: any) =>  uuidv4()}
+                          getRowId={(row: any) =>  row.requestno}
+                          slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: ServiceEmpty }}
                           checkboxSelection
+                          pagination
+                          initialState={{
+                            pagination: { paginationModel: { pageSize: 10 } },
+                          }}
                         />
                     </div>
-
-                  <ServiceDetail />                 
+               
+                   {
+                    detail &&
+                       <ServiceDetail />                 
+                   }
 
               </div>
 
@@ -294,7 +391,7 @@ function Service() {
                                 position: 'relative',
                                 left:'-30px'
                         }}
-                        // onClick={moveRequest}
+                        onClick={(e) => exportToExcel('서비스')}
                         >
                             <Typography sx={{
                                     color: 'var(--Main-Blue-Blue-500, #067DFD)',
@@ -317,3 +414,28 @@ function Service() {
 }
 
 export default Service;
+
+// function CustomPagination(props: any) {
+//   return <GridPagination ActionsComponent={Pagination} {...props} />;
+// }
+
+// function Pagination({
+//   page,
+//   onPageChange,
+//   className,
+// }: Pick<TablePaginationProps, 'page' | 'onPageChange' | 'className'>) {
+//   const apiRef = useGridApiContext();
+//   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+//   return (
+//     <MuiPagination
+//       color="primary"
+//       className={className}
+//       count={pageCount}
+//       page={page + 1}
+//       onChange={(event, newPage) => {
+//         onPageChange(event as any, newPage - 1);
+//       }}
+//     />
+//   );
+// }

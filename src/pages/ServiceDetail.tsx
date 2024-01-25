@@ -14,6 +14,7 @@ import {
     Rating
 } from '@mui/material';
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
+import CustomToolbar from './CustomToolbar';
 import { styled } from '@mui/material/styles';
 import Page from 'src/components/Page';
 import ServiceRequestForm from './ServiceRequestForm';
@@ -615,7 +616,8 @@ function ServiceDetail() {
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
                           getRowId={(row: any) =>  uuidv4()}
-                          slots={{ toolbar: GridToolbar }}
+                        //   slots={{ toolbar: GridToolbar }}
+                        slots={{ toolbar: CustomToolbar}}
                           checkboxSelection
                         />
             </div>

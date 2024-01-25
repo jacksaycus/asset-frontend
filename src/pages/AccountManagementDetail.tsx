@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
+import MuiPagination from '@mui/material/Pagination';
 import { Icon , addIcon } from '@iconify/react';
 import Rating from '@mui/material/Rating';
 import { v4 as uuidv4 } from 'uuid'
+import CustomToolbar from './CustomToolbar'
+import CustomPagination from './CustomPagination'
  import {
          Stack,
          Box,
@@ -200,7 +203,8 @@ function AccountManagementDetail() {
                   disableRowSelectionOnClick={true}
                   // getRowId={row => row._links.self.href}
                   getRowId={(row: any) =>  uuidv4()}
-                  slots={{ toolbar: GridToolbar }}
+                  // slots={{ toolbar: GridToolbar }}
+                  slots={{ toolbar: CustomToolbar, pagination: CustomPagination }}
                 />
               </Box>
         </Stack>

@@ -1,17 +1,23 @@
 import * as React from 'react'
 import { Container, Stack, Typography, Grid, Button , TextField, MenuItem, Popover, IconButton, Link } from '@mui/material'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridCellParams, GridToolbar,GridPagination,useGridApiContext,useGridSelector,gridPageCountSelector } from '@mui/x-data-grid'
+import MuiPagination from '@mui/material/Pagination';
+import CustomToolbar from './CustomToolbar'
 import frame from 'src/assets/images/icons/frame.png'
 import plus from 'src/assets/images/icons/plus.png'
 import down from 'src/assets/images/icons/down.png'
 import filesave from 'src/assets/images/icons/file_save.png'
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined'
+import * as FileSaver from 'file-saver';
+import * as _ from "lodash";
 import { v4 as uuidv4 } from 'uuid'
 import {Account} from './src/types'
 import AccountAuthority from './AccountAuthority'
 import AccountRating from './AccountRating'
 import AccountManagementDetail from './AccountManagementDetail';
+import CustomNoRowsOverlay from './CustomNoRowsOverlay'
+import CustomPagination from './CustomPagination'
 
 function AccountManagement() {
     const navigate = useNavigate();
@@ -38,7 +44,44 @@ function AccountManagement() {
     };
   
     
-    const data = [{id:uuidv4(),company:'신한은행',userid:'길길동',authority:'supermanager',name:'레노보',tel:'0134213',phone:'00000000', email:'kone@kon.com',rating:0}];
+    const excelcols = 
+              ["회사및지점명","아이디","권한", "이름", "연락처", "핸드폰연락처", "이메일",  "평점"];
+    const maptocol = {
+                company:'회사및지점명',
+                userid:'아이디',
+                authority:'권한',
+                name:'이름',
+                tel:'연락처',
+                phone:'핸드폰연락처', 
+                email:'이메일@kon.com',
+                rating:"평점"
+    };          
+             
+    const data = [{
+                 company:'신한은행',
+                 userid:'길길동',
+                 authority:'supermanager',
+                 name:'레노보',
+                 tel:'0134213',
+                 phone:'00000000', 
+                 email:'kone@kon.com',
+                 rating:0
+                }];
+
+    let obj={}
+    let exceldata1 = []
+    for(let i=0;i<data.length;i++){
+          let j=0;
+          _.map(data[i], function(val, k) {
+                 obj[excelcols[j]]=val;
+                  ++j;
+          })
+          exceldata1.push(obj)
+          obj={}
+    }
+    console.log(exceldata1);
+    
+
     const columns: GridColDef[] = [
       {field: 'id', headerName: '', width: 0 },
       {field: 'company', headerName: '회사및지점명', width: 150},
@@ -71,6 +114,27 @@ function AccountManagement() {
        },      
     ]; 
 
+    const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      
+      const exportToExcel = async (fileName) => {
+        const ws = XLSX.utils.json_to_sheet(exceldata1,{header:excelcols});
+        const wb = { Sheets: { "data" : ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array"});
+        const data1 = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data1, fileName + fileExtension);
+      }
+
+      const [olddetail,setOlddetail] = React.useState('');
+      const handleRowClick: GridEventListener<'rowClick'> = (params) => {
+        if(params.row.requestno===olddetail){
+           setDetail(false);
+           setOlddetail(''); 
+        }else{
+           setDetail(true);
+           setOlddetail(params.row.requestno); 
+        }
+      };
     
     return (
             <>
@@ -255,6 +319,7 @@ function AccountManagement() {
                   </Stack>  
                   
                   <div style={{
+                    height: 400, width: 'auto',
                         display: 'flex',
                         padding: '20px',
                         flexDirection: 'column',
@@ -270,6 +335,7 @@ function AccountManagement() {
                         position: 'relative',
                         left:'-20px',
                        }}
+                       onRowClick={handleRowClick}
                           columnVisibilityModel={{
                             id: false,
                           }}
@@ -278,7 +344,7 @@ function AccountManagement() {
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
                           getRowId={(row: any) =>  uuidv4()}
-                          slots={{ toolbar: GridToolbar }}
+                          slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
                           checkboxSelection
                         />
                   </div>
@@ -316,7 +382,7 @@ function AccountManagement() {
                       position: 'relative',
                       left:'-30px'
               }}
-              // onClick={moveRequest}
+              onClick={(e) => exportToExcel('계정')}
               >
                   <Typography sx={{
                           color: 'var(--Main-Blue-Blue-500, #067DFD)',
