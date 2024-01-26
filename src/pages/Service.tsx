@@ -13,12 +13,21 @@ import down from 'src/assets/images/icons/down.png'
 import ServiceDetail from './ServiceDetail'
 import * as FileSaver from 'file-saver';
 import * as _ from "lodash";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MuiPagination from '@mui/material/Pagination';
 import CustomPagination from './CustomPagination'
 import ServiceEmpty from './ServiceEmpty'
+import { getService } from '../api/assetapi';
 
 function Service() {
     
+  const queryClient = useQueryClient();
+
+  const { data, error, isSuccess } = useQuery({
+    queryKey: ["Service"],
+    queryFn: getService
+  });
+  
     const [detail, setDetail] = React.useState(false);
 
     const condition = [
@@ -27,6 +36,8 @@ function Service() {
             label: '조건1',
           },
     ]
+
+    console.log(data);
 
     const excelcols = 
               ["요청번호","회사","서비스명", "AS담당자", "중요도", "유형", "서비스일자",  "요청자", "상태"];
@@ -43,46 +54,58 @@ function Service() {
         status:"상태"
     };
 
-    const data =
+    const data1 =
         // id:uuidv4(),
         [
-          {
-          requestno:"#2342",
-          company:"노트북",
-          servicename:"모델명",
-          asmanager:"레노보",
-          priority:"중",
-          servicetype:"error",
-          servicedate:"20000101",
-          requester:"tester",
-          status:"요청"
-        },
-        {
-          requestno:"#2343",
-          company:"노트북1",
-          servicename:"모델명1",
-          asmanager:"레노보1",
-          priority:"하",
-          servicetype:"normal",
-          servicedate:"20000102",
-          requester:"rrr",
-          status:"완료"
-        }
+        //   {
+        //   requestno:"#2342",
+        //   company:"노트북",
+        //   servicename:"모델명",
+        //   asmanager:"레노보",
+        //   priority:"중",
+        //   servicetype:"error",
+        //   servicedate:"20000101",
+        //   requester:"tester",
+        //   status:"요청"
+        // },
+        // {
+        //   requestno:"#2343",
+        //   company:"노트북1",
+        //   servicename:"모델명1",
+        //   asmanager:"레노보1",
+        //   priority:"하",
+        //   servicetype:"normal",
+        //   servicedate:"20000102",
+        //   requester:"rrr",
+        //   status:"완료"
+        // }
       ];
 
+      let obj1 = {};
+      for (let i=0;i<data?.length;i++) {
+        obj1.requestno = data[i].serviceNo;
+        obj1.servicename = data[i].serviceName;
+        obj1.asmanager = data[i].asUserId;
+        obj1.priority = ''
+        obj1.servicetype = data[i].serviceTypeCode;
+        obj1.servicedate = data[i].serviceStartData;
+        obj1.requester = data[i].reqUserId;
+        obj1.status = ''
+        data1.push(obj1);
+      }
 
       let obj={}
       let exceldata1 = []
-      for(let i=0;i<data.length;i++){
+      for(let i=0;i<data1.length;i++){
         let j=0;
-        _.map(data[i], function(val, k) {
+        _.map(data1[i], function(val, k) {
             obj[excelcols[j]]=val;
             ++j;
         })
         exceldata1.push(obj)
         obj={}
       }
-      console.log(exceldata1);
+      // console.log(exceldata1);
         
       const exceldata = [
         {
@@ -346,17 +369,18 @@ function Service() {
                             id: false,
                           }}
                           onRowClick={handleRowClick}
-                          rows={data}
+                          rows={data1}
                           columns={columns}
                           disableRowSelectionOnClick={true}
-                          // getRowId={(row: any) =>  uuidv4()}
-                          getRowId={(row: any) =>  row.requestno}
+                          getRowId={(row: any) =>  uuidv4()}
+                          // getRowId={(row: any) =>  row.requestno}
+                          // slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: ServiceEmpty }}
                           slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: ServiceEmpty }}
                           checkboxSelection
-                          pagination
-                          initialState={{
-                            pagination: { paginationModel: { pageSize: 10 } },
-                          }}
+                          //pagination
+                          // initialState={{
+                          //   pagination: { paginationModel: { pageSize: 10 } },
+                          // }}
                         />
                     </div>
                
@@ -414,28 +438,3 @@ function Service() {
 }
 
 export default Service;
-
-// function CustomPagination(props: any) {
-//   return <GridPagination ActionsComponent={Pagination} {...props} />;
-// }
-
-// function Pagination({
-//   page,
-//   onPageChange,
-//   className,
-// }: Pick<TablePaginationProps, 'page' | 'onPageChange' | 'className'>) {
-//   const apiRef = useGridApiContext();
-//   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-//   return (
-//     <MuiPagination
-//       color="primary"
-//       className={className}
-//       count={pageCount}
-//       page={page + 1}
-//       onChange={(event, newPage) => {
-//         onPageChange(event as any, newPage - 1);
-//       }}
-//     />
-//   );
-// }

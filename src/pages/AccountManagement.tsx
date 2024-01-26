@@ -344,7 +344,8 @@ function AccountManagement() {
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
                           getRowId={(row: any) =>  uuidv4()}
-                          slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
+                          // slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
+                          slots={{ toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
                           checkboxSelection
                         />
                   </div>

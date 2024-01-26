@@ -11,7 +11,7 @@ type IconProps = {
     iconProp:any
   }
 function ServiceStatus({ iconProp }: any) {
-  console.log(iconProp);
+//   console.log(iconProp);
   const servicetype = iconProp.servicetype;
   return(
     <>
