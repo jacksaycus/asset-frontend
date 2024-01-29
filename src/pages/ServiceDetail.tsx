@@ -11,7 +11,8 @@ import {
     TextField,
     Divider,
     Button,
-    Rating
+    Rating,
+    InputAdornment
 } from '@mui/material';
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
 import CustomToolbar from './CustomToolbar';
@@ -21,13 +22,22 @@ import ServiceRequestForm from './ServiceRequestForm';
 import ServiceStepButton from './ServiceStepButton';
 import group from 'src/assets/images/icons/group.png';
 // import { useForm, FormProvider, useFormContext } from "react-hook-form"
+import { useQuery, useMutation, useQueryClient, QueryClient } from '@tanstack/react-query';
 import ServiceStatus from './ServiceStatus'
 import {Service} from 'src/types'
 import AssetStatus from './AssetStatus'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
+import { getServiceDetail } from '../api/assetapi';
+// import Serarch from 'src/assets/images/icons/search.png'
+import SearchIcon from '@mui/icons-material/Search';
 
-function ServiceDetail() {
+function ServiceDetail({serviceNo}) {
+
+    // const { detaildata, error, isSuccess } = useQuery({
+    //     queryKey: ["ServiceDetail"],
+    //      queryFn: getServiceDetail(serviceNo)
+    //   });
     
     const params = {servicetype:'error'};
     const rating = 1;
@@ -39,6 +49,34 @@ function ServiceDetail() {
         { title: '평가', link: '' },
     ];
 
+
+    // const detailData = {
+    //     serviceNo:
+    //     serviceName:
+    //     serviceContent:
+    //     serviceTypeCode:
+    //     serviceTypeName:
+    //     serviceDetailTypeCode:
+    //     serviceDetailTypeName:
+    //     serviceJobStatusCode:
+    //     serviceJobStatusName:
+    //     serviceStartDate:
+    //     serviceEndData:
+    //     serviceEstTime:
+    //     요청일
+    //     계약명
+    //     평점
+    //     serviceHopeDate:
+    //     reqUserId:
+    //     reqUserName:
+    //        assetList:{
+    //         자산분류 assetCategoryValue
+    //         모델명  assetName
+    //         제조사 assetManComp
+    //         시리얼넘버  assetSn
+    //         상태     assetStatusValue
+    //        }
+    // }
 
     const data = [{
         id:uuidv4(),
@@ -596,6 +634,77 @@ function ServiceDetail() {
 
 
             <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                alignSelf: 'stretch'
+            }}
+            >
+                <span
+                    style={{
+                        color: 'var(--Gray-Gray-900, #222)',
+                        fontFamily: 'Pretendard',
+                        fontSize: '20px',
+                        fontStyle: 'normal',
+                        fontWeight: '600',
+                        lineHeight: '28px'
+                    }}
+                >
+                    자산 리스트
+                </span>
+                <TextField
+                    fullWidth
+                    variant='standard'
+                    placeholder='검색어를 입력하세요'
+                    InputProps={{disableUnderline:true,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                        )
+                    }}
+                    style={{
+                        marginLeft:'780px',
+                        display: 'flex',
+                        width: '300px',
+                        height: '36px',
+                        padding: '4px 12px',
+                        alignItems: 'center',
+                        gap: '8px',
+                        borderRadius: '100px',
+                        border: '1px solid var(--Gray-Gray-500, #9E9E9E)',
+                        background: 'var(--White, #FFF)'
+                    }}
+                />
+                <Button
+                    sx={{
+                        display: 'flex',
+                        height: '36px',
+                        padding: '4px 20px',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '100px',
+                        border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
+                        background: 'var(--White, #FFF)',
+                        boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
+                        }}
+                >
+                    <span
+                        style={{
+                            color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                            fontFamily: 'Pretendard',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                            fontWeight: '600',
+                            lineHeight: '20px',
+                        }}
+                    >
+                        검색하기
+                    </span>
+                </Button>
+            </div>
+            <div style={{
                         display: 'flex',
                         padding: '20px',
                         flexDirection: 'column',
@@ -652,6 +761,68 @@ function ServiceDetail() {
                </Grid>
             </Grid>
             
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: '12px',
+                    alignSelf: 'stretch',
+                }}
+            >
+                <Button
+                    sx={{
+                        display: 'flex',
+                        padding: '8px 20px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '4px',
+                        borderRadius: '1000px',
+                        border: '1px solid var(--Main-Red-Red-500, #EF2B2A)',
+                        background: 'var(--White, #FFF)',
+                    }}
+                >
+                    <span
+                       style={{
+                        color: 'var(--Main-Red-Red-500, #EF2B2A)',
+                        textAlign: 'center',
+                        fontFamily: 'Pretendard',
+                        fontSize: '14px',
+                        fontStyle: 'normal',
+                        fontWeight: '600',
+                        lineHeight: '20px',
+                       }}
+                    >
+                        수정하기
+                    </span>
+                </Button>
+                <Button
+                   sx={{
+                    display: 'flex',
+                    padding: '8px 16px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '4px',
+                    borderRadius: '4px',
+                    boxShadow: '0px 1px 1px 0px rgba(0, 0, 0, 0.25)',
+                   }}
+                >
+                    <span
+                        style={{
+                            color: 'var(--Gray-Gray-500, #9E9E9E)',
+                            textAlign: 'center',
+                            fontFamily: 'Pretendard',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                            fontWeight: '600',
+                            lineHeight: '20px',
+                        }}
+                    >
+                        삭제하기
+                    </span>
+                </Button>
+
+            </div>
 
             </div>
 

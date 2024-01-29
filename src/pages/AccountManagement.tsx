@@ -12,6 +12,8 @@ import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlin
 import * as FileSaver from 'file-saver';
 import * as _ from "lodash";
 import { v4 as uuidv4 } from 'uuid'
+import { useQuery, useMutation, useQueryClient, QueryClient, dataTagSymbol } from '@tanstack/react-query';
+import { getAccount } from '../api/assetapi';
 import {Account} from './src/types'
 import AccountAuthority from './AccountAuthority'
 import AccountRating from './AccountRating'
@@ -25,17 +27,67 @@ function AccountManagement() {
     const [detail, setDetail] = React.useState(false);
     const [open, setOpen] = React.useState(false);
 
+    const [searchColumn, setSearchColumn] = React.useState('')
+    const [searchValue, setSearchValue] = React.useState('')
+    
+   const handleChangeSearchColumn = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchColumn(event.target.value);
+   };
+   const handleChangeSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(event.target.value);
+   };
+   
+
     const moveRequest = (e) => {
         e.preventDefault();
         navigate('/dashboard/accountcreate', { replace: true });
     };
 
     const condition = [
-        {
-            value: 'cond1',
-            label: '조건1',
-          },
+      {
+        value: 'userId',
+        label: '아이디',
+      },
+      {
+        value: 'userName',
+        label: '이름',
+      },
+      {
+        value: 'userTel',
+        label: '연락처',
+      },
+      {
+        value: 'userMobile',
+        label: '개인연락처',
+      },
+      {
+        value: 'userEmail',
+        label: '이메일',
+      }
     ]
+
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          
+        },
+      },
+    })
+    let accountData = []
+    const doinquiery = async () => {
+    
+    // await queryClient.fetchQuery({ queryKey: ['Service'], queryFn: getService(searchValue) })
+    const { data, error, isSuccess } = await queryClient.fetchQuery({ queryKey: ['Account',{searchColumn:searchColumn,searchValue:searchValue}], queryFn: getAccount })
+    accountData = data;
+   }
+
+   const condition1 = [
+    {
+      value: 'userId',
+      label: '아이디',
+    }
+]
+
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -45,11 +97,12 @@ function AccountManagement() {
   
     
     const excelcols = 
-              ["회사및지점명","아이디","권한", "이름", "연락처", "핸드폰연락처", "이메일",  "평점"];
+              // ["회사및지점명","아이디","권한", "이름", "연락처", "핸드폰연락처", "이메일",  "평점"];
+              ["아이디","이름", "연락처", "핸드폰연락처", "이메일",  "평점"];
     const maptocol = {
-                company:'회사및지점명',
+                // company:'회사및지점명',
                 userid:'아이디',
-                authority:'권한',
+                // authority:'권한',
                 name:'이름',
                 tel:'연락처',
                 phone:'핸드폰연락처', 
@@ -57,16 +110,28 @@ function AccountManagement() {
                 rating:"평점"
     };          
              
-    const data = [{
-                 company:'신한은행',
-                 userid:'길길동',
-                 authority:'supermanager',
-                 name:'레노보',
-                 tel:'0134213',
-                 phone:'00000000', 
-                 email:'kone@kon.com',
-                 rating:0
-                }];
+    // const data = [{
+    //             //  company:'신한은행',
+    //              userid:'길길동',
+    //             //  authority:'supermanager',
+    //              name:'레노보',
+    //              tel:'0134213',
+    //              phone:'00000000', 
+    //              email:'kone@kon.com',
+    //              rating:0
+    //             }];
+
+    let data= []
+    let obj1 = {};
+      for (let i=0;i<accountData?.length;i++) {
+           obj1.userid = accountData[i].userId;
+           obj1.name = accountData[i].userName;
+           obj1.tel = accountData[i].userTel;
+           obj1.phone = accountData[i].userPhone;
+           obj1.email = accountData[i].userEmail;
+           obj1.rating = accountData[i].serviceStarAvg;
+           data.push(obj1);
+      }
 
     let obj={}
     let exceldata1 = []
@@ -84,19 +149,19 @@ function AccountManagement() {
 
     const columns: GridColDef[] = [
       {field: 'id', headerName: '', width: 0 },
-      {field: 'company', headerName: '회사및지점명', width: 150},
+      // {field: 'company', headerName: '회사및지점명', width: 150},
       {field: 'userid', headerName: '아이디', width: 80},
-      {
-        field: 'authority',
-        align:'left',
-        headerName: '권한',
-        width: 120,
-        sortable: false,
-        filterable: false,
-        disableColumnMenu: true,
-        renderCell: (params: GridCellParams) =>
-         <AccountAuthority iconProp={params.row} />
-       },
+      // {
+      //   field: 'authority',
+      //   align:'left',
+      //   headerName: '권한',
+      //   width: 120,
+      //   sortable: false,
+      //   filterable: false,
+      //   disableColumnMenu: true,
+      //   renderCell: (params: GridCellParams) =>
+      //    <AccountAuthority iconProp={params.row} />
+      //  },
       {field: 'name', headerName: '이름.', width: 100},
       {field: 'tel', headerName: '연락처', width: 100},
       {field: 'phone', headerName: '핸드폰연락처', width: 100},
@@ -140,7 +205,7 @@ function AccountManagement() {
             <>
             <div style={{
                     display: 'flex',
-                    width: 'auto',
+                    width: '1140px',
                     // minWidth: '1180px',
                     padding: '22px',
                     marginRight:'auto',
@@ -155,14 +220,15 @@ function AccountManagement() {
             }}
             >
               
-            <Stack direction="row" spacing={2} style={{marginLeft:'20px', width:'auto',
+            <Stack direction="row" spacing={2} style={{marginLeft:'20px', width:'1000px',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '20px',
             alignSelf: 'stretch',
           }}>
               <TextField
-                name="condition"
+                name="searchColumn"
+                value={searchColumn}
                 variant="standard"
                 InputProps={{disableUnderline:true}}
                 select
@@ -177,6 +243,7 @@ function AccountManagement() {
                     borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
                   }
                 }}
+                onChange={handleChangeSearchColumn}
                 >
                 {condition.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -186,12 +253,14 @@ function AccountManagement() {
               </TextField>
               <TextField
                     fullWidth
-                    name="condition1"
+                    name="searchValue"
+                    value={searchValue}
                     variant="standard"
                     InputProps={{disableUnderline:true}}
+                    onChange={handleChangeSearchValue}
                     sx={{
                         '.MuiInputBase-input': {
-                            width: '650px',
+                            width: '150px',
                             height: '18px',
                             display: 'flex',
                             padding: '8px 12px',
@@ -207,7 +276,7 @@ function AccountManagement() {
                 <div
                    style={{
                     display: 'flex',
-                    width : '14%',
+                    width:'auto',
                     height: '36px',
                     padding: '8px 16px',
                     flexDirection: 'column',
@@ -220,8 +289,9 @@ function AccountManagement() {
                 <Button 
                   fullWidth
                 sx = {{
-                    
+                    width:'80px'
                 }}
+                onClick={doinquiery}
                 >
                   <Typography
                         sx = {{
@@ -344,8 +414,8 @@ function AccountManagement() {
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
                           getRowId={(row: any) =>  uuidv4()}
-                          // slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
-                          slots={{ toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
+                          slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
+                          // slots={{ toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
                           checkboxSelection
                         />
                   </div>

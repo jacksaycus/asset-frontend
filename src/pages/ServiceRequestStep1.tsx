@@ -532,8 +532,8 @@ function ServiceRequestStep1({ values, file, handleChange, formState, handleFile
                         background: 'var(--Gray-Gray-50, #FAFAFA)'
                     }}
                 >
-                    <input id="file" type="file" onChange={handleFileChange} hidden />
-                    <label htmlFor='file' style={{cursor: 'pointer'}}>
+                    <input id="files" name="files" type="file" onChange={handleFileChange} multiple hidden />
+                    <label htmlFor='files' style={{cursor: 'pointer'}}>
                     <img src={group} width="40px" height="40px" />
                     </label>
                     {file && file.name}

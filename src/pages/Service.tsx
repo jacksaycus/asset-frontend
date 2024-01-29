@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as React from 'react'
 import { Container, Stack, Typography, Grid, Button , TextField, MenuItem, Popover, IconButton, Link } from '@mui/material'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
@@ -13,7 +13,7 @@ import down from 'src/assets/images/icons/down.png'
 import ServiceDetail from './ServiceDetail'
 import * as FileSaver from 'file-saver';
 import * as _ from "lodash";
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, QueryClient } from '@tanstack/react-query';
 import MuiPagination from '@mui/material/Pagination';
 import CustomPagination from './CustomPagination'
 import ServiceEmpty from './ServiceEmpty'
@@ -21,23 +21,70 @@ import { getService } from '../api/assetapi';
 
 function Service() {
     
-  const queryClient = useQueryClient();
-
-  const { data, error, isSuccess } = useQuery({
-    queryKey: ["Service"],
-    queryFn: getService
-  });
+  const [searchColumn, setSearchColumn] = React.useState('')
+  const [searchValue, setSearchValue] = React.useState('')
+    
+   const handleChangeSearchColumn = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchColumn(event.target.value);
+   };
+   const handleChangeSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(event.target.value);
+   };
   
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        
+      },
+    },
+  })
+  let serviceData = []
+  const doinquiery = async () => {
+  alert(searchValue)
+  
+  // await queryClient.fetchQuery({ queryKey: ['Service'], queryFn: getService(searchValue) })
+  const { data, error, isSuccess } = await queryClient.fetchQuery({ queryKey: ['Service',{searchColumn:searchColumn,searchValue:searchValue}], queryFn: getService })
+  serviceData = data;
+ }
+
     const [detail, setDetail] = React.useState(false);
 
     const condition = [
-        {
+          {
+            value: 'compName',
+            label: '회사및지점',
+          },
+          {
+            value: 'serviceJobStatusValue',
+            label: '상태',
+          },
+          {
+            value: 'serviceLevelValue',
+            label: '중요도',
+          },
+          {
+            value: 'serviceName',
+            label: '서비스명',
+          },
+          {
+            value: 'asUserName',
+            label: 'AS담당자',
+          },
+          {
+            value: 'reqUserName',
+            label: '요청자',
+          },
+          {
+            value: 'serviceStartDate',
+            label: '요청일',
+          },
+          {
             value: 'cond1',
-            label: '조건1',
+            label: '접수일',
           },
     ]
 
-    console.log(data);
+    console.log(serviceData);
 
     const excelcols = 
               ["요청번호","회사","서비스명", "AS담당자", "중요도", "유형", "서비스일자",  "요청자", "상태"];
@@ -57,17 +104,17 @@ function Service() {
     const data1 =
         // id:uuidv4(),
         [
-        //   {
-        //   requestno:"#2342",
-        //   company:"노트북",
-        //   servicename:"모델명",
-        //   asmanager:"레노보",
-        //   priority:"중",
-        //   servicetype:"error",
-        //   servicedate:"20000101",
-        //   requester:"tester",
-        //   status:"요청"
-        // },
+          {
+          requestno:"#2342",
+          company:"노트북",
+          servicename:"모델명",
+          asmanager:"레노보",
+          priority:"중",
+          servicetype:"error",
+          servicedate:"20000101",
+          requester:"tester",
+          status:"요청"
+        },
         // {
         //   requestno:"#2343",
         //   company:"노트북1",
@@ -82,15 +129,15 @@ function Service() {
       ];
 
       let obj1 = {};
-      for (let i=0;i<data?.length;i++) {
-        obj1.requestno = data[i].serviceNo;
-        obj1.servicename = data[i].serviceName;
-        obj1.asmanager = data[i].asUserId;
-        obj1.priority = ''
-        obj1.servicetype = data[i].serviceTypeCode;
-        obj1.servicedate = data[i].serviceStartData;
-        obj1.requester = data[i].reqUserId;
-        obj1.status = ''
+      for (let i=0;i<serviceData?.length;i++) {
+        obj1.requestno = serviceData[i].serviceNo;
+        obj1.servicename = serviceData[i].serviceName;
+        obj1.asmanager = serviceData[i].asUserName;
+        obj1.priority = serviceData[i].serviceLevelValue;
+        obj1.servicetype = serviceData[i].serviceTypeValue;
+        obj1.servicedate = serviceData[i].serviceStartData;
+        obj1.requester = serviceData[i].reqUserName;
+        obj1.status = serviceData[i].serviceStatusValue;
         data1.push(obj1);
       }
 
@@ -205,7 +252,7 @@ function Service() {
                  >
 
              <TextField
-                name="condition"
+                name="searchColumn"
                 variant="standard"
                 InputProps={{disableUnderline:true}}
                 select
@@ -220,6 +267,8 @@ function Service() {
                     borderBottom: '1px solid var(--Gray-Gray-700, #616161)'
                   }
                 }}
+                value={searchColumn}
+                onChange={handleChangeSearchColumn}
                 >
                 {condition.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -229,7 +278,7 @@ function Service() {
               </TextField>
               <TextField
                     fullWidth
-                    name="condition1"
+                    name="searchValue"
                     variant="standard"
                     InputProps={{disableUnderline:true}}
                     sx={{
@@ -244,6 +293,8 @@ function Service() {
                             background: 'var(--White, #FFF)'
                         }
                     }}
+                    onChange={handleChangeSearchValue}
+                    value={searchValue}
                 >
                 </TextField>
                 <Button
@@ -258,6 +309,7 @@ function Service() {
                         borderRadius: '4px',
                         background: 'var(--Main-Blue-Blue-500, #067DFD)'
                     }}
+                    onClick={doinquiery}
                 >
                    <Typography
                         sx={{
@@ -352,7 +404,7 @@ function Service() {
                    
 
                      <div style={{
-                      height: 400, width: 'auto',
+                      height: 550, width: 'auto',
                         display: 'flex',
                         padding: '20px',
                         flexDirection: 'column',
