@@ -49,12 +49,12 @@ function ServiceRequest() {
         requester:'',
     });
     
-    const [file, setFile] = React.useState<File | null>(null);
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            console.log(e.target.files[0]);
-          setFile(e.target.files[0]);
-        }
+    // const [file, setFile] = React.useState<File | null>(null);
+    const [fileList, setFileList] = React.useState([])
+    const handleFileChange = (list) => {
+        console.log(list)
+        setFileList(list)
+        console.log(fileList)
       };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +90,8 @@ function ServiceRequest() {
       setStep(
              value => value + 1
             )
-            console.log('step', step);
+            console.log('step', step)
+            // console.log(fileList)
             
            
   };
@@ -246,7 +247,7 @@ function ServiceRequest() {
                         </Typography>
 
                         <div style={{marginBottom:'32px'}}></div>
-                        <ServiceRequestForm step={step} values={values} file={file} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} />
+                        <ServiceRequestForm step={step} values={values} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} />
 
                     </div>
                 </div>

@@ -260,7 +260,7 @@ function Service() {
                   ".MuiInputBase-input": {
                     display: 'flex',
                     width: '200px',
-                    height: '36px',
+                    height: '21px',
                     padding: '8px 4px',
                     alignItems: 'center',
                     gap: '4px',

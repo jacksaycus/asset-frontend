@@ -507,7 +507,7 @@ function ServiceDetail({serviceNo}) {
                             20200202
                         </Typography>
                </Grid>
-               <Grid item xs={4}>
+               {/* <Grid item xs={4}>
                    <Typography
                         sx={{
                             color: 'var(--Gray-Gray-700, #616161)',
@@ -532,7 +532,7 @@ function ServiceDetail({serviceNo}) {
                         >
                             김길동
                         </Typography>
-               </Grid>
+               </Grid> */}
             </Grid>
             <div style={{ 
                          width: '1200px',
@@ -632,6 +632,25 @@ function ServiceDetail({serviceNo}) {
                </Grid>
             </Grid>
 
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+               <Grid item xs={12}>
+               <Typography
+                        sx={{
+                            color: 'var(--Gray-Gray-700, #616161)',
+                            fontFamily: 'Pretendard',
+                            fontSize: '12px',
+                            fontStyle: 'normal',
+                            fontWeight: '600',
+                            lineHeight: '16px'
+                        }}
+                    >
+                        첨부파일
+                    </Typography>
+               </Grid>
+               <Grid item xs={12}>
+               
+               </Grid>
+            </Grid>
 
             <div style={{
                 display: 'flex',

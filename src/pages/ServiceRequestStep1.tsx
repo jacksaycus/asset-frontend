@@ -14,16 +14,47 @@ import {
 import group from 'src/assets/images/icons/group.png';
 import {Service} from 'src/types'
 import './page.css'
+import { FileUploader } from "react-drag-drop-files";
+import * as _ from "lodash";
 
 type RequestFormProps = {
     values: Service;
-    file: any;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     formState: Service;
-    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFileChange: (e:any) => void;
 }
-function ServiceRequestStep1({ values, file, handleChange, formState, handleFileChange }: RequestFormProps) {
+const temp = []
+function ServiceRequestStep1({ values, handleChange, formState, handleFileChange }: RequestFormProps) {
       
+    const [file, setFile] = React.useState<Array<File> | null>([]);
+    const [tempList, setTempList] = React.useState([]);
+    const [noop, setNoop] = React.useState(null);
+
+    const handleChange1 =  (file1:File) => {
+        for(let i=0;i<file1.length;i++){
+            console.log(file1[i]);
+            temp.push(file1[i])
+        }
+        console.log(temp)
+        setNoop(listItems(temp))
+        setTempList(temp)
+        handleFileChange(temp)
+        console.log('changes',tempList);
+    }
+
+    const listItems = (list) => {
+        let tmp=[];
+        let i=0;
+          _.forEach(list, function(value) {
+        tmp.push(<li key={i} style={{fontSize:'80%'}}>{value.name}</li>)
+        ++i;
+      })
+      console.log(tmp);
+      return tmp;
+    }
+
+
+
     return (
         <React.Fragment>
             <form  autoComplete="off" noValidate >
@@ -515,7 +546,12 @@ function ServiceRequestStep1({ values, file, handleChange, formState, handleFile
                 >
                     첨부파일
                 </Typography>
-
+                <FileUploader
+                    handleChange={handleChange1}
+                    name="file"
+                    multiple={true}
+                    // types={fileTypes}
+                > 
                 <div
                     style={{
                         marginLeft: '50px',
@@ -532,12 +568,14 @@ function ServiceRequestStep1({ values, file, handleChange, formState, handleFile
                         background: 'var(--Gray-Gray-50, #FAFAFA)'
                     }}
                 >
-                    <input id="files" name="files" type="file" onChange={handleFileChange} multiple hidden />
+                    {/* <input id="files" name="files" type="file" onChange={handleFileChange} multiple hidden /> */}
                     <label htmlFor='files' style={{cursor: 'pointer'}}>
                     <img src={group} width="40px" height="40px" />
                     </label>
-                    {file && file.name}
+                    {/* {file && file.name} */}
+                    {listItems(tempList)}
                 </div>
+                </ FileUploader>  
             </div>
             </form>
         </React.Fragment>

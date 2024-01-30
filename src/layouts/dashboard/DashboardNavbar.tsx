@@ -3,13 +3,15 @@ import React from 'react';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton,Typography } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar, IconButton,Typography ,SwipeableDrawer } from '@mui/material';
 import { MHidden } from '@/components/@material-extend';
 import PageContext from 'src/components/PageContext';
 // import Searchbar from './Searchbar';
 // import AccountPopover from './AccountPopover';
 // import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
+import Fingerprint from '@mui/icons-material/Fingerprint';
+import DashboardSidebar from './DashboardSidebar';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -43,6 +45,22 @@ interface Props {
 const DashboardNavbar = (props: Props): JSX.Element => {
     const { onOpenSidebar } = props;
     const { activePage } = React.useContext(PageContext);
+
+    const [anchor,setAnchor] = React.useState(false)
+    const toggleDrawer =
+    (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
+      setAnchor(open)
+   }
+
     return (
         <RootStyle>
             <ToolbarStyle>
@@ -71,6 +89,21 @@ const DashboardNavbar = (props: Props): JSX.Element => {
 
                 <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
                     {/* <LanguagePopover /> */}
+                    <IconButton aria-label="fingerprint" color="success"
+                      onClick={toggleDrawer(true)}
+                    >
+                        <Fingerprint />
+                    </IconButton>
+
+                    <SwipeableDrawer
+                        anchor='left'
+                        open={anchor}
+                        onClose={toggleDrawer(false)}
+                        onOpen={toggleDrawer(true)}
+                    >
+                        <DashboardSidebar/>
+                    </SwipeableDrawer>
+
                     <NotificationsPopover />
                     {/* <AccountPopover /> */}
                 </Stack>
