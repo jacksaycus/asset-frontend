@@ -22,8 +22,35 @@ export const getAccount = async (param): Promise<any[]> => {
   console.log(param.queryKey[1].searchColumn, param.queryKey[1].searchValue)
   const searchColumn = param.queryKey[1].searchColumn;
   const searchValue = param.queryKey[1].searchValue 
-  let qstr = `${import.meta.env.VITE_API_URL}/api/kitms-user/all`
-  if(searchColumn!=='' && searchValue!=='') qstr = `${import.meta.env.VITE_API_URL}/api/kitms-user/all?serviceColumn=${searchColumn}&?serviceValue=${searchValue}`
+  let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/all`
+  if(searchColumn!=='' && searchValue!=='') qstr = `${import.meta.env.VITE_API_URL}/kitms-user/all?serviceColumn=${searchColumn}&?serviceValue=${searchValue}`
   const response = await axios.get(qstr);
+  // console.log(response.data)
+  return response.data;
+}
+
+export const getAccountDetail = async (param): Promise<any[]> => {
+  console.log(param.queryKey[1]);
+  console.log(param.queryKey[1].searchValue)
+    const searchValue = param.queryKey[1].searchValue 
+  // let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/${searchValue}`
+  let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/11`
+  const response = await axios.get(qstr);
+  // console.log(response.data)
+  return response.data;
+}
+
+export const addAccount = async (account: any): Promise<any[]> => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/kitms-user`, account, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  return response.data;
+}
+
+export const getBranch = async (): Promise<any[]> => {
+  let qstr = `${import.meta.env.VITE_API_URL}/common/getKitmsCommonBranchList`
+  const response = await axios.get(qstr);
+  // console.log(response.data)
   return response.data;
 }

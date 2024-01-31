@@ -18,7 +18,7 @@ export type Account = {
   company: string;
   userid: string;
   authority: string;
-  name : string;
+  username : string;
   tel : string;
   phone: string;
   email : string;
@@ -27,7 +27,7 @@ export type Account = {
   repassword: string;
   priority:string;
   bigo:string;
-  branch:string;
+  branch:[];
 }
 
 export type Profile = {

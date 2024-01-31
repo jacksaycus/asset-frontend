@@ -13,7 +13,7 @@ type IconProps = {
     iconProp:any
   }
 function AccountRating({ iconProp }: IconProps) {
-  console.log(iconProp);
+  // console.log(iconProp);
   const rating = iconProp.rating;
   return(
     <>

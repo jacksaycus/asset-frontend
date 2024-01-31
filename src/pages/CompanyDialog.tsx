@@ -2,57 +2,60 @@ import * as React from 'react';
 import { Container, MenuItem,Stack, Typography, TextField, Grid , Paper, Box, Button, Dialog,DialogTitle,DialogContent,DialogActions } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getBranch } from '../api/assetapi';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
 import { Icon , addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
 import InitImage from 'src/assets/images/restart_alt.png';
+import * as _ from "lodash";
 
-
-const branch = [
-    {
-        value: '',
-        label: '',
-      },
-    {
-      value: 'seoul',
-      label: '서울',
-    },
-    {
-        value: 'inchon',
-        label: '인천',
-      },
-      {
-        value: 'gyoungkey',
-        label: '경기',
-      },
-      {
-        value: 'dagoo',
-        label: '대구',
-      },
-]
-const company = [
-    {
-        value: '',
-        label: '',
-      },
-    {
-      value: 'shinhan',
-      label: '신한',
-    },
-    {
-        value: 'busan',
-        label: '부산',
-      },
-      {
-        value: 'gyungnam',
-        label: '경남',
-      },
-      {
-        value: 'jungbook',
-        label: '전북',
-      },
-]
+const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
+// const branch = [
+//     {
+//         value: '',
+//         label: '',
+//       },
+//     {
+//       value: 'seoul',
+//       label: '서울',
+//     },
+//     {
+//         value: 'inchon',
+//         label: '인천',
+//       },
+//       {
+//         value: 'gyoungkey',
+//         label: '경기',
+//       },
+//       {
+//         value: 'dagoo',
+//         label: '대구',
+//       },
+// ]
+// const company = [
+//     {
+//         value: '',
+//         label: '',
+//       },
+//     {
+//       value: 'shinhan',
+//       label: '신한',
+//     },
+//     {
+//         value: 'busan',
+//         label: '부산',
+//       },
+//       {
+//         value: 'gyungnam',
+//         label: '경남',
+//       },
+//       {
+//         value: 'jungbook',
+//         label: '전북',
+//       },
+// ]
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
@@ -62,9 +65,56 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
   }));
 
+  const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
 function CompanyDialog(props) {
-    const {mopen} = props;
-    const [open, setOpen] = React.useState(mopen);
+
+  const queryClient = useQueryClient();
+
+  const { data, error, isSuccess } = useQuery({
+    queryKey: ['Branch'],
+    queryFn: getBranch
+  });
+
+  let company=[]
+  let branch=[]
+ for (let i=0;i<data?.length;i++){
+    let obj = {}
+    obj.value=data[i].compNo
+    obj.label=data[i].compName
+    company.push(obj)
+  }
+  
+  // console.log(company)
+  company = _.uniqBy(company, 'label');
+  console.log(company)
+  const setBranch = (companyno) =>{
+    let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
+    console.log('tempbranch',tempbranch)
+    for (let i=0;i<tempbranch?.length;i++){
+      let obj = {}
+      obj.value=tempbranch[i].branchNo
+      obj.label=tempbranch[i].branchName
+      branch.push(obj)
+    }
+    console.log('branch',branch)
+    }
+  if(company.length>0)
+  setBranch(company[0].value)
+
+  
+    // const {mopen} = props;
+    const [open, setOpen] = React.useState(false);
     
     const [values, setValues] = React.useState({
         company: '',
@@ -73,7 +123,9 @@ function CompanyDialog(props) {
 
 
       const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-
+        if(event.target.name==='company'){
+          setBranch(event.target.value)
+        }
         setValues({...values, [event.target.name]: event.target.value});
 
     }
@@ -95,11 +147,45 @@ function CompanyDialog(props) {
           });
         console.log(values);
     }
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    }
+
     return (
       <React.Fragment>
-        {/* <Button variant="outlined" onClick={handleClickOpen}>
-          Open dialog
-        </Button> */}
+        
+        <Button
+              sx={{
+                    display: 'flex',
+                    padding: '8px 16px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '16px',
+                    borderRadius: '100px',
+                    border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
+                    background: 'var(--White, #FFF)'
+                 }}
+                  onClick={handleClickOpen}
+          >
+            <Typography
+              sx={{
+                  color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                  textAlign: 'center',
+                  fontFamily: 'Pretendard',
+                  fontSize: '14px',
+                  fontStyle: 'normal',
+                  fontWeight: '600',
+                  lineHeight: '20px'
+                  }}
+              >
+                찾아보기
+                </Typography>
+                  {getIcon('search')}
+                </Button>
+
+
+
         <BootstrapDialog
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"
@@ -254,7 +340,9 @@ function CompanyDialog(props) {
                     paddingLeft:'20px'
                   }
                 }}
+                multiple
                 onChange={handleChange}
+                
               >
                 {branch.map((option) => (
                     <MenuItem key={option.value} value={option.value}>

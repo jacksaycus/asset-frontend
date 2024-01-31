@@ -7,6 +7,9 @@ import MuiPagination from '@mui/material/Pagination';
 import { Icon , addIcon } from '@iconify/react';
 import Rating from '@mui/material/Rating';
 import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment'
+import { getAccountDetail } from '../api/assetapi';
+import { useQuery, useMutation, useQueryClient, QueryClient, dataTagSymbol } from '@tanstack/react-query';
 import CustomToolbar from './CustomToolbar'
 import CustomPagination from './CustomPagination'
  import {
@@ -40,6 +43,16 @@ const columns: GridColDef[] = [
    },      
 ];
 
+const columns1: GridColDef[] = [
+   {field: 'id', headerName: '', width: 0 },
+   {field: 'compName', headerName: '회사', width: 150},
+   {field: 'branchNo', headerName: '지점번호', width: 150},
+   {field: 'branchName', headerName: '지점명', width: 150},
+   {field: 'branchEtc', headerName: '지점비고', width: 150},
+   {field: 'branchAddr', headerName: '지점주소', width: 150},
+   
+ ];
+ 
 const rows = [
     {id:uuidv4(),requestno:'#234213423',servicename:'신협은행장기점검',servicetype:'완료',workstatus:'완료',requestdate:'20230101',name:'김길동',rating:0},
     {id:uuidv4(),requestno:'#234213422',servicename:'국민은행장기점검',servicetype:'완료',workstatus:'완료',requestdate:'20230201',name:'김길동',rating:1},
@@ -71,15 +84,30 @@ const DeviderStyle = styled('div')({
 
 
 const accountListColumn = ['회사및지점','아이디','이름','연란처','핸드폰 연락처','이메일'];
-const accountList = ['신현은행(인천점)','k-itms01','홍길동','01-111-1111','02-000-0000','gildong@k-one.co.kr'];
+let accountList = ['신현은행(인천점)','k-itms01','홍길동','01-111-1111','02-000-0000','gildong@k-one.co.kr'];
 
-function AccountManagementDetail() {
+function AccountManagementDetail({requestno}) {
   const navigate = useNavigate();
   const moveUpdate = (e) => {
     e.preventDefault();
     navigate('/accountupdate');
   };
-  
+
+  const queryClient = useQueryClient();
+
+  const { data, error, isSuccess } = useQuery({
+    queryKey: ['AccountDetail',{searchValue:requestno}],
+    queryFn: getAccountDetail
+  });
+
+  console.log(data);
+  accountList[0] = `${data.compName}(${data.branchName})`
+  accountList[1] = data.userId
+  accountList[2] = data.userName
+  accountList[3] = data.userTel
+  accountList[4] = data.userMobile
+  accountList[5] = data.userEmail
+
   return(
     <>
       <AccountDetailRootDiv>
@@ -113,7 +141,7 @@ function AccountManagementDetail() {
             ))} */}
         
         {accountListColumn.map((val, index) => (
-            <Box
+            <Box key={index}
                sx={{
                 display: 'grid',
                 columnGap: 3,
@@ -210,7 +238,7 @@ function AccountManagementDetail() {
         </Stack>
         
         <DeviderStyle/>
-
+         
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
             <Box
                sx={{
@@ -245,7 +273,9 @@ function AccountManagementDetail() {
                         lineHeight: '24px',
                      }}
                 >
-                   사용중
+                   {data.enable==true &&
+                    <span>사용중</span>
+                   }
                 </Typography>
             </Box>
             <Box
@@ -281,11 +311,54 @@ function AccountManagementDetail() {
                         lineHeight: '24px',
                      }}
                 >
-                   2023-12-01
+                   {moment(data.createDt).format("YYYY-MM-DD")}
                 </Typography>
             </Box>
         </Box>
 
+
+        <Stack direction="row" alignItems="center"
+         sx={{
+            display: 'flex',
+            paddingBottom: '12px',
+            alignItems: 'center',
+            gap: '10px',
+            alignSelf: 'stretch',
+            borderBottom: '1px solid var(--Gray-Gray-400, #BDBDBD)'
+         }}
+       >  
+        <Typography variant="h6" gutterBottom 
+                  sx={{
+                    color: 'var(--Gray-Gray-900, #222)',
+                    fontFamily:'Pretendard',
+                    fontSize: '20px',
+                    fontStyle: 'normal',
+                    fontWeight: '600px',
+                    lineHeight: '28px'
+                  }}
+              >
+                        지점
+                    </Typography> 
+       </Stack>
+       <Stack direction="row" alignItems="center" spacing={1}>
+             <Box sx={{ height: 400, width: '100%' ,backgroundColor:'white'}}>
+                <DataGrid
+                  rows={data.branchList}
+                  columns={columns1}
+                  columnVisibilityModel={{
+                    id: false,
+                  }}
+                  disableRowSelectionOnClick={true}
+                  // getRowId={row => row._links.self.href}
+                  getRowId={(row: any) =>  uuidv4()}
+                  // slots={{ toolbar: GridToolbar }}
+                  slots={{ toolbar: CustomToolbar, pagination: CustomPagination }}
+                />
+              </Box>
+        </Stack>
+        
+        <DeviderStyle/>
+        
         <Stack direction="row" alignItems="center"
           sx = {{
             display: 'flex',

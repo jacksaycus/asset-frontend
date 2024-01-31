@@ -1,12 +1,21 @@
 import * as React from 'react';
 import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
 import { Icon, addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
 import CompanyDialog from './CompanyDialog';
 import { Account } from 'src/types';
+import { addAccount } from '../api/assetapi';
+import Auth0 from 'src/assets/images/icons/auth0.png';
+import Auth1 from 'src/assets/images/icons/auth1.png';
+import Auth2 from 'src/assets/images/icons/auth2.png';
+import Auth3 from 'src/assets/images/icons/auth3.png';
+import Auth4 from 'src/assets/images/icons/auth4.png';
+import Auth5 from 'src/assets/images/icons/auth4.png';
+
 
 const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
 
@@ -99,7 +108,7 @@ function AccountCreate() {
         company: '',
         userid:  '',
         authority:  '',
-        name :  '',
+        username :  '',
         tel :  '',
         phone:  '',
         email :  '',
@@ -108,8 +117,13 @@ function AccountCreate() {
         repassword:  '',
         priority: '',
         bigo: '',
-        branch: ''
+        branch: []
     });
+    const[auth,setAuth] = React.useState(0)
+    const handleAuth = (param) => {
+        setAuth(Number(param))
+        console.log('auth',auth)
+    }
     
     const [file, setFile] = React.useState<File | null>(null);
 
@@ -128,6 +142,27 @@ function AccountCreate() {
         });
     };
 
+    const queryClient = useQueryClient()
+    const { mutate } = useMutation({addAccount,
+        onSuccess: () => {
+        //   queryClient.invalidateQueries(["Account"]);
+        },
+        onError: (err) => {
+          console.error(err);
+        },
+      }) 
+
+      const handleSave = () => {
+        const formData = new FormData();
+        formData.append('userId', values.userid);
+        formData.append('userName', values.username);
+        formData.append('userPwd', values.password);
+        formData.append('userTel', values.tel);
+        formData.append('userMobile', values.phone);
+        formData.append('file', file);
+        mutate(formData);
+      }  
+    
     const handleSubmit1 = (e) => {
         e.preventDefault();
         console.log(`${values.userid} ${values.password}`);
@@ -160,7 +195,8 @@ function AccountCreate() {
     };
 
     const onSubmit = (data: Profile) => {
-        alert(JSON.stringify(data));
+        // alert(JSON.stringify(data));
+        handleSave()
     };
 
     const [open, setOpen] = React.useState(false);
@@ -207,90 +243,188 @@ function AccountCreate() {
                     </Typography>
                     <Grid container spacing={1} px={{ m: 1 }}>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                            <Button 
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===0 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>setAuth(0)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#00C400" />
-                                </svg>
+                                <img src={Auth0} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Main-Green-Green-500, #00C400)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 관리자
-                            </ManagerBadge>
+                                </span>
+                                </Button>
                         </Grid>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                        <Button
+                        
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===1 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>handleAuth(1)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#9D50E5" />
-                                </svg>
+                                <img src={Auth1} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Sub-Purple-Purple-500, #9D50E5)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 승인권자
-                            </ManagerBadge>
+                                </span>
+                                </Button>
+
                         </Grid>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                        <Button
+                        
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===2 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>setAuth(2)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#067DFD" />
-                                </svg>
+                                <img src={Auth2} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 AS총괄
-                            </ManagerBadge>
+                                </span>
+                                </Button>
+                           
                         </Grid>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                        <Button 
+                        
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===3 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>setAuth(3)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#067DFD" />
-                                </svg>
+                                <img src={Auth3} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Main-Blue-Blue-500, #067DFD)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 AS담당자
-                            </ManagerBadge>
+                                </span>  
+                            </Button>    
                         </Grid>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                        <Button 
+                        
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===4 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>setAuth(4)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#43BED0" />
-                                </svg>
+                                <img src={Auth4} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Sub-Teal-Teal-500, #43BED0)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 콜센터
-                            </ManagerBadge>
+                                </span>  
+                            </Button>
                         </Grid>
                         <Grid item>
-                            <ManagerBadge>
-                                <svg
-                                    width="8"
-                                    height="8"
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                        <Button 
+                        
+                                   style={{
+                                    display: 'flex',
+                                    padding: '4px 8px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    borderRadius: '100px',
+                                    background: 'var(--Gray-Gray-200, #EEE)',
+                                    border: auth===5 ? '1px solid var(--Sub-Purple-Purple-500, #9D50E5)':''
+                                   }}
+                                   onClick={()=>setAuth(5)}
                                 >
-                                    <circle cx="4" cy="4" r="4" fill="#F9560E" />
-                                </svg>
+                                <img src={Auth5} width='8px' height='8px' />
+                                <span style={{
+                                    color: 'var(--Main-Orange-Orange-500, #F9560E)',
+                                    textAlign: 'center',
+                                    fontFamily: 'Pretendard',
+                                    fontSize: '12px',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: '16px'
+                                }}
+                                >
                                 고객
-                            </ManagerBadge>
+                                </span>  
+                            </Button>
                         </Grid>
                     </Grid>
+
                     {/* </Stack>  */}
                     <Stack direction="row" spacing={0}>
                         <Typography
@@ -335,7 +469,10 @@ function AccountCreate() {
                            </Typography>
                            {getIcon('search')}
                     </SearchButton> */}
-                        <Button
+                        
+                        
+                        
+                        {/* <Button
                             sx={{
                                 display: 'flex',
                                 padding: '8px 16px',
@@ -362,14 +499,18 @@ function AccountCreate() {
                                 찾아보기
                             </Typography>
                             {getIcon('search')}
-                        </Button>
+                        </Button> */}
+
+
+
                         {/* </SearchButton> */}
-                        <CompanyDialog mopen={open} handleClose1={handleClose} />
+                        {/* <CompanyDialog mopen={open} handleClose1={handleClose} /> */}
+                        <CompanyDialog handleClose1={handleClose} />
                         <span>
                             {commpanyname} {branchname}
                         </span>
                     </Stack>
-
+{/* 
                     <Stack
                         direction="row"
                         spacing={0}
@@ -408,7 +549,7 @@ function AccountCreate() {
                         {...register('userid', { required: true} )}
                         fullWidth
                         variant="outlined"
-                        InputProps={{disableUnderline:true}}
+                        // InputProps={{disableUnderline:true}}
                         sx={{
                             // display: 'flex',
                             // height: '48px',
@@ -432,7 +573,156 @@ function AccountCreate() {
                         value={values.userid}
                         onChange={handleChange}
                     />
+                    <Stack
+                        direction="row"
+                        spacing={0}
+                        sx={{
+                            paddingTop: '20px',
+                            paddingBottom:'0px',
+                            marginBottom:'0px'
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                color: 'var(--Gray-Gray-900, #222)',
+                                fontFamily: 'Pretendard',
+                                fontSize: '14px',
+                                fontStyle: 'normal',
+                                fontWeight: '700',
+                                lineHeight: '20px'
+                            }}
+                        >
+                            이름
+                        </Typography>
+                    </Stack>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        // InputProps={{disableUnderline:true}}
+                        sx={{
+                            // display: 'flex',
+                            // height: '48px',
+                            // padding: '16px',
+                            // flexDirection: 'column',
+                            // justifycontent: 'left',
+                            // alignItems: 'flex-start',
+                            // alignSelf: 'stretch',
+                            // borderRadius: '4px',
+                            // paddingTop: '20px'
+                        }}
+                        name="username"
+                        value={values.username}
+                        onChange={handleChange}
+                    /> */}
                     {/* {errors.userid?.type === "required" && <span>아이디를 입력하세요</span>} */}
+                    
+                    
+                    
+                    <Grid
+                        container
+                        spacing={62}
+                        px={{ m: 1 }}
+                        sx={{
+                            paddingTop: '30px'
+                        }}
+                    >
+                        <Grid item>
+                            <Stack direction="row" spacing={0}>
+                                <Typography
+                                    sx={{
+                                        color: 'var(--Gray-Gray-900, #222)',
+                                        fontFamily: 'Pretendard',
+                                        fontSize: '14px',
+                                        fontStyle: 'normal',
+                                        fontWeight: '700',
+                                        lineHeight: '20px'
+                                    }}
+                                >
+                                    아이디
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        color: 'var(--Main-Red-Red-500, #EF2B2A)',
+                                        fontFamily: 'Pretendard',
+                                        fontSize: '14px',
+                                        fontStyle: 'normal',
+                                        fontWeight: '700',
+                                        lineHeight: '20px'
+                                    }}
+                                >
+                                    *
+                                </Typography>
+                            </Stack>
+                        </Grid>
+                        <Grid item>
+                            <Stack direction="row" spacing={0}>
+                                <Typography
+                                    sx={{
+                                        color: 'var(--Gray-Gray-900, #222)',
+                                        fontFamily: 'Pretendard',
+                                        fontSize: '14px',
+                                        fontStyle: 'normal',
+                                        fontWeight: '700',
+                                        lineHeight: '20px'
+                                    }}
+                                >
+                                    이름
+                                </Typography>
+                                
+                            </Stack>
+                        </Grid>
+                    </Grid>
+       
+                    <Grid container spacing={2} ml={{ m: 0 }}>
+                        <Grid item>
+                        <TextField
+                        {...register('userid', { required: true} )}
+                        fullWidth
+                        variant="outlined"
+                        sx={{
+                            width: '535px',
+                            background : errors.userid?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                            marginBottom: errors.userid?.type === "required" ?'20px' : '',    
+                            borderWidth: errors.userid?.type === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: errors.userid?.type === "required" ? 'solid' : '',
+                            borderColor: errors.userid?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: errors.userid?.type === "required" ? 'initial' : '',
+                        }}
+                        name="userid"
+                        value={values.userid}
+                        onChange={handleChange}
+                    />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                        fullWidth
+                        variant="outlined"
+                        // InputProps={{disableUnderline:true}}
+                        sx={{
+                            width: '535px',
+                            // display: 'flex',
+                            // height: '48px',
+                            // padding: '16px',
+                            // flexDirection: 'column',
+                            // justifycontent: 'left',
+                            // alignItems: 'flex-start',
+                            // alignSelf: 'stretch',
+                            // borderRadius: '4px',
+                            // paddingTop: '20px'
+                        }}
+                        name="username"
+                        value={values.username}
+                        onChange={handleChange}
+                    />
+                     <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
+                    </div>
+                    </Grid>
+                    </Grid>
+
+
+
+
+                    
                     <Grid
                         container
                         spacing={61}
@@ -505,7 +795,7 @@ function AccountCreate() {
                                {...register('password', { required: true} )}
                                 fullWidth
                                 variant="outlined"
-                                InputProps={{disableUnderline:true}}
+                                // InputProps={{disableUnderline:true}}
                                 sx={{
                                      width: '535px',
                                     // display: 'flex',
@@ -538,7 +828,7 @@ function AccountCreate() {
                                 } )}
                                 fullWidth
                                 variant="outlined"
-                                InputProps={{disableUnderline:true}}
+                                // InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     // display: 'flex',
@@ -627,7 +917,7 @@ function AccountCreate() {
                             <TextField
                                 fullWidth
                                 variant="outlined"
-                                InputProps={{disableUnderline:true}}
+                                // InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
                                     // display: 'flex',
@@ -650,7 +940,7 @@ function AccountCreate() {
                                 {...register('phone', { required: true,  pattern: /^\d{3}-\d{3,4}-\d{4}$/ } )}
                                 fullWidth
                                 variant="outlined"
-                                InputProps={{disableUnderline:true}}
+                                // InputProps={{disableUnderline:true}}
                                 helperText='ex) 000-0000-0000'
                                 sx={{
                                     width: '535px',
@@ -678,7 +968,7 @@ function AccountCreate() {
                         </Grid>
                     </Grid>
                     
-                    <Stack
+                    {/* <Stack
                         direction="row"
                         spacing={0}
                         sx={{
@@ -701,7 +991,7 @@ function AccountCreate() {
                     <TextField
                         fullWidth
                         variant="standard"
-                        InputProps={{disableUnderline:true}}
+                        // InputProps={{disableUnderline:true}}
                         sx={{
                             display: 'flex',
                             height: '46px',
@@ -716,7 +1006,7 @@ function AccountCreate() {
                         name="priority"
                         value={values.priority}
                         onChange={handleChange}
-                    />
+                    /> */}
 
                     <Typography
                         sx={{
@@ -852,7 +1142,7 @@ function AccountCreate() {
                         <TextField
                             fullWidth
                             variant="outlined"
-                            InputProps={{disableUnderline:true}}
+                            // InputProps={{disableUnderline:true}}
                             sx={{
                                 display: 'flex',
                                 height: '46px',

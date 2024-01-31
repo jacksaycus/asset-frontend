@@ -37,7 +37,6 @@ function AccountManagement() {
       setSearchValue(event.target.value);
    };
    
-
     const moveRequest = (e) => {
         e.preventDefault();
         navigate('/dashboard/accountcreate', { replace: true });
@@ -73,13 +72,24 @@ function AccountManagement() {
         },
       },
     })
+    
     let accountData = []
     const doinquiery = async () => {
-    
-    // await queryClient.fetchQuery({ queryKey: ['Service'], queryFn: getService(searchValue) })
-    const { data, error, isSuccess } = await queryClient.fetchQuery({ queryKey: ['Account',{searchColumn:searchColumn,searchValue:searchValue}], queryFn: getAccount })
-    accountData = data;
+    const data = await queryClient.fetchQuery({ queryKey: ['Account',{searchColumn:searchColumn,searchValue:searchValue}], queryFn: getAccount })
+    console.log(data)
+    accountData = data
+    // manuplate()
    }
+
+   const { data, error, isSuccess } = useQuery({
+    queryKey: ["Account",{searchColumn:searchColumn,searchValue:searchValue}],
+    queryFn: getAccount
+  });
+  accountData = data
+  //  React.useEffect(() => {
+  //   doinquiery()
+  // }, []);
+  
 
    const condition1 = [
     {
@@ -121,36 +131,41 @@ function AccountManagement() {
     //              rating:0
     //             }];
 
-    let data= []
-    let obj1 = {};
-      for (let i=0;i<accountData?.length;i++) {
-           obj1.userid = accountData[i].userId;
-           obj1.name = accountData[i].userName;
-           obj1.tel = accountData[i].userTel;
-           obj1.phone = accountData[i].userPhone;
-           obj1.email = accountData[i].userEmail;
-           obj1.rating = accountData[i].serviceStarAvg;
-           data.push(obj1);
-      }
-
-    let obj={}
-    let exceldata1 = []
-    for(let i=0;i<data.length;i++){
-          let j=0;
-          _.map(data[i], function(val, k) {
-                 obj[excelcols[j]]=val;
-                  ++j;
-          })
-          exceldata1.push(obj)
-          obj={}
-    }
-    console.log(exceldata1);
     
+      let data1= []
+      //const manuplate = () => { 
+        for (let i=0;i<accountData?.length;i++) {
+          let obj1 = {};
+            obj1.userid = accountData[i].userId;
+            obj1.name = accountData[i].userName;
+            obj1.tel = accountData[i].userTel;
+            obj1.phone = accountData[i].userPhone;
+            obj1.email = accountData[i].userEmail;
+            obj1.rating = Math.floor(Number(accountData[i].serviceStarAvg));
+            //  console.log(obj1)
+            // data1 = [...data1,obj1]
+            data1.push(obj1)
+        }
 
-    const columns: GridColDef[] = [
+      let obj={}
+      let exceldata1 = []
+      for(let i=0;i<data1.length;i++){
+            let j=0;
+            _.map(data1[i], function(val, k) {
+                  obj[excelcols[j]]=val;
+                    ++j;
+            })
+            exceldata1.push(obj)
+            obj={}
+      }
+      console.log(exceldata1);
+      //}
+
+      
+     const columns: GridColDef[] = [
       {field: 'id', headerName: '', width: 0 },
       // {field: 'company', headerName: '회사및지점명', width: 150},
-      {field: 'userid', headerName: '아이디', width: 80},
+      {field: 'userid', headerName: '아이디', width: 120},
       // {
       //   field: 'authority',
       //   align:'left',
@@ -162,15 +177,15 @@ function AccountManagement() {
       //   renderCell: (params: GridCellParams) =>
       //    <AccountAuthority iconProp={params.row} />
       //  },
-      {field: 'name', headerName: '이름.', width: 100},
-      {field: 'tel', headerName: '연락처', width: 100},
-      {field: 'phone', headerName: '핸드폰연락처', width: 100},
-      {field: 'email', headerName: '이메일', width: 130},
+      {field: 'name', headerName: '이름.', width: 120},
+      {field: 'tel', headerName: '연락처', width: 150},
+      {field: 'phone', headerName: '핸드폰연락처', width: 150},
+      {field: 'email', headerName: '이메일', width: 160},
       {
         field: 'rating',
         align:'left',
         headerName: '평점',
-        width: 130,
+        width: 150,
         sortable: false,
         filterable: false,
         disableColumnMenu: true,
@@ -178,7 +193,7 @@ function AccountManagement() {
          <AccountRating iconProp={params.row} />
        },      
     ]; 
-
+  
     const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
       const fileExtension = ".xlsx";
       
@@ -191,10 +206,12 @@ function AccountManagement() {
       }
 
       const [olddetail,setOlddetail] = React.useState('');
+      let detailrow = 0;
       const handleRowClick: GridEventListener<'rowClick'> = (params) => {
         if(params.row.requestno===olddetail){
            setDetail(false);
            setOlddetail(''); 
+           detailrow = params.row.requestno
         }else{
            setDetail(true);
            setOlddetail(params.row.requestno); 
@@ -404,12 +421,13 @@ function AccountManagement() {
                        <DataGrid  sx={{
                         position: 'relative',
                         left:'-20px',
+                        width:'920px'
                        }}
                        onRowClick={handleRowClick}
                           columnVisibilityModel={{
                             id: false,
                           }}
-                          rows={data}
+                          rows={data1}
                           columns={columns}
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
@@ -426,7 +444,7 @@ function AccountManagement() {
 
             {
                  detail && 
-                     <AccountManagementDetail/>
+                     <AccountManagementDetail requestno={detailrow} />
             }
 
             <div style={{
