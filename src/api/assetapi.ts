@@ -41,7 +41,8 @@ export const getAccountDetail = async (param): Promise<any[]> => {
 }
 
 export const addAccount = async (account: any): Promise<any[]> => {
-  const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/kitms-user`, account, {
+  console.log('addAccount...')
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/kitms-user`, ...account, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 

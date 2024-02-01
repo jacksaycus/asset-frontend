@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Container, MenuItem,Stack, Typography, TextField, Grid , Paper, Box, Button, Dialog,DialogTitle,DialogContent,DialogActions } from '@mui/material';
+import { Theme, useTheme } from '@mui/material/styles';
+import { Container, MenuItem,Stack, Typography, TextField, Grid , Paper, Box, Button, Dialog,DialogTitle,DialogContent,DialogActions, Select, Chip,OutlinedInput } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, QueryClient } from '@tanstack/react-query';
 import { getBranch } from '../api/assetapi';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
@@ -56,6 +57,16 @@ const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
 //         label: '전북',
 //       },
 // ]
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+  fontWeight:
+  personName.indexOf(name) === -1
+  ? theme.typography.fontWeightRegular
+  : theme.typography.fontWeightMedium,
+  };
+  }
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
@@ -65,7 +76,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
   }));
 
-  const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
   const MenuProps = {
@@ -78,40 +89,62 @@ const ITEM_PADDING_TOP = 8;
   };
 
 function CompanyDialog(props) {
+  const theme = useTheme();
+  // const queryClient = useQueryClient();
 
-  const queryClient = useQueryClient();
+  // const { data, error, isSuccess } = useQuery({
+  //   queryKey: ['Branch'],
+  //   queryFn: getBranch
+  // });
 
-  const { data, error, isSuccess } = useQuery({
-    queryKey: ['Branch'],
-    queryFn: getBranch
-  });
+//   const queryClient = new QueryClient({
+//     defaultOptions: {
+//       queries: {
+//       },
+//     },
+//   })
 
-  let company=[]
-  let branch=[]
- for (let i=0;i<data?.length;i++){
-    let obj = {}
-    obj.value=data[i].compNo
-    obj.label=data[i].compName
-    company.push(obj)
-  }
+//   let dat = []
+//   const doinquiery = async () => {
+//     const data = await queryClient.fetchQuery({ queryKey: ['Branch'], queryFn: getBranch })
+//     dat = data
+//     console.log(dat)
+//   }
+
+//  React.useEffect(() => {
+//    doinquiery()
+//  }, []);
+
+//   let company=[]
+//   let branch=[]
+//   console.log(dat.length)
+//  for (let i=0;i<dat?.length;i++){
+//     let obj = {}
+//     obj.value=dat[i].compNo
+//     obj.label=dat[i].compName
+//     company.push(obj)
+//   }
   
-  // console.log(company)
-  company = _.uniqBy(company, 'label');
-  console.log(company)
-  const setBranch = (companyno) =>{
-    let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
-    console.log('tempbranch',tempbranch)
-    for (let i=0;i<tempbranch?.length;i++){
-      let obj = {}
-      obj.value=tempbranch[i].branchNo
-      obj.label=tempbranch[i].branchName
-      branch.push(obj)
-    }
-    console.log('branch',branch)
-    }
-  if(company.length>0)
-  setBranch(company[0].value)
+//   // console.log(company)
+//   company = _.uniqBy(company, 'label');
+//   console.log(company)
+//   const setBranch = (companyno) =>{
+//     let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
+//     console.log('tempbranch',tempbranch)
+//     for (let i=0;i<tempbranch?.length;i++){
+//       let obj = {}
+//       obj.value=tempbranch[i].branchNo
+//       obj.label=tempbranch[i].branchName
+//       branch.push(obj)
+//     }
+//     console.log('branch',branch)
+//     }
+//   if(company.length>0)
+//   setBranch(company[0].value)
 
+
+    let branch = props.branch
+    let company = props.company
   
     // const {mopen} = props;
     const [open, setOpen] = React.useState(false);
@@ -122,22 +155,51 @@ function CompanyDialog(props) {
       });
 
 
-      const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if(event.target.name==='company'){
-          setBranch(event.target.value)
-        }
-        setValues({...values, [event.target.name]: event.target.value});
+    const [branches, setBranches] = React.useState<string[]>([]);
+    const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+      // const {
+      //   target: { value },
+      //   } = event
 
+      if(event.target.name==='company'){
+        setValues({...values, ['company']: event.target.value});
+        branch = props.setBranch(event.target.value)
+      }if(event.target.name==='branch'){
+        setBranches(
+          typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+       )
+        // setValues({...values, [event.target.name]: event.target.value});
     }
-    const handleClose = () => {
+  }
+
+    const getBranchName = (val) => {
+      let bname = ''
+        for (let i=0;i<branch.length; i++){
+          if(branch[i].value===val){
+            bname=branch[i].label
+            break;
+          }
+        }
+        return bname
+     }
+
+      const handleClose = () => {
       setOpen(false);
+
+      setValues({...values, ['branch']: branches});
 
       console.log(values['company']);
       console.log(values['branch']);
       
-      const companyname = company.find((item) => item.value === values['company'])?.label;
-      const branchname=branch.find((item) => item.value === values['branch'])?.label;
-      props.handleClose1(false,values['company'],values['branch'],companyname, branchname);
+      // const companyname = company.find((item) => item.value === values['company'])?.label;
+      // const branchname=branch.find((item) => item.value === values['branch'])?.label;
+      
+      let bnametemp=[]
+      for (let i=0;i<branches.length;i++){
+        bnametemp.push( _.find(branch, { 'value': branches[i] }).label + ',')
+      }
+
+      props.handleClose1(bnametemp);
     };
   
     const handleInit = () => {
@@ -145,6 +207,7 @@ function CompanyDialog(props) {
             company: '',
             branch: '',
           });
+          setBranches([])
         console.log(values);
     }
 
@@ -295,12 +358,13 @@ function CompanyDialog(props) {
                     </MenuItem>
                 ))}
             </TextField>
+            
              </div>
              
              <div
                 style={{
                     display: 'flex',
-                    width: '452px',
+                    width: '652px',
                     justifyContent: 'left',
                     alignItems: 'left',
                     gap: '0px',
@@ -324,7 +388,7 @@ function CompanyDialog(props) {
                 >
                     지점
             </Typography>    
-            <TextField
+            {/* <TextField
                 fullWidth
                 name="branch"
                 value={values.branch}
@@ -349,7 +413,36 @@ function CompanyDialog(props) {
                     {option.label}
                     </MenuItem>
                 ))}
-            </TextField>
+            </TextField> */}
+            
+            <Select
+            fullWidth
+                id="branch"
+                multiple
+                name='branch'
+                value={branches}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map((value) => (
+              <Chip key={value} label={getBranchName(value)} />
+              ))}
+              </Box>
+              )}
+              MenuProps={MenuProps}
+              >
+              {branch.map((option) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                style={getStyles(option, branches, theme)}
+              >
+                {option.label}
+              </MenuItem>
+              ))}
+            </Select>
+
              </div>
           </Stack>
 

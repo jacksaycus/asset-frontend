@@ -141,7 +141,8 @@ function AccountManagement() {
             obj1.tel = accountData[i].userTel;
             obj1.phone = accountData[i].userPhone;
             obj1.email = accountData[i].userEmail;
-            obj1.rating = Math.floor(Number(accountData[i].serviceStarAvg));
+            // obj1.rating = Math.floor(Number(accountData[i].serviceStarAvg));
+            obj1.rating = accountData[i].serviceStarAvg;
             //  console.log(obj1)
             // data1 = [...data1,obj1]
             data1.push(obj1)

@@ -21,7 +21,7 @@ function AccountRating({ iconProp }: IconProps) {
             sx={{
                 
             }}
-            value={rating} readOnly />
+            value={Math.floor(Number(rating)) } readOnly />
     </>
   );
 }

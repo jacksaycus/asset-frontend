@@ -12,6 +12,7 @@ import { getAccountDetail } from '../api/assetapi';
 import { useQuery, useMutation, useQueryClient, QueryClient, dataTagSymbol } from '@tanstack/react-query';
 import CustomToolbar from './CustomToolbar'
 import CustomPagination from './CustomPagination'
+import * as _ from "lodash";
  import {
          Stack,
          Box,
@@ -24,23 +25,23 @@ import SignImage from 'src/assets/images/sign.png';
 
 const columns: GridColDef[] = [
   {field: 'id', headerName: '', width: 0 },
-  {field: 'requestno', headerName: '요청번호', width: 150},
-  {field: 'servicename', headerName: '서비스명', width: 150},
-  {field: 'servicetype', headerName: '서비스유형', width: 150},
-  {field: 'workstatus', headerName: '작업상태', width: 150},
-  {field: 'requestdate', headerName: '요청일', width: 150},
-  {field: 'name', headerName: '이름', width: 150},
-  {
-    field: 'rating',
-    align:'left',
-    headerName: '평점',
-    width: 130,
-    sortable: false,
-    filterable: false,
-    disableColumnMenu: true,
-    renderCell: (params: GridCellParams) =>
-     <AccountRating iconProp={params.row} />
-   },      
+  {field: 'serviceNo', headerName: '요청번호', width: 150},
+  {field: 'serviceName', headerName: '서비스명', width: 150},
+  {field: 'serviceTypeValue', headerName: '서비스유형', width: 150},
+  {field: 'serviceJobStatusValue', headerName: '작업상태', width: 150},
+  {field: 'serviceStartDate', headerName: '요청일', width: 150},
+  {field: 'asUserName', headerName: '이름', width: 150},
+//   {
+//     field: 'serviceStar',
+//     align:'left',
+//     headerName: '평점',
+//     width: 130,
+//     sortable: false,
+//     filterable: false,
+//     disableColumnMenu: true,
+//     renderCell: (params: GridCellParams) =>
+//      <AccountRating iconProp={params.row} />
+//    },      
 ];
 
 const columns1: GridColDef[] = [
@@ -100,7 +101,9 @@ function AccountManagementDetail({requestno}) {
     queryFn: getAccountDetail
   });
 
-  console.log(data);
+  if(_.isUndefined(data))return
+  console.log(data)
+  
   accountList[0] = `${data.compName}(${data.branchName})`
   accountList[1] = data.userId
   accountList[2] = data.userName
@@ -223,7 +226,7 @@ function AccountManagementDetail({requestno}) {
        <Stack direction="row" alignItems="center" spacing={1}>
              <Box sx={{ height: 400, width: '100%' ,backgroundColor:'white'}}>
                 <DataGrid
-                  rows={rows}
+                  rows={data.serviceList}
                   columns={columns}
                   columnVisibilityModel={{
                     id: false,

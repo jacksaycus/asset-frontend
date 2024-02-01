@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
 import { Icon, addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
 import CompanyDialog from './CompanyDialog';
 import { Account } from 'src/types';
-import { addAccount } from '../api/assetapi';
+import { addAccount,getBranch } from '../api/assetapi';
 import Auth0 from 'src/assets/images/icons/auth0.png';
 import Auth1 from 'src/assets/images/icons/auth1.png';
 import Auth2 from 'src/assets/images/icons/auth2.png';
 import Auth3 from 'src/assets/images/icons/auth3.png';
 import Auth4 from 'src/assets/images/icons/auth4.png';
 import Auth5 from 'src/assets/images/icons/auth4.png';
-
+import * as _ from "lodash";
 
 const getIcon = (name) => <Icon icon={name} width={20} height={20} />;
 
@@ -101,6 +101,7 @@ function AccountCreate() {
         register,
         handleSubmit,
         watch,
+        trigger,
         formState: { errors }
     } = useForm<Account>();
 
@@ -117,7 +118,7 @@ function AccountCreate() {
         repassword:  '',
         priority: '',
         bigo: '',
-        branch: []
+        branch: '',
     });
     const[auth,setAuth] = React.useState(0)
     const handleAuth = (param) => {
@@ -136,14 +137,53 @@ function AccountCreate() {
     const [commpanyname, setCompanyname] = React.useState('');
     const [branchname, setBranchname] = React.useState('');
 
-    const handleChange = ({ target: { name, value } }) => {
-        setValues({
-            [name]: value
-        });
-    };
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValues({ ...values, [event.target.name]: event.target.value });
+    }
 
     const queryClient = useQueryClient()
-    const { mutate } = useMutation({addAccount,
+
+    // const queryClient = new QueryClient({
+    //     defaultOptions: {
+    //       queries: {
+    //       },
+    //     },
+    //   })
+    
+      const { data, error, isSuccess } = useQuery({
+           queryKey: ['Branch'],
+           queryFn: getBranch
+      });
+      let company=[]
+      let branch=[]
+     for (let i=0;i<data?.length;i++){
+        let obj = {}
+        obj.value=data[i].compNo
+        obj.label=data[i].compName
+        company.push(obj)
+      }
+      
+      // console.log(company)
+      company = _.uniqBy(company, 'label');
+      console.log(company)
+      const setBranch = (companyno) =>{
+        let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
+        console.log('tempbranch',tempbranch)
+        for (let i=0;i<tempbranch?.length;i++){
+          let obj = {}
+          obj.value=tempbranch[i].branchNo
+          obj.label=tempbranch[i].branchName
+          branch.push(obj)
+        }
+        console.log('branch',branch)
+        return branch
+        }
+      if(company.length>0)
+      branch = setBranch(company[0].value)
+
+
+
+    const { mutate } = useMutation({mutationFn : addAccount,
         onSuccess: () => {
         //   queryClient.invalidateQueries(["Account"]);
         },
@@ -152,15 +192,27 @@ function AccountCreate() {
         },
       }) 
 
-      const handleSave = () => {
-        const formData = new FormData();
-        formData.append('userId', values.userid);
-        formData.append('userName', values.username);
-        formData.append('userPwd', values.password);
-        formData.append('userTel', values.tel);
-        formData.append('userMobile', values.phone);
-        formData.append('file', file);
-        mutate(formData);
+      const handleSave = async () => {
+        console.log('values...',values)
+        const isValid = await trigger();
+       console.log(isValid);
+       if(!isValid)return
+        
+        let param = {
+        'userId' : values.userid,
+        'userName' : values.username,
+        'userPwd': values.password,
+        'userTel': values.tel,
+        'userMobile': values.phone,
+        'userEmail': values.email,
+        'userEtc': values.bigo,
+        'enable': 'true',
+        'file': file,
+        'authCode': auth,
+        'branchList':values.branch
+        }
+        console.log(param)
+        mutate(param)
       }  
     
     const handleSubmit1 = (e) => {
@@ -194,9 +246,10 @@ function AccountCreate() {
 
     };
 
-    const onSubmit = (data: Profile) => {
-        // alert(JSON.stringify(data));
-        handleSave()
+    const onSubmit = (data: any) => {
+        alert(JSON.stringify(data));
+        console.log(data)
+         handleSave()
     };
 
     const [open, setOpen] = React.useState(false);
@@ -204,9 +257,9 @@ function AccountCreate() {
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const handleClose = (isopen, company, branch, companyname, branchname) => {
+    const handleClose = (branchname) => {
         setOpen(false);
-        setCompanyname(companyname);
+        setCompanyname('');
         setBranchname(branchname);
     };
 
@@ -505,7 +558,7 @@ function AccountCreate() {
 
                         {/* </SearchButton> */}
                         {/* <CompanyDialog mopen={open} handleClose1={handleClose} /> */}
-                        <CompanyDialog handleClose1={handleClose} />
+                        <CompanyDialog handleClose1={handleClose} branch={branch} company={company} data={data} setBranch={setBranch} />
                         <span>
                             {commpanyname} {branchname}
                         </span>
@@ -820,6 +873,10 @@ function AccountCreate() {
                                 onChange={handleChange}
                             />
                             {/* {errors.password?.type === "required" && <p>비밀번호를 입력하세요</p>} */}
+                            <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
+                    {errors.repassword?.type === "required" && <p>비밀번호확인을 입력하세요</p>}
+                    {errors.repassword && <p>{errors.repassword?.message}</p>} 
+                    </div>
                         </Grid>
                         <Grid item>
                             <TextField
@@ -850,10 +907,10 @@ function AccountCreate() {
                                 name="repassword"
                                 
                             />
-                     <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
-                    {/* {errors.repassword?.type === "required" && <p>비밀번호확인을 입력하세요</p>}
-                    {errors.repassword && <p>{errors.repassword?.message}</p>} */}
-                    </div>
+                     {/* <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
+                    {errors.repassword?.type === "required" && <p>비밀번호확인을 입력하세요</p>}
+                    {errors.repassword && <p>{errors.repassword?.message}</p>} 
+                    </div> */}
                         </Grid>
                     </Grid>
                     
@@ -963,8 +1020,8 @@ function AccountCreate() {
                                 value={values.phone}
                                 onChange={handleChange}
                             />
-                            {/* {errors.phone?.type === "required" && <p>핸드폰 연락처를 입력하세요</p>}
-                            {errors?.phone?.type === "pattern" && (<p>휴대폰번호를제대로 입력하세요</p> )} */}
+                            {/* {errors.phone?.type === "required" && <p>핸드폰 연락처를 입력하세요</p>}*/}
+                            {errors?.phone?.type === "pattern" && (<p>휴대폰번호를제대로 입력하세요(010-0000-0000)</p> )} 
                         </Grid>
                     </Grid>
                     
@@ -1023,7 +1080,7 @@ function AccountCreate() {
 
                     <Stack direction="row" spacing={0}>
                         {/* <SearchButton> */}
-                        <input id="file" type="file" accept='.JPEG, PNG, GIF' onChange={handleFileChange} hidden />
+                        <input id="file" type="file" accept='.JPEG, .PNG, .GIF' onChange={handleFileChange} hidden />
                         <label htmlFor='file'
                              style={{
                                 cursor: 'pointer',
@@ -1175,6 +1232,10 @@ function AccountCreate() {
                                 '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)'
                         }}
                         type='submit'
+                        // onClick={() => {
+                        //     handleSave()
+                        //   }}
+                        // onClick={handleSave}
                     >
                         <Typography
                             sx={{

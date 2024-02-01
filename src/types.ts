@@ -27,7 +27,7 @@ export type Account = {
   repassword: string;
   priority:string;
   bigo:string;
-  branch:[];
+  branch:string;
 }
 
 export type Profile = {

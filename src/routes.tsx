@@ -13,7 +13,7 @@ import AssetCreate from 'src/pages/AssetCreate';
 import Contract from 'src/pages/Contract';
 import Stat from 'src/pages/Stat';
 import ReportList from 'src/pages/ReportList';
-import Notice from 'src/pages/Notice';
+import Notice from 'src/pages/Helloworld';
 import CompanyManagement from 'src/pages/CompanyManagement';
 import CompanyReport from 'src/pages/CompanyReport';
 import Login from 'src/pages/Login';
