@@ -16,6 +16,8 @@ import {Service} from 'src/types'
 import './page.css'
 import { FileUploader } from "react-drag-drop-files";
 import * as _ from "lodash";
+import { useForm } from "react-hook-form"
+import ServiceStepButton from './ServiceStepButton';
 
 type RequestFormProps = {
     values: Service;
@@ -23,9 +25,17 @@ type RequestFormProps = {
     formState: Service;
     handleFileChange: (e:any) => void;
 }
-const temp = []
-function ServiceRequestStep1({ values, handleChange, formState, handleFileChange }: RequestFormProps) {
-      
+
+function ServiceRequestStep1({formData, handleChange, handleFileChange,handleNextStep, handlePreveStep,step }) {
+    const { register, handleSubmit,trigger, formState: { errors } } = useForm()
+    const onSubmit = (data) => {
+        trigger().then((res) => {
+            if (res) {
+                handleNextStep()
+            }})
+    }
+
+    const temp = []      
     const [file, setFile] = React.useState<Array<File> | null>([]);
     const [tempList, setTempList] = React.useState([]);
     const [noop, setNoop] = React.useState(null);
@@ -57,7 +67,56 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
 
     return (
         <React.Fragment>
-            <form  autoComplete="off" noValidate >
+             <div
+                    style={{
+                        display: 'flex',
+                        width: '1346px',
+                        padding: '28px',
+                        marginTop: '20px',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '32px',
+                        borderRadius: '12px',
+                        border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                        background: 'var(--White, #FFF)',
+                        position:'relative',
+                        left:'-60px'
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '1316px',
+                            marginTop: '20px',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            padding: '32px',
+                            // borderRadius: '12px',
+                            // border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                            background: 'var(--White, #FFF)'
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                color: 'var(--Gray-Gray-900, #222)',
+                                fontFamily: 'Pretendard',
+                                fontSize: '20px',
+                                fontStyle: 'normal',
+                                fontWeight: '600',
+                                lineHeight: '28px'
+                            }}
+                        >
+                            서비스 요청
+                        </Typography>
+
+                        <div style={{marginBottom:'32px'}}></div>
+
+            <form  autoComplete="off"
+                            method="post"
+                            noValidate
+                            onSubmit={handleSubmit(onSubmit)}
+                            encType="multipart/form"
+            >
             <div
                 style={{
                     display: 'flex',
@@ -95,6 +154,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     *
                 </Typography>
                 <TextField
+                 {...register('servicename', { required: true} )}
                     fullWidth
                     variant='standard'
                     InputProps={{disableUnderline:true}}
@@ -109,18 +169,18 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                         flex: '1 0 0',
                         // borderRadius: '4px',
                         // background: 'var(--Gray-Gray-100, #F5F5F5)',
-                        background : formState.servicename === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.servicename === "required" ?'20px' : '',    
-                        borderWidth: formState.servicename === "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.servicename ===  "required" ? 'solid' : '',
-                        borderColor: formState.servicename ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.servicename ===  "required" ? 'initial' : '',
+                        background : errors.servicename?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.servicename?.type === "required" ?'20px' : '',    
+                        borderWidth: errors.servicename?.type === "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.servicename?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.servicename?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.servicename?.type ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
                     name="servicename"
                     id="servicename"
-                    value={values.servicename}
+                    value={formData.servicename}
                 />
             </div>
             {/* {formState.errors.servicename?.type === "required" && <span>서비스명을 입력하세요</span>} */}
@@ -161,6 +221,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     *
                 </Typography>
                 <TextField
+                {...register('servicecontent', { required: true} )}
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
@@ -176,18 +237,18 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                         borderRadius: '4px',
                         // background: 'var(--Gray-Gray-100, #F5F5F5)',
 
-                        background : formState.servicecontent ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.servicecontent === "required" ?'20px' : '',    
-                        borderWidth: formState.servicecontent ===  "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.servicecontent ===  "required" ? 'solid' : '',
-                        borderColor: formState.servicecontent ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.servicecontent ===  "required" ? 'initial' : '',
+                        background : errors.servicecontent?.type ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.servicecontent?.type === "required" ?'20px' : '',    
+                        borderWidth: errors.servicecontent?.type ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.servicecontent?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.servicecontent?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.servicecontent?.type ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
                     name="servicecontent"
                     id="servicecontent"
-                    value={values.servicecontent}
+                    value={formData.servicecontent}
                 />
             </div>
             {/* {formState.errors.servicecontent?.type === "required" && <span>서비스내용을 입력하세요</span>}         */}
@@ -228,6 +289,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     *
                 </Typography>
                 <TextField
+                {...register('servicetype', { required: true} )}
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
@@ -244,18 +306,18 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                         borderRadius: '4px',
                         // background: 'var(--Gray-Gray-100, #F5F5F5)'
 
-                        background : formState.servicetype ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.servicetype ===  "required" ?'20px' : '',    
-                        borderWidth: formState.servicetype ===  "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.servicetype ===  "required" ? 'solid' : '',
-                        borderColor: formState.servicetype ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.servicetype ===  "required" ? 'initial' : '',
+                        background : errors.servicetype?.type ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.servicetype?.type ===  "required" ?'20px' : '',    
+                        borderWidth: errors.servicetype?.type ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.servicetype?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.servicetype?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.servicetype?.type ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
                     type="text"
                     name="servicetype"
                     id="servicetype"
-                    value={values.servicetype}
+                    value={formData.servicetype}
                 />
             </div>
             {/* {formState.errors.servicetype?.type === "required" && <span>서비스유형을 입력하세요</span>}        */}
@@ -296,6 +358,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     *
                 </Typography>
                 <TextField
+                {...register('pridicttime', { required: true} )}
                     fullWidth
                     variant="standard"
                     InputProps={{disableUnderline:true}}
@@ -310,20 +373,19 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                         flex: '1 0 0',
                         borderRadius: '4px',
                         // background: 'var(--Gray-Gray-100, #F5F5F5)'
-
-                        background : formState.pridicttime ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.pridicttime ===  "required" ?'20px' : '',    
-                        borderWidth: formState.pridicttime ===  "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.pridicttime ===  "required" ? 'solid' : '',
-                        borderColor: formState.pridicttime ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.pridicttime ===  "required" ? 'initial' : '',
+                        background : errors.pridicttime?.type ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.pridicttime?.type ===  "required" ?'20px' : '',    
+                        borderWidth: errors.pridicttime?.type ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.pridicttime?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.pridicttime?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.pridicttime?.type ===  "required" ? 'initial' : '',
 
                     }}
                     onChange={handleChange}
                     type="text"
                     name="pridicttime"
                     id="pridicttime"
-                    value={values.pridicttime}
+                    value={formData.pridicttime}
                 />
                
                 <Typography
@@ -362,17 +424,17 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     
                     <RadioGroup
                         row
-                        
+                        {...register('priority', { required: true} )}
                         name="priority"
-                        value={values.priority}
+                        value={formData.priority}
                         onChange={handleChange}
                         sx={{
-                        background : formState.priority ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.priority ===  "required" ?'20px' : '',    
-                        borderWidth: formState.priority ===  "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.priority ===  "required" ? 'solid' : '',
-                        borderColor: formState.priority ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.priority ===  "required" ? 'initial' : '',
+                        background : errors.priority?.type ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.priority?.type ===  "required" ?'20px' : '',    
+                        borderWidth: errors.priority?.type ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.priority?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.priority?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.priority?.type ===  "required" ? 'initial' : '',
                         }}
                     >
                         <FormControlLabel value="toprange" control={<Radio />} label="상" />
@@ -420,6 +482,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     *
                 </Typography>
                 <TextField
+                 {...register('servicehopedate', { required: true} )}
                 variant="standard"
                 fullWidth
                 InputProps={{disableUnderline:true}}
@@ -435,14 +498,15 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                         borderRadius: '4px',
                         // background: 'var(--Gray-Gray-100, #F5F5F5)'
 
-                        background : formState.servicehopedate ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
-                        marginBottom: formState.servicehopedate ===  "required" ?'20px' : '',    
-                        borderWidth: formState.servicehopedate ===  "required" ? '1px 1px 1px 10px': '' ,
-                        borderStyle: formState.servicehopedate ===  "required" ? 'solid' : '',
-                        borderColor: formState.servicehopedate ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                        borderImage: formState.servicehopedate ===  "required" ? 'initial' : '',
+                        background : errors.servicehopedate?.type ===  "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)',    
+                        marginBottom: errors.servicehopedate?.type ===  "required" ?'20px' : '',    
+                        borderWidth: errors.servicehopedate?.type ===  "required" ? '1px 1px 1px 10px': '' ,
+                        borderStyle: errors.servicehopedate?.type ===  "required" ? 'solid' : '',
+                        borderColor: errors.servicehopedate?.type ===  "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                        borderImage: errors.servicehopedate?.type ===  "required" ? 'initial' : '',
                     }}
                     onChange={handleChange}
+                    value={formData.servicehopedate}
                     type="text"
                     name="servicehopedate"
                     id="servicehopedate"
@@ -498,7 +562,7 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                     id="bigo"
                     name="bigo"
                     // label="비고"
-                    value={values.bigo}
+                    value={formData.bigo}
                     onChange={handleChange}
                 />
             </div>
@@ -578,6 +642,12 @@ function ServiceRequestStep1({ values, handleChange, formState, handleFileChange
                 </ FileUploader>  
             </div>
             </form>
+
+            </div>
+                </div>
+
+                <ServiceStepButton onSubmit={onSubmit} handleCancelStep={handlePreveStep} step={step} />
+
         </React.Fragment>
     );
 }

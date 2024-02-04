@@ -30,6 +30,9 @@ function AccountManagement() {
     const [searchColumn, setSearchColumn] = React.useState('')
     const [searchValue, setSearchValue] = React.useState('')
     
+    const serSearchValue1 = () => {
+      setSearchValue('')
+    }
    const handleChangeSearchColumn = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchColumn(event.target.value);
    };
@@ -78,14 +81,15 @@ function AccountManagement() {
     const data = await queryClient.fetchQuery({ queryKey: ['Account',{searchColumn:searchColumn,searchValue:searchValue}], queryFn: getAccount })
     console.log(data)
     accountData = data
-    // manuplate()
+    setGridData()
    }
 
-   const { data, error, isSuccess } = useQuery({
-    queryKey: ["Account",{searchColumn:searchColumn,searchValue:searchValue}],
-    queryFn: getAccount
-  });
-  accountData = data
+  //  const { data, error, isSuccess } = useQuery({
+  //   queryKey: ["Account",{searchColumn:searchColumn,searchValue:searchValue}],
+  //   queryFn: getAccount
+  // });
+
+  // accountData = data
   //  React.useEffect(() => {
   //   doinquiery()
   // }, []);
@@ -96,9 +100,7 @@ function AccountManagement() {
       value: 'userId',
       label: '아이디',
     }
-]
-
-
+   ]
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -132,8 +134,15 @@ function AccountManagement() {
     //             }];
 
     
-      let data1= []
+    // let data1= []
+    const [data1,setData1] = React.useState([])
+    const [exceldata1,setExceldata1] = React.useState([])
+    // let exceldata1 = []
+    
+    const setGridData = () => {
       //const manuplate = () => { 
+        const newItems = data1.slice(0,0)
+        let temp = []
         for (let i=0;i<accountData?.length;i++) {
           let obj1 = {};
             obj1.userid = accountData[i].userId;
@@ -143,26 +152,30 @@ function AccountManagement() {
             obj1.email = accountData[i].userEmail;
             // obj1.rating = Math.floor(Number(accountData[i].serviceStarAvg));
             obj1.rating = accountData[i].serviceStarAvg;
-            //  console.log(obj1)
-            // data1 = [...data1,obj1]
-            data1.push(obj1)
+            // console.log(obj1)
+            newItems.unshift(obj1)
+            setData1(newItems)
+           temp.push(obj1)
         }
-
+        setExceldata(temp)
+      }
+     
+    const setExceldata =(data) => {
+      const newItems = exceldata1.slice(0,0)
       let obj={}
-      let exceldata1 = []
-      for(let i=0;i<data1.length;i++){
+      for(let i=0;i<data.length;i++){
             let j=0;
-            _.map(data1[i], function(val, k) {
+            _.map(data[i], function(val, k) {
                   obj[excelcols[j]]=val;
                     ++j;
             })
-            exceldata1.push(obj)
+            // exceldata1.push(obj)
+            newItems.unshift(obj)
+            setExceldata1(newItems)
             obj={}
       }
-      console.log(exceldata1);
-      //}
+    }
 
-      
      const columns: GridColDef[] = [
       {field: 'id', headerName: '', width: 0 },
       // {field: 'company', headerName: '회사및지점명', width: 150},
@@ -198,7 +211,7 @@ function AccountManagement() {
     const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
       const fileExtension = ".xlsx";
       
-      const exportToExcel = async (fileName) => {
+    const exportToExcel = async (fileName) => {
         const ws = XLSX.utils.json_to_sheet(exceldata1,{header:excelcols});
         const wb = { Sheets: { "data" : ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array"});
@@ -219,6 +232,10 @@ function AccountManagement() {
         }
       };
     
+      // React.useEffect(() => {
+      //   setSearchValue('')
+      // },[])
+
     return (
             <>
             <div style={{
@@ -325,7 +342,9 @@ function AccountManagement() {
                   </Typography>
                 </Button>
                 </div>
-                <img src={frame} style={{
+                <img 
+                  onClick={serSearchValue1}
+                  src={frame} style={{
                      marginLeft:'6px',
                 }} width='36px' height='36px' />
               </Stack>

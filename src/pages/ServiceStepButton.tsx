@@ -21,7 +21,7 @@ type RequestFormProps = {
     step:number;
   }
 
-function ServiceStepButton({handleNextStep, handleCancelStep, step }: RequestFormProps) {
+function ServiceStepButton({onSubmit, handleCancelStep,step }: RequestFormProps) {
     return (
         <React.Fragment>
             <div
@@ -48,7 +48,7 @@ function ServiceStepButton({handleNextStep, handleCancelStep, step }: RequestFor
                         borderRadius: '4px',
                         background: 'var(--Main-Blue-Blue-50, #EEF7FF)'
                     }}
-                    onClick={handleNextStep}
+                    onClick={onSubmit}
                 >
                     <Typography
                         sx={{

@@ -19,23 +19,11 @@ import ServiceStepButton from './ServiceStepButton';
 import group from 'src/assets/images/icons/group.png';
 // import { useForm, FormProvider, useFormContext } from "react-hook-form"
 import {Service} from 'src/types'
+import reducer from './updateAction';
 
-function ServiceRequest() {
-  
-    const [values, setValues] = React.useState({
-        servicename: '',
-        servicecontent: '',
-        servicetype: '',
-        pridicttime: '',
-        priority: '',
-        servicehopedate: '',
-        bigo: '',
-        branch:'',
-        contract:'',
-        asset:[],
-        requester:'',
-    });
-    const [formState, setFormState] = React.useState({
+const initialState = {
+    currentStep: 1,
+    formData: {
         servicename: '',
         servicecontent: '',
         servicetype: '',
@@ -47,61 +35,40 @@ function ServiceRequest() {
         contract:'',
         asset:'',
         requester:'',
-    });
-    
-    // const [file, setFile] = React.useState<File | null>(null);
+        files:[],
+    }
+  };
+function ServiceRequest() {
+    const [state, dispatch] = React.useReducer(reducer, initialState);
+    const { currentStep, formData } = state;
+
+    const handleNextStep = () => {
+        if(currentStep===5){
+            
+        }else
+        dispatch({ type: "next_step" });
+    }
+    const handlePrevStep = () => dispatch({ type: "prev_step" });
+
+    const handleChange = (e) => {
+      dispatch({
+        type: "change",
+        name: e.target.name,
+        value: e.target.value
+      });
+    };
+
     const [fileList, setFileList] = React.useState([])
     const handleFileChange = (list) => {
         console.log(list)
         setFileList(list)
         console.log(fileList)
+        dispatch({
+            type: "change",
+            name: 'files',
+            value: list
+          });
       };
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            setValues({ ...values, [event.target.name]: event.target.value });
-    };
-
-  const [step, setStep] = React.useState(1);
-  
-  const handleNextStep = () => {
-    if(step===1){
-        (values.servicename.trim() === '') ? ( setFormState( formState => ({ ...formState, servicename: 'required' })) ,setStep(0)):'';
-        (values.servicecontent.trim() === '') ? ( setFormState( formState => ({ ...formState, servicecontent: 'required' })) ,setStep(0)):'';
-        (values.servicetype.trim() === '') ? ( setFormState( formState => ({ ...formState, servicetype: 'required' })) ,setStep(0)):'';
-        (values.pridicttime.trim() === '') ? ( setFormState( formState => ({ ...formState, pridicttime: 'required' })) ,setStep(0)):'';
-        (values.priority.trim() === '') ? ( setFormState( formState => ({ ...formState, priority: 'required' })) ,setStep(0)):'';
-        (values.servicehopedate.trim() === '') ? ( setFormState( formState => ({ ...formState, servicehopedate: 'required' })) ,setStep(0)):'';
-    }
-        ( values.branch.trim() === '' && Number(step)===2 ) ? ( setFormState( formState => ({ ...formState, branch: 'required' })) ,setStep(1)):'';
-
-        (values.contract.trim() === '' && Number(step)===3) ? ( setFormState( formState => ({ ...formState, contract: 'required' })) ,setStep(2)):'';
-
-        (values.asset.length<1 && Number(step)===4 ) ? ( setFormState( formState => ({ ...formState, asset: 'required' })) ,setStep(3)):'';
-
-        if(values.requester.trim() === ''  && Number(step)===5 ) { 
-            setFormState( formState => ({ ...formState, requester: 'required' }));
-            setStep(4);
-         }
-         
-         if(step===5 && values.requester.trim() !== ''){
-            alert(JSON.stringify(values));
-         }
-         if(step>5)setStep(step-1);
-      setStep(
-             value => value + 1
-            )
-            console.log('step', step)
-            // console.log(fileList)
-            
-           
-  };
-  const handleCancelStep = ()=> {
-    if(step>1){
-        setStep(step-1);
-    }
-    // setStep(1);
-    console.log('step', step);
-  }
 
     const rqueststep = [
         { title: '요청정보입력', link: '' },
@@ -111,7 +78,7 @@ function ServiceRequest() {
         { title: '요청자선택', link: '' },
         { title: '승인권자선택', link: '' }
     ];
-
+    
     return (
         <Page title="서비스요청">
             <Container
@@ -204,55 +171,10 @@ function ServiceRequest() {
                     </div>
                 </Stack>
 
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '1346px',
-                        padding: '28px',
-                        marginTop: '20px',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: '32px',
-                        borderRadius: '12px',
-                        border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
-                        background: 'var(--White, #FFF)',
-                        position:'relative',
-                        left:'-60px'
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            width: '1316px',
-                            marginTop: '20px',
-                            flexDirection: 'column',
-                            alignItems: 'flex-start',
-                            padding: '32px',
-                            // borderRadius: '12px',
-                            // border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
-                            background: 'var(--White, #FFF)'
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                color: 'var(--Gray-Gray-900, #222)',
-                                fontFamily: 'Pretendard',
-                                fontSize: '20px',
-                                fontStyle: 'normal',
-                                fontWeight: '600',
-                                lineHeight: '28px'
-                            }}
-                        >
-                            서비스 요청
-                        </Typography>
+               
+                        <ServiceRequestForm formData={formData} step={currentStep} handleChange={handleChange} handleFileChange={handleFileChange} handleNextStep={handleNextStep} handlePreveStep={handlePrevStep} />
 
-                        <div style={{marginBottom:'32px'}}></div>
-                        <ServiceRequestForm step={step} values={values} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} />
-
-                    </div>
-                </div>
-
-                <ServiceStepButton handleNextStep={handleNextStep} handleCancelStep={handleCancelStep} step={step} />
+                
                 {/* </form>
                 </FormProvider> */}
             </Container>

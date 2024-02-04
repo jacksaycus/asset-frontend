@@ -2,8 +2,7 @@ import 'simplebar';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { useLocation } from "react-router-dom"
-import { BrowserRouter } from 'react-router-dom';
+import { useLocation, BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import ThemeConfig from '@/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,7 +11,9 @@ import Router from '@/routes';
 import route from './route';
 import findActivePage from 'src/utils/findActivePage';
 import PageContext from 'src/components/PageContext';
-// import {ServiceRequestProvider} from 'src/pages/ServiceRequestContext';
+import AuthProvider from "./components/AuthProvider";
+import { ProtectedRoute } from './components/ProtectedRoute'
+
 const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
@@ -50,11 +51,14 @@ const App = (): JSX.Element => {
       pageContextValue.activePage=''
     }
 
+
     return (
         <ThemeConfig>
             <ScrollToTop />
             <PageContext.Provider value={pageContextValue}>
+            <ProtectedRoute>
             <Router />
+            </ProtectedRoute>
             </PageContext.Provider>
         </ThemeConfig>
     );
@@ -64,10 +68,12 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
     <HelmetProvider>
+      <AuthProvider>
         <BrowserRouter>
         <QueryClientProvider client={queryClient}>
             <App />
         </QueryClientProvider>
         </BrowserRouter>
+        </AuthProvider>
     </HelmetProvider>
 );

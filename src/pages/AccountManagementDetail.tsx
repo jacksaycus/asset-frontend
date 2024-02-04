@@ -8,7 +8,7 @@ import { Icon , addIcon } from '@iconify/react';
 import Rating from '@mui/material/Rating';
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
-import { getAccountDetail } from '../api/assetapi';
+import { getAccountDetail,delAccount } from '../api/assetapi';
 import { useQuery, useMutation, useQueryClient, QueryClient, dataTagSymbol } from '@tanstack/react-query';
 import CustomToolbar from './CustomToolbar'
 import CustomPagination from './CustomPagination'
@@ -89,18 +89,23 @@ let accountList = ['신현은행(인천점)','k-itms01','홍길동','01-111-1111
 
 function AccountManagementDetail({requestno}) {
   const navigate = useNavigate();
-  const moveUpdate = (e) => {
-    e.preventDefault();
-    navigate('/accountupdate');
-  };
-
-  const queryClient = useQueryClient();
+  
+const queryClient = useQueryClient();
 
   const { data, error, isSuccess } = useQuery({
     queryKey: ['AccountDetail',{searchValue:requestno}],
     queryFn: getAccountDetail
   });
 
+  const { mutate } = useMutation({mutationFn : delAccount,
+   onSuccess: () => {
+   //   queryClient.invalidateQueries(["Account"]);
+   },
+   onError: (err) => {
+     console.error(err);
+   },
+ }) 
+ 
   if(_.isUndefined(data))return
   console.log(data)
   
@@ -110,6 +115,31 @@ function AccountManagementDetail({requestno}) {
   accountList[3] = data.userTel
   accountList[4] = data.userMobile
   accountList[5] = data.userEmail
+
+  const moveUpdate = (e) => {
+   e.preventDefault();
+   const param = {
+     requestno:requestno,
+     userId:data.userId,
+     userName: data.userName,
+     branchList:data.branchList,
+     authCode:data.authCode,
+     useEmail: data.userEmail,
+     userMobile: data.userMobile,
+     usePwd: data.userPwd,
+     userTel : data.userTel,
+     attachFileName:data.attachFileName,
+     attachFilePath:data.attachFilePath,
+     attachNo:data.attachNo,
+     userNo:data.userNo,
+   }
+   console.log(param)
+   navigate('/dashboard/accountcreate',{state: {node:'u', param:param} })
+ };
+
+ const handleDelete = (e) => {
+   mutate(data.userNo)
+ }
 
   return(
     <>
@@ -408,9 +438,10 @@ function AccountManagementDetail({requestno}) {
                     borderRadius: '4px',
                     boxShadow: '0px 1px 1px 0px rgba(0, 0, 0, 0.25)'
                   }}
-                  onClick={() => {
+                  onClick={(e) => {
                     if (window.confirm(`진심으로 삭제하시겠습니까?`)) {
                        //mutate(params.row._links.car.href);
+                       handleDelete(e)
                     } 
                   }}
              >

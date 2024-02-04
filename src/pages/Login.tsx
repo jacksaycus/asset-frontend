@@ -11,6 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import DashboardApp from './DashboardApp';
 import {User} from 'src/types'
+import AuthContext from "../components/AuthContext";
 
 const RootStyle = styled('div')({
     display: 'inline-flex',
@@ -43,12 +44,14 @@ const LoginBoxStyle = styled('div')({
 })
 
 function Login() {
+  const { login } = React.useContext(AuthContext);
+  
   const navigate = useNavigate();
   const [user, setUser] = React.useState<User>({
     userid: '',
     password: ''
   });
-  const [isAuthenticated, setAuth] = React.useState(false);
+  // const [isAuthenticated, setAuth] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,11 +84,20 @@ const onSubmit1 = (data: User) => {
    navigate('/dashboard/app');
 };
   const onSubmit = (e: React.SyntheticEvent) => {
-    console.log(e);
+    // console.log(e);
+    login()
    navigate('/dashboard/app');
   }
 
+    // React.useLayoutEffect( ()=> {
+  //   let isAuthenticated = window.sessionStorage.getItem('isAuthenticated');
+  //   console.log(window.sessionStorage.getItem('isAuthenticated'))
+  //   if(isAuthenticated==='true')
+  //      navigate('/dashboard/app')
+  // },[])
+  
     return (
+
         <div style={{
           display: 'flex',
           width: '328px',

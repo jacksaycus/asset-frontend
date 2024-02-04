@@ -26,17 +26,17 @@ type RequestFormProps = {
     handleFileChange: (e:any) => void;
   }
 
-function ServiceRequestForm({ step ,values, formState, handleChange, handleFileChange }: RequestFormProps ) {
+function ServiceRequestForm({formData, step , handleChange, handleFileChange ,handleNextStep, handlePreveStep } ) {
    
 
     return (
         <React.Fragment>
 
-            {step===1 && <ServiceRequestStep1 values={values} handleChange={handleChange} formState={formState} handleFileChange={handleFileChange} /> }
-            {step===2 && <ServiceRequestStep2 values={values} handleChange={handleChange} formState={formState}/> }
-            {step===3 && <ServiceRequestStep3 values={values} handleChange={handleChange} formState={formState}/> }
-            {step===4 && <ServiceRequestStep4 values={values} handleChange={handleChange} formState={formState}/> }
-            {step===5 && <ServiceRequestStep5 values={values} handleChange={handleChange} formState={formState}/> }
+            {step===1 && <ServiceRequestStep1 formData={formData} handleChange={handleChange} handleFileChange={handleFileChange} handleNextStep={handleNextStep} handlePreveStep={handlePreveStep} step={step} /> }
+            {step===2 && <ServiceRequestStep2 formData={formData} handleChange={handleChange} handleNextStep={handleNextStep} handlePreveStep={handlePreveStep} step={step} /> }
+            {step===3 && <ServiceRequestStep3 formData={formData} handleChange={handleChange} handleNextStep={handleNextStep} handlePreveStep={handlePreveStep} step={step} /> }
+            {step===4 && <ServiceRequestStep4 formData={formData} handleChange={handleChange} handleNextStep={handleNextStep} handlePreveStep={handlePreveStep} step={step} /> }
+            {step===5 && <ServiceRequestStep5 formData={formData} handleChange={handleChange} handleNextStep={handleNextStep} handlePreveStep={handlePreveStep} step={step} /> }
             
         </React.Fragment>
     );

@@ -14,6 +14,8 @@ import {
     MenuItem
 } from '@mui/material';
 import {Service} from 'src/types'
+import { useForm } from "react-hook-form"
+import ServiceStepButton from './ServiceStepButton';
 
 const contract = [
     {
@@ -40,10 +42,69 @@ type RequestFormProps = {
     formState: Service;
 };
 
-function ServiceRequestStep2({ values, handleChange, formState }: RequestFormProps) {
-    
+function ServiceRequestStep2({formData, handleChange, handleNextStep, handlePreveStep,step }) {
+    const { register, handleSubmit,trigger, formState: { errors } } = useForm()
+    const onSubmit = (data) => {
+        trigger().then((res) => {
+            if (res) {
+                handleNextStep()
+            }})
+    }
     return (
         <React.Fragment>
+            <div
+                    style={{
+                        display: 'flex',
+                        width: '1346px',
+                        padding: '28px',
+                        marginTop: '20px',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '32px',
+                        borderRadius: '12px',
+                        border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                        background: 'var(--White, #FFF)',
+                        position:'relative',
+                        left:'-60px'
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '1316px',
+                            marginTop: '20px',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            padding: '32px',
+                            // borderRadius: '12px',
+                            // border: '1px solid var(--Gray-Gray-300, #E0E0E0)',
+                            background: 'var(--White, #FFF)'
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                color: 'var(--Gray-Gray-900, #222)',
+                                fontFamily: 'Pretendard',
+                                fontSize: '20px',
+                                fontStyle: 'normal',
+                                fontWeight: '600',
+                                lineHeight: '28px'
+                            }}
+                        >
+                            서비스 요청
+                        </Typography>
+
+                        <div style={{marginBottom:'32px'}}></div>
+
+            <form  autoComplete="off"
+                            method="post"
+                            noValidate
+                            onSubmit={handleSubmit(onSubmit)}
+                            encType="multipart/form"
+            >
+
+
+
             <div
                 style={{
                     display: 'flex',
@@ -81,9 +142,10 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                     *
                 </Typography>
                 <TextField
+                 {...register('contract', { required: true} )}
                     fullWidth
                     name="contract"
-                    value={values.contract}
+                    value={formData.contract}
                     variant="standard"
                     select
                     InputProps={{disableUnderline:true}}
@@ -98,12 +160,12 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                             flex: '1 0 0',
                             paddingLeft: '20px'
 
-                            ,background : formState.contract === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)', 
-                            marginBottom: formState.contract === "required" ?'20px' : '',    
-                            borderWidth: formState.contract === "required" ? '1px 1px 1px 10px': '' ,
-                            borderStyle: formState.contract === "required" ? 'solid' : '',
-                            borderColor: formState.contract === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                            borderImage: formState.contract === "required" ? 'initial' : '',
+                            ,background : errors.contract?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : 'var(--Gray-Gray-100, #F5F5F5)', 
+                            marginBottom: errors.contract?.type === "required" ?'20px' : '',    
+                            borderWidth: errors.contract?.type === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: errors.contract?.type === "required" ? 'solid' : '',
+                            borderColor: errors.contract?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: errors.contract?.type === "required" ? 'initial' : '',
                         }
                     }}
                     onChange={handleChange}
@@ -115,6 +177,14 @@ function ServiceRequestStep2({ values, handleChange, formState }: RequestFormPro
                     ))}
                 </TextField>
             </div>
+
+            </form>
+
+            </div>
+                </div>
+
+                <ServiceStepButton onSubmit={onSubmit} handleCancelStep={handlePreveStep} step={step} />
+
         </React.Fragment>
     );
 }

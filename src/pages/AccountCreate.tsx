@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box } from '@mui/material';
+import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box, Alert } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import Page from 'src/components/Page';
+import { useLocation  } from 'react-router-dom'
+import { useMutation, useQueryClient, useQuery,QueryClient } from '@tanstack/react-query';
+// import Page from 'src/components/Page';
 import { styled } from '@mui/material/styles';
 import { Icon, addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
@@ -102,30 +103,81 @@ function AccountCreate() {
         handleSubmit,
         watch,
         trigger,
+        setValue,
+        getValues,
         formState: { errors }
     } = useForm<Account>();
 
-    const [values, setValues] = React.useState<Account>({
-        company: '',
-        userid:  '',
-        authority:  '',
-        username :  '',
-        tel :  '',
-        phone:  '',
-        email :  '',
-        rating:  '0',
-        password:  '',
-        repassword:  '',
-        priority: '',
-        bigo: '',
-        branch: '',
-    });
+    let location = useLocation();
+    
+    // const [values, setValues] = React.useState<Account>({
+    //     company: '',
+    //     userid:  '',
+    //     authority:  '',
+    //     username :  '',
+    //     tel :  '',
+    //     phone:  '',
+    //     email :  '',
+    //     rating:  '0',
+    //     password:  '',
+    //     repassword:  '',
+    //     priority: '',
+    //     bigo: '',
+    //     branch: '',
+    // });
+    const undefinedtostr = (str) =>{
+        if(str==null || _.isUndefined(str))return ''
+        else return str
+    }
+   
+    //  let values = {
+    //         company: '',
+    //          userid:  '',
+    //          authority:  '',
+    //          username :  '',
+    //          tel :  '',
+    //          phone:  '',
+    //          email :  '',
+    //          rating:  '0',
+    //          password:  '',
+    //          repassword:  '',
+    //          priority: '',
+    //          bigo: '',
+    //          branch: '',
+    //  }
+    //  let branchname=''
+
+     //  if(location.state.node==='u'){
+    //     const param = location.state.param
+    //     values.userid = undefinedtostr(param.userId)
+    //     values.username = undefinedtostr(param.userName)
+    //     values.password = undefinedtostr(param.userPwd)
+    //     values.tel = undefinedtostr(param.userTel)
+    //     values.phone = undefinedtostr(param.userMobile)
+    //     values.email = undefinedtostr(param.userEmail)
+    //     values.bigo = undefinedtostr(param.userEtc)
+    //     values.branch=''
+    //     let temp = undefinedtostr(param.branchList)
+    //     if(temp!==''){
+    //     let str=''
+    //     for(let i=0;i<param.branchList.length;i++){
+    //        str += param.branchList[0].branchNo
+    //        str+=','
+    //        branchname += param.branchList[0].branchName
+    //        branchname+=','
+    //     }
+    //     values.branch=undefinedtostr(param.branchList)
+    //    }
+       
+    //  }
+
     const[auth,setAuth] = React.useState(0)
     const handleAuth = (param) => {
         setAuth(Number(param))
         console.log('auth',auth)
     }
-    
+    const [isWarning, setIsWarning] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
     const [file, setFile] = React.useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,54 +186,12 @@ function AccountCreate() {
     }
   };
 
-    const [commpanyname, setCompanyname] = React.useState('');
+    // const [commpanyname, setCompanyname] = React.useState('');
     const [branchname, setBranchname] = React.useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...values, [event.target.name]: event.target.value });
+        // setValues({ ...values, [event.target.name]: event.target.value });
     }
-
-    const queryClient = useQueryClient()
-
-    // const queryClient = new QueryClient({
-    //     defaultOptions: {
-    //       queries: {
-    //       },
-    //     },
-    //   })
-    
-      const { data, error, isSuccess } = useQuery({
-           queryKey: ['Branch'],
-           queryFn: getBranch
-      });
-      let company=[]
-      let branch=[]
-     for (let i=0;i<data?.length;i++){
-        let obj = {}
-        obj.value=data[i].compNo
-        obj.label=data[i].compName
-        company.push(obj)
-      }
-      
-      // console.log(company)
-      company = _.uniqBy(company, 'label');
-      console.log(company)
-      const setBranch = (companyno) =>{
-        let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
-        console.log('tempbranch',tempbranch)
-        for (let i=0;i<tempbranch?.length;i++){
-          let obj = {}
-          obj.value=tempbranch[i].branchNo
-          obj.label=tempbranch[i].branchName
-          branch.push(obj)
-        }
-        console.log('branch',branch)
-        return branch
-        }
-      if(company.length>0)
-      branch = setBranch(company[0].value)
-
-
 
     const { mutate } = useMutation({mutationFn : addAccount,
         onSuccess: () => {
@@ -192,80 +202,134 @@ function AccountCreate() {
         },
       }) 
 
-      const handleSave = async () => {
-        console.log('values...',values)
-        const isValid = await trigger();
-       console.log(isValid);
-       if(!isValid)return
-        
-        let param = {
-        'userId' : values.userid,
-        'userName' : values.username,
-        'userPwd': values.password,
-        'userTel': values.tel,
-        'userMobile': values.phone,
-        'userEmail': values.email,
-        'userEtc': values.bigo,
-        'enable': 'true',
-        'file': file,
-        'authCode': auth,
-        'branchList':values.branch
+      const handleSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+        console.log(branchname.length)
+        if(branchname.length<1){
+            setIsWarning(true)
+            return;
         }
+        
+    //    const isValid = await trigger();
+    //    console.log(isValid);
+    //    if(!isValid)return
+        
+        // let param = {
+        // 'userId' : values.userid,
+        // 'userName' : values.username,
+        // 'userPwd': values.password,
+        // 'userTel': values.tel,
+        // 'userMobile': values.phone,
+        // 'userEmail': values.email,
+        // 'userEtc': values.bigo,
+        // 'enable': 'true',
+        // 'file': file,
+        // 'authCode': auth,
+        // 'branchList':values.branch
+        // }
+        // console.log(param)
+        let param = new FormData()
+        param.append('userId', undefinedtostr(getValues('userid')))
+        param.append('userName', undefinedtostr(getValues('username')))
+        param.append('userPwd', undefinedtostr(getValues('password')))
+        param.append('userTel', undefinedtostr(getValues('tel')))
+        param.append('userMobile', undefinedtostr(getValues('phone')))
+        param.append('userEmail', undefinedtostr(getValues('email')))
+        param.append('userEtc', undefinedtostr(getValues('bigo')))
+        param.append('enable', 'true')
+        param.append('enabled', 'true')
+        param.append('authCode',auth)
+        param.append('branchList', undefinedtostr(getValues('branch')))
+        param.append('file',file,file?.name)
+        for (var key of param.entries()) {
+            console.log(key[0] + ', ' + key[1]);
+        }
+    
+        console.log(file)
+        let mode='POST'
+        if(location.state!=null){
+            mode='PUT'
+        }
+        param.append('mode',mode)
         console.log(param)
         mutate(param)
       }  
     
-    const handleSubmit1 = (e) => {
-        e.preventDefault();
-        console.log(`${values.userid} ${values.password}`);
-        // navigate('/', { replace: true });
-
-    //   const formData = new FormData();
-    //   formData.append('_method', 'put');
-    //   formData.append('first_name', values.first_name);
-    //   formData.append('last_name', values.last_name);
-    //   formData.append('phone_no', values.phone_no);
-    //   formData.append('profile_picture', values.profile_picture, 'bermuda.png');
-    //   formData.append('password', values.password);
-
-    //   await axios
-    //     .post(`/api/v1/users/${user.member_no}`, formData, 
-    //      {
-    //        headers: {'Content-Type': 'multipart/form-data'}
-    //      })
-    //     .then((res) => {
-    //       console.log(res.data);
-    //       if (res.status === 201) {
-    //         console.log('success');
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.response.data.message);
-    //     });
-    // },
-
-    };
-
-    const onSubmit = (data: any) => {
-        alert(JSON.stringify(data));
+ 
+    const onSubmit = (data: any,e) => {
         console.log(data)
-         handleSave()
+        // values.userid = undefinedtostr(data.userid)
+        // values.username = undefinedtostr(data.username)
+        // values.password = undefinedtostr(data.password)
+        // values.tel = undefinedtostr(data.tel)
+        // values.phone = undefinedtostr(data.phone)
+        // values.email = undefinedtostr(data.email)
+        // values.bigo = undefinedtostr(data.bigo)
+        //console.log(JSON.stringify(data));
+        // console.log(values)
+        handleSave(e)
     };
 
-    const [open, setOpen] = React.useState(false);
+    const setBranchName1 = () => {
+        setBranchname('')
+    }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = (branchname) => {
+    const setValues1 = (name,value) => {
+        //setValues({ ...values, [name]: value });
+        setValue('branch', value)
+        
+    }
+    
+    const handleClose = (branchname1) => {
         setOpen(false);
-        setCompanyname('');
-        setBranchname(branchname);
+        //setCompanyname('');
+        setBranchname(branchname1)
+        setIsWarning(false)
     };
 
+    React.useEffect(() => {
+        if(location.state!=null){
+            console.log(location.state.node)
+            const param = location.state.param
+            console.log(param)
+            setValue('userid', undefinedtostr(param.userId))
+            setValue('username', undefinedtostr(param.userName))
+            setValue('password' , undefinedtostr(param.usePwd))
+            setValue('tel' , undefinedtostr(param.userTel))
+            setValue('phone' , undefinedtostr(param.userMobile))
+            setValue('email' , undefinedtostr(param.userEmail))
+            setValue('bigo' , undefinedtostr(param.userEtc))
+            setValue('branch','')
+            
+            let temp = undefinedtostr(param.branchList)
+            if(temp!==''){
+            let str=''
+            let branchname=''
+            for(let i=0;i<param.branchList.length;i++){
+               str += param.branchList[i].branchNo
+               str+=','
+               branchname += param.branchList[i].branchName
+               branchname+=','
+            }
+            // console.log(branchname)
+            setBranchname(branchname)
+            setValue('branch',str)
+            setValue('attachFileName' , undefinedtostr(param.attachFileName))
+            setValue('attachFilePath' , undefinedtostr(param.attachFilePath))
+            setValue('attachNo' , undefinedtostr(param.attachNo))
+            setValue('userNo' , undefinedtostr(param.userNo))
+           }
+        }    
+      }, [])
     return (
         <>
-            <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
+            <form autoComplete="off" method='post' noValidate onSubmit={handleSubmit(onSubmit)} encType='multipart/form'>
+                <input type='hidden' {...register('branch', { required: false} )} />
+                <input type='hidden' {...register('attachFileName', { required: false} )} />
+                <input type='hidden' {...register('attachFilePath', { required: false} )} />
+                <input type='hidden' {...register('attachNo', { required: false} )} />
+                <input type='hidden' {...register('userNo', { required: false} )} />
+                
                 <RootDiv>
                     <Typography
                         sx={{
@@ -506,170 +570,15 @@ function AccountCreate() {
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={0}>
-                        {/* <SearchButton>
-                        <Typography
-                           sx={{
-                            color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                            textAlign: 'center',
-                            fontFamily: 'Pretendard',
-                            fontSize: '14px',
-                            fontStyle: 'normal',
-                            fontWeight: '600',
-                            lineHeight: '20px'
-                           }}
-                           >
-                            찾아보기
-                           </Typography>
-                           {getIcon('search')}
-                    </SearchButton> */}
                         
-                        
-                        
-                        {/* <Button
-                            sx={{
-                                display: 'flex',
-                                padding: '8px 16px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: '16px',
-                                borderRadius: '100px',
-                                border: '1px solid var(--Main-Blue-Blue-500, #067DFD)',
-                                background: 'var(--White, #FFF)'
-                            }}
-                            onClick={handleClickOpen}
-                        >
-                            <Typography
-                                sx={{
-                                    color: 'var(--Main-Blue-Blue-500, #067DFD)',
-                                    textAlign: 'center',
-                                    fontFamily: 'Pretendard',
-                                    fontSize: '14px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '600',
-                                    lineHeight: '20px'
-                                }}
-                            >
-                                찾아보기
-                            </Typography>
-                            {getIcon('search')}
-                        </Button> */}
-
-
-
-                        {/* </SearchButton> */}
-                        {/* <CompanyDialog mopen={open} handleClose1={handleClose} /> */}
-                        <CompanyDialog handleClose1={handleClose} branch={branch} company={company} data={data} setBranch={setBranch} />
+                        <CompanyDialog handleClose1={handleClose} setBranchName1= {setBranchName1} setValues1={setValues1} />
                         <span>
-                            {commpanyname} {branchname}
+                            {branchname}
                         </span>
+                        {isWarning &&
+                        <Alert severity="error" >지점을 선택하세요</Alert>
+                        }
                     </Stack>
-{/* 
-                    <Stack
-                        direction="row"
-                        spacing={0}
-                        sx={{
-                            paddingTop: '20px',
-                            paddingBottom:'0px',
-                            marginBottom:'0px'
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                color: 'var(--Gray-Gray-900, #222)',
-                                fontFamily: 'Pretendard',
-                                fontSize: '14px',
-                                fontStyle: 'normal',
-                                fontWeight: '700',
-                                lineHeight: '20px'
-                            }}
-                        >
-                            아이디
-                        </Typography>
-                        <Typography
-                            sx={{
-                                color: 'var(--Main-Red-Red-500, #EF2B2A)',
-                                fontFamily: 'Pretendard',
-                                fontSize: '14px',
-                                fontStyle: 'normal',
-                                fontWeight: '700',
-                                lineHeight: '20px'
-                            }}
-                        >
-                            *
-                        </Typography>
-                    </Stack>
-                    <TextField
-                        {...register('userid', { required: true} )}
-                        fullWidth
-                        variant="outlined"
-                        // InputProps={{disableUnderline:true}}
-                        sx={{
-                            // display: 'flex',
-                            // height: '48px',
-                            // padding: '16px',
-                            // flexDirection: 'column',
-                            // justifycontent: 'left',
-                            // alignItems: 'flex-start',
-                            // alignSelf: 'stretch',
-                            // borderRadius: '4px',
-                            // paddingTop: '20px'
-                            // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
-
-                            background : errors.userid?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
-                            marginBottom: errors.userid?.type === "required" ?'20px' : '',    
-                            borderWidth: errors.userid?.type === "required" ? '1px 1px 1px 10px': '' ,
-                            borderStyle: errors.userid?.type === "required" ? 'solid' : '',
-                            borderColor: errors.userid?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
-                            borderImage: errors.userid?.type === "required" ? 'initial' : '',
-                        }}
-                        name="userid"
-                        value={values.userid}
-                        onChange={handleChange}
-                    />
-                    <Stack
-                        direction="row"
-                        spacing={0}
-                        sx={{
-                            paddingTop: '20px',
-                            paddingBottom:'0px',
-                            marginBottom:'0px'
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                color: 'var(--Gray-Gray-900, #222)',
-                                fontFamily: 'Pretendard',
-                                fontSize: '14px',
-                                fontStyle: 'normal',
-                                fontWeight: '700',
-                                lineHeight: '20px'
-                            }}
-                        >
-                            이름
-                        </Typography>
-                    </Stack>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        // InputProps={{disableUnderline:true}}
-                        sx={{
-                            // display: 'flex',
-                            // height: '48px',
-                            // padding: '16px',
-                            // flexDirection: 'column',
-                            // justifycontent: 'left',
-                            // alignItems: 'flex-start',
-                            // alignSelf: 'stretch',
-                            // borderRadius: '4px',
-                            // paddingTop: '20px'
-                        }}
-                        name="username"
-                        value={values.username}
-                        onChange={handleChange}
-                    /> */}
-                    {/* {errors.userid?.type === "required" && <span>아이디를 입력하세요</span>} */}
-                    
-                    
                     
                     <Grid
                         container
@@ -721,7 +630,18 @@ function AccountCreate() {
                                 >
                                     이름
                                 </Typography>
-                                
+                                <Typography
+                                    sx={{
+                                        color: 'var(--Main-Red-Red-500, #EF2B2A)',
+                                        fontFamily: 'Pretendard',
+                                        fontSize: '14px',
+                                        fontStyle: 'normal',
+                                        fontWeight: '700',
+                                        lineHeight: '20px'
+                                    }}
+                                >
+                                    *
+                                </Typography>
                             </Stack>
                         </Grid>
                     </Grid>
@@ -742,29 +662,27 @@ function AccountCreate() {
                             borderImage: errors.userid?.type === "required" ? 'initial' : '',
                         }}
                         name="userid"
-                        value={values.userid}
+                        // value={values.userid}
                         onChange={handleChange}
                     />
                     </Grid>
                     <Grid item>
                         <TextField
+                        {...register('username', { required: true} )}
                         fullWidth
                         variant="outlined"
                         // InputProps={{disableUnderline:true}}
                         sx={{
                             width: '535px',
-                            // display: 'flex',
-                            // height: '48px',
-                            // padding: '16px',
-                            // flexDirection: 'column',
-                            // justifycontent: 'left',
-                            // alignItems: 'flex-start',
-                            // alignSelf: 'stretch',
-                            // borderRadius: '4px',
-                            // paddingTop: '20px'
+                            background : errors.username?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                            marginBottom: errors.username?.type === "required" ?'20px' : '',    
+                            borderWidth: errors.username?.type === "required" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: errors.username?.type === "required" ? 'solid' : '',
+                            borderColor: errors.username?.type === "required" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: errors.username?.type === "required" ? 'initial' : '',
                         }}
                         name="username"
-                        value={values.username}
+                        // value={values.username}
                         onChange={handleChange}
                     />
                      <div style={{display:'flex', flexDirection:'row', margin:'0px', padding:'0px'}} >
@@ -851,15 +769,6 @@ function AccountCreate() {
                                 // InputProps={{disableUnderline:true}}
                                 sx={{
                                      width: '535px',
-                                    // display: 'flex',
-                                    // height: '38px',
-                                    // padding: '0px',
-                                    // flexDirection: 'column',
-                                    // justifycontent: 'left',
-                                    // alignItems: 'flex-start',
-                                    // alignSelf: 'stretch',
-                                    // borderRadius: '4px'
-                                      // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                                     background : errors.password?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
                                     marginBottom: errors.password?.type === "required" ?'20px' : '',    
                                     borderWidth: errors.password?.type === "required" ? '1px 1px 1px 10px': '' ,
@@ -869,7 +778,7 @@ function AccountCreate() {
                                 }}
                                 type="password"
                                 name="password"
-                                value={values.password}
+                                // value={values.password}
                                 onChange={handleChange}
                             />
                             {/* {errors.password?.type === "required" && <p>비밀번호를 입력하세요</p>} */}
@@ -888,14 +797,6 @@ function AccountCreate() {
                                 // InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
-                                    // display: 'flex',
-                                    // height: '38px',
-                                    // padding: '0px',
-                                    // flexDirection: 'column',
-                                    // justifycontent: 'left',
-                                    // alignItems: 'flex-start',
-                                    // alignSelf: 'stretch',
-                                    // borderRadius: '4px'
                                     background : errors.repassword?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
                                     marginBottom: errors.repassword?.type === "required" ?'20px' : '',    
                                     borderWidth: errors.repassword?.type === "required" ? '1px 1px 1px 10px': '' ,
@@ -972,23 +873,16 @@ function AccountCreate() {
                     <Grid container spacing={2} ml={{ m: 0 }}>
                         <Grid item>
                             <TextField
+                            {...register('tel', { required: true} )}
                                 fullWidth
                                 variant="outlined"
                                 // InputProps={{disableUnderline:true}}
                                 sx={{
                                     width: '535px',
-                                    // display: 'flex',
-                                    // height: '38px',
-                                    // padding: '0px',
-                                    // flexDirection: 'column',
-                                    // justifycontent: 'left',
-                                    // alignItems: 'flex-start',
-                                    // alignSelf: 'stretch',
-                                    // borderRadius: '4px'
-                                      // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                                    
                                 }}
                                 name='tel'
-                                value={values.tel}
+                                // value={values.tel}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -1001,14 +895,7 @@ function AccountCreate() {
                                 helperText='ex) 000-0000-0000'
                                 sx={{
                                     width: '535px',
-                                    // display: 'flex',
-                                    // height: '38px',
-                                    // padding: '0px',
-                                    // flexDirection: 'column',
-                                    // justifycontent: 'left',
-                                    // alignItems: 'flex-start',
-                                    // alignSelf: 'stretch',
-                                    // borderRadius: '4px'
+                                    
                                     background : errors.phone?.type === "required" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
                                     marginBottom: errors.phone?.type === "required" ?'20px' : '',    
                                     borderWidth: errors.phone?.type === "required" ? '1px 1px 1px 10px': '' ,
@@ -1017,7 +904,7 @@ function AccountCreate() {
                                     borderImage: errors.phone?.type === "required" ? 'initial' : '',  
                                 }}
                                 name="phone"
-                                value={values.phone}
+                                // value={values.phone}
                                 onChange={handleChange}
                             />
                             {/* {errors.phone?.type === "required" && <p>핸드폰 연락처를 입력하세요</p>}*/}
@@ -1025,6 +912,59 @@ function AccountCreate() {
                         </Grid>
                     </Grid>
                     
+                      <Stack
+                        direction="row"
+                        spacing={0}
+                        sx={{
+                            paddingTop: '20px'
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                color: 'var(--Gray-Gray-900, #222)',
+                                fontFamily: 'Pretendard',
+                                fontSize: '14px',
+                                fontStyle: 'normal',
+                                fontWeight: '700',
+                                lineHeight: '20px'
+                            }}
+                        >
+                            이메일
+                        </Typography>
+                    </Stack>
+                    <TextField
+                    {...register('email', { required: true} )}
+                        fullWidth
+                        variant="outlined"
+                        // InputProps={{disableUnderline:true}}
+                        {...register("email", {
+                            pattern: {
+                              value: /\S+@\S+\.\S+/,
+                              message: "이메일을 제대로 입력하세요",
+                            },
+                          })}
+                        sx={{
+                            display: 'flex',
+                            height: '46px',
+                            padding: '0px',
+                            flexDirection: 'column',
+                            justifycontent: 'left',
+                            alignItems: 'flex-start',
+                            alignSelf: 'stretch',
+                            borderRadius: '4px',
+                            // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
+                            background : errors.email?.type === "pattern" ?'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',    
+                            marginBottom: errors.email?.type === "pattern" ?'20px' : '',    
+                            borderWidth: errors.email?.type === "pattern" ? '1px 1px 1px 10px': '' ,
+                            borderStyle: errors.email?.type === "pattern" ? 'solid' : '',
+                            borderColor: errors.email?.type === "pattern" ? 'rgb(191, 22, 80) rgb(191, 22, 80) rgb(191, 22, 80) rgb(236, 89, 144)' : '',
+                            borderImage: errors.email?.type === "pattern" ? 'initial' : '',
+                        }}
+                        name="email"
+                        // value={values.email}
+                        onChange={handleChange}
+                    />
+
                     {/* <Stack
                         direction="row"
                         spacing={0}
@@ -1197,6 +1137,7 @@ function AccountCreate() {
                         }}
                     >
                         <TextField
+                        {...register('bigo', { required: true} )}
                             fullWidth
                             variant="outlined"
                             // InputProps={{disableUnderline:true}}
@@ -1212,7 +1153,7 @@ function AccountCreate() {
                                 // border: '1px solid var(--Main-Blue-Blue-500, #067DFD)'
                             }}
                             name="bigo"
-                            value={values.bigo}
+                            // value={values.bigo}
                             onChange={handleChange}
                         />
                     </div>
@@ -1232,9 +1173,9 @@ function AccountCreate() {
                                 '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)'
                         }}
                         type='submit'
-                        // onClick={() => {
-                        //     handleSave()
-                        //   }}
+                        //  onClick={(e) => {
+                        //      handleSave(e)
+                        //    }}
                         // onClick={handleSave}
                     >
                         <Typography

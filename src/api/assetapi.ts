@@ -41,15 +41,29 @@ export const getAccountDetail = async (param): Promise<any[]> => {
 }
 
 export const addAccount = async (account: any): Promise<any[]> => {
-  console.log('addAccount...')
-  const response = await axios.post(`${import.meta.env.VITE_API_URL}/kitms-user`, ...account, {
+  const method = account.get('mode')
+  console.log('addAccount...',method)
+  const response = await axios( {
+    method: method,
+    url: `${import.meta.env.VITE_API_URL}/kitms-user`,
     headers: { 'Content-Type': 'multipart/form-data' },
-  });
-
+    data: account
+  }
+  );
   return response.data;
 }
-
+export const delAccount = async (account: any): Promise<any[]> => {
+  const response = await axios( {
+    method: 'DELETE',
+    url: `${import.meta.env.VITE_API_URL}/kitms-user`,
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: account
+  }
+  );
+  return response.data;
+}
 export const getBranch = async (): Promise<any[]> => {
+  console.log('.........getbranch')
   let qstr = `${import.meta.env.VITE_API_URL}/common/getKitmsCommonBranchList`
   const response = await axios.get(qstr);
   // console.log(response.data)
