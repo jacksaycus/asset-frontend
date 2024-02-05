@@ -33,30 +33,36 @@ export const getAccountDetail = async (param): Promise<any[]> => {
   console.log(param.queryKey[1]);
   console.log(param.queryKey[1].searchValue)
     const searchValue = param.queryKey[1].searchValue 
-  // let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/${searchValue}`
-  let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/11`
+  let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/${searchValue}`
+  // let qstr = `${import.meta.env.VITE_API_URL}/kitms-user/11`
   const response = await axios.get(qstr);
   // console.log(response.data)
   return response.data;
 }
 
 export const addAccount = async (account: any): Promise<any[]> => {
+  for (var key of account.entries()) {
+    console.log(key[0] + ', ' + key[1]);
+}
   const method = account.get('mode')
+  // const method = account.mode
   console.log('addAccount...',method)
   const response = await axios( {
     method: method,
     url: `${import.meta.env.VITE_API_URL}/kitms-user`,
     headers: { 'Content-Type': 'multipart/form-data' },
+    // headers: { 'Content-Type': 'application/json' },
     data: account
   }
   );
   return response.data;
 }
+
 export const delAccount = async (account: any): Promise<any[]> => {
   const response = await axios( {
     method: 'DELETE',
-    url: `${import.meta.env.VITE_API_URL}/kitms-user`,
-    headers: { 'Content-Type': 'multipart/form-data' },
+    url: `${import.meta.env.VITE_API_URL}/kitms-user?userNo=${account}`,
+    // headers: { 'Content-Type': 'multipart/form-data' },
     data: account
   }
   );

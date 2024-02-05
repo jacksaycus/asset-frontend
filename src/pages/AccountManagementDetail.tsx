@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
+import {Snackbar } from '@mui/material';
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid'
 import MuiPagination from '@mui/material/Pagination';
 import { Icon , addIcon } from '@iconify/react';
@@ -87,7 +88,8 @@ const DeviderStyle = styled('div')({
 const accountListColumn = ['회사및지점','아이디','이름','연란처','핸드폰 연락처','이메일'];
 let accountList = ['신현은행(인천점)','k-itms01','홍길동','01-111-1111','02-000-0000','gildong@k-one.co.kr'];
 
-function AccountManagementDetail({requestno}) {
+function AccountManagementDetail({requestno,toggleDetail}) {
+  console.log(requestno)
   const navigate = useNavigate();
   
 const queryClient = useQueryClient();
@@ -97,9 +99,13 @@ const queryClient = useQueryClient();
     queryFn: getAccountDetail
   });
 
+  const[isSave,setIsSave] = React.useState(false)    
   const { mutate } = useMutation({mutationFn : delAccount,
    onSuccess: () => {
    //   queryClient.invalidateQueries(["Account"]);
+   setIsSave(true)
+  //  navigate(-1)
+  toggleDetail()
    },
    onError: (err) => {
      console.error(err);
@@ -462,6 +468,11 @@ const queryClient = useQueryClient();
 
         </Stack>
       </AccountDetailRootDiv>
+      <Snackbar
+          open={isSave}
+          autoHideDuration={2000}
+          onClose={() => setOpen(false)}
+          message="삭제되었습니다" />
     </>
   );
 }

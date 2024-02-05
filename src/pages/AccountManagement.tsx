@@ -145,6 +145,7 @@ function AccountManagement() {
         let temp = []
         for (let i=0;i<accountData?.length;i++) {
           let obj1 = {};
+            obj1.userNo = accountData[i].userNo;
             obj1.userid = accountData[i].userId;
             obj1.name = accountData[i].userName;
             obj1.tel = accountData[i].userTel;
@@ -177,7 +178,7 @@ function AccountManagement() {
     }
 
      const columns: GridColDef[] = [
-      {field: 'id', headerName: '', width: 0 },
+      {field: 'userNo', headerName: '', width: 0 },
       // {field: 'company', headerName: '회사및지점명', width: 150},
       {field: 'userid', headerName: '아이디', width: 120},
       // {
@@ -219,18 +220,26 @@ function AccountManagement() {
         FileSaver.saveAs(data1, fileName + fileExtension);
       }
 
-      const [olddetail,setOlddetail] = React.useState('');
-      let detailrow = 0;
+      const [olddetail,setOlddetail] = React.useState(0);
+      let detailrow = -1;
       const handleRowClick: GridEventListener<'rowClick'> = (params) => {
-        if(params.row.requestno===olddetail){
+        console.log(params.row.userNo)
+        if(params.row.userNo===olddetail){
+          // alert('1')
            setDetail(false);
            setOlddetail(''); 
-           detailrow = params.row.requestno
         }else{
+          // alert('2')
            setDetail(true);
-           setOlddetail(params.row.requestno); 
+           setOlddetail(params.row.userNo);
+           detailrow = params.row.userNo
         }
       };
+
+      const toggleDetail = () =>{
+        setDetail(false)
+        doinquiery()        
+      }
     
       // React.useEffect(() => {
       //   setSearchValue('')
@@ -445,6 +454,7 @@ function AccountManagement() {
                        }}
                        onRowClick={handleRowClick}
                           columnVisibilityModel={{
+                            userNo:false,
                             id: false,
                           }}
                           rows={data1}
@@ -452,6 +462,7 @@ function AccountManagement() {
                           disableRowSelectionOnClick={true}
                           // getRowId={row => row._links.self.href}
                           getRowId={(row: any) =>  uuidv4()}
+                          // getRowId={(row: any) =>  row.userNo}
                           slots={{ pagination: CustomPagination, toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
                           // slots={{ toolbar: CustomToolbar,noRowsOverlay: CustomNoRowsOverlay }}
                           checkboxSelection
@@ -464,7 +475,7 @@ function AccountManagement() {
 
             {
                  detail && 
-                     <AccountManagementDetail requestno={detailrow} />
+                     <AccountManagementDetail requestno={olddetail} toggleDetail = {toggleDetail} />
             }
 
             <div style={{

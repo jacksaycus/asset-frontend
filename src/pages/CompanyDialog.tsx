@@ -102,29 +102,30 @@ function CompanyDialog(props) {
     let branch=[]
 
   
-  const [branches, setBranches] = React.useState<string[]>([]);
+  const [branches, setBranches] = React.useState<Number[]>([]);
 
-  let fetched = false
-  const { data, error, isSuccess, refetch, isFetching } = useQuery({
+  
+  const { data, error, isSuccess, refetch, isFetching,isFetched } = useQuery({
     queryKey: ['Branch'],
     queryFn: getBranch,
-    enabled:fetched
+    // enabled:fetched
     });
-    
-  
+    console.log(open1)
+    if(open1){
     for (let i=0;i<data?.length;i++){
     let obj = {}
     obj.value=data[i].compNo
     obj.label=data[i].compName
     company.push(obj)
-    }
+    
   
 
     console.log(company)
     company = _.uniqBy(company, 'label');
     console.log(company)
-  
+  }
 
+}
     const setBranch = (companyno) =>{
     let tempbranch =  _.filter(data, function(o) { return o.compNo===companyno });
     console.log('tempbranch',tempbranch)
@@ -153,7 +154,7 @@ function CompanyDialog(props) {
         branch = setBranch(event.target.value)
       }if(event.target.name==='branch'){
         setBranches(
-          typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+          typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
        )
         // setValues({...values, [event.target.name]: event.target.value});
     }
@@ -188,16 +189,16 @@ function CompanyDialog(props) {
   }
   
     const handleInit = () => {
-        props.setValues({...values,
-            ['company']: '',
-            ['branch']: '',
-          });
+        // props.setValues({...values,
+        //     ['company']: '',
+        //     ['branch']: '',
+        //   });
           setBranches([])
         console.log(values);
     }
 
     const handleClickOpen = () => {
-      refetch()
+      // refetch()
       setOpen1(true)
       // props.setBranchName1()
       // props.setValues1('branch', '');

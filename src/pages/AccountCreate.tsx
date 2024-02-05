@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box, Alert } from '@mui/material';
+import { Container, Button, Stack, Typography, TextField, Grid, Paper, Box, Alert,Snackbar } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useLocation  } from 'react-router-dom'
 import { useMutation, useQueryClient, useQuery,QueryClient } from '@tanstack/react-query';
 // import Page from 'src/components/Page';
@@ -9,7 +10,7 @@ import { Icon, addIcon } from '@iconify/react';
 import ErrorIcon from 'src/assets/images/icons/error.png';
 import CompanyDialog from './CompanyDialog';
 import { Account } from 'src/types';
-import { addAccount,getBranch } from '../api/assetapi';
+import { addAccount,getBranch,delAccount } from '../api/assetapi';
 import Auth0 from 'src/assets/images/icons/auth0.png';
 import Auth1 from 'src/assets/images/icons/auth1.png';
 import Auth2 from 'src/assets/images/icons/auth2.png';
@@ -98,6 +99,7 @@ const AttachCommentStyle = styled('div')({
 });
 
 function AccountCreate() {
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -110,67 +112,11 @@ function AccountCreate() {
 
     let location = useLocation();
     
-    // const [values, setValues] = React.useState<Account>({
-    //     company: '',
-    //     userid:  '',
-    //     authority:  '',
-    //     username :  '',
-    //     tel :  '',
-    //     phone:  '',
-    //     email :  '',
-    //     rating:  '0',
-    //     password:  '',
-    //     repassword:  '',
-    //     priority: '',
-    //     bigo: '',
-    //     branch: '',
-    // });
     const undefinedtostr = (str) =>{
         if(str==null || _.isUndefined(str))return ''
         else return str
     }
    
-    //  let values = {
-    //         company: '',
-    //          userid:  '',
-    //          authority:  '',
-    //          username :  '',
-    //          tel :  '',
-    //          phone:  '',
-    //          email :  '',
-    //          rating:  '0',
-    //          password:  '',
-    //          repassword:  '',
-    //          priority: '',
-    //          bigo: '',
-    //          branch: '',
-    //  }
-    //  let branchname=''
-
-     //  if(location.state.node==='u'){
-    //     const param = location.state.param
-    //     values.userid = undefinedtostr(param.userId)
-    //     values.username = undefinedtostr(param.userName)
-    //     values.password = undefinedtostr(param.userPwd)
-    //     values.tel = undefinedtostr(param.userTel)
-    //     values.phone = undefinedtostr(param.userMobile)
-    //     values.email = undefinedtostr(param.userEmail)
-    //     values.bigo = undefinedtostr(param.userEtc)
-    //     values.branch=''
-    //     let temp = undefinedtostr(param.branchList)
-    //     if(temp!==''){
-    //     let str=''
-    //     for(let i=0;i<param.branchList.length;i++){
-    //        str += param.branchList[0].branchNo
-    //        str+=','
-    //        branchname += param.branchList[0].branchName
-    //        branchname+=','
-    //     }
-    //     values.branch=undefinedtostr(param.branchList)
-    //    }
-       
-    //  }
-
     const[auth,setAuth] = React.useState(0)
     const handleAuth = (param) => {
         setAuth(Number(param))
@@ -186,16 +132,38 @@ function AccountCreate() {
     }
   };
 
-    // const [commpanyname, setCompanyname] = React.useState('');
     const [branchname, setBranchname] = React.useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // setValues({ ...values, [event.target.name]: event.target.value });
     }
 
-    const { mutate } = useMutation({mutationFn : addAccount,
+     const delmutate = useMutation({mutationFn : delAccount,
+        onSuccess: () => {
+        },
+        onError: (err) => {
+          console.error(err);
+        },
+      })
+    
+      const handleDel = (event) => {
+
+        // if (window.confirm(`진심으로 삭제하시겠습니까?`)) {
+
+        // console.log(getValues('userNo'))
+        // let param = new FormData()
+        // let arg = {}
+        // arg.userNo = undefinedtostr(getValues('userNo'))
+        // param.append('params',JSON.stringify(arg))
+        // delmutate.mutate(userNo) 
+        // }
+    }
+
+    const[isSave,setIsSave] = React.useState(false)    
+    const addmutate = useMutation({mutationFn : addAccount,
         onSuccess: () => {
         //   queryClient.invalidateQueries(["Account"]);
+        setIsSave(true)
         },
         onError: (err) => {
           console.error(err);
@@ -210,63 +178,47 @@ function AccountCreate() {
             return;
         }
         
-    //    const isValid = await trigger();
-    //    console.log(isValid);
-    //    if(!isValid)return
-        
-        // let param = {
-        // 'userId' : values.userid,
-        // 'userName' : values.username,
-        // 'userPwd': values.password,
-        // 'userTel': values.tel,
-        // 'userMobile': values.phone,
-        // 'userEmail': values.email,
-        // 'userEtc': values.bigo,
-        // 'enable': 'true',
-        // 'file': file,
-        // 'authCode': auth,
-        // 'branchList':values.branch
-        // }
-        // console.log(param)
         let param = new FormData()
-        param.append('userId', undefinedtostr(getValues('userid')))
-        param.append('userName', undefinedtostr(getValues('username')))
-        param.append('userPwd', undefinedtostr(getValues('password')))
-        param.append('userTel', undefinedtostr(getValues('tel')))
-        param.append('userMobile', undefinedtostr(getValues('phone')))
-        param.append('userEmail', undefinedtostr(getValues('email')))
-        param.append('userEtc', undefinedtostr(getValues('bigo')))
-        param.append('enable', 'true')
-        param.append('enabled', 'true')
-        param.append('authCode',auth)
-        param.append('branchList', undefinedtostr(getValues('branch')))
-        param.append('file',file,file?.name)
+        let props = {}
+        let arg = {}
+        arg.userNo = undefinedtostr(getValues('userNo'))
+        arg.userId = undefinedtostr(getValues('userid'))
+        arg.userName = undefinedtostr(getValues('username'))
+        arg.userPwd = undefinedtostr(getValues('password'))
+        arg.userTel = undefinedtostr(getValues('tel'))
+        arg.userMobile = undefinedtostr(getValues('phone'))
+        arg.userEmail = undefinedtostr(getValues('email'))
+        arg.userEtc = undefinedtostr(getValues('bigo'))
+        arg.enable = true
+        arg.firstFlag = true
+        arg.authCode = auth.toString()
+        let temp = undefinedtostr(getValues('branch'))
+        let b = []
+        for (let i=0;i<temp.length;i++){
+            b.push(Number(temp[i]))
+        }
+        arg.branchNoList = b
+        param.append('params',JSON.stringify(arg))
+        param.append('file',file)
+        console.log(JSON.stringify(arg))
+        let params = {}
         for (var key of param.entries()) {
             console.log(key[0] + ', ' + key[1]);
         }
-    
-        console.log(file)
+        // console.log(file)
         let mode='POST'
         if(location.state!=null){
             mode='PUT'
         }
         param.append('mode',mode)
-        console.log(param)
-        mutate(param)
+        
+        addmutate.mutate(param)
+      
       }  
     
  
     const onSubmit = (data: any,e) => {
-        console.log(data)
-        // values.userid = undefinedtostr(data.userid)
-        // values.username = undefinedtostr(data.username)
-        // values.password = undefinedtostr(data.password)
-        // values.tel = undefinedtostr(data.tel)
-        // values.phone = undefinedtostr(data.phone)
-        // values.email = undefinedtostr(data.email)
-        // values.bigo = undefinedtostr(data.bigo)
-        //console.log(JSON.stringify(data));
-        // console.log(values)
+        console.log(e)
         handleSave(e)
     };
 
@@ -287,6 +239,8 @@ function AccountCreate() {
         setIsWarning(false)
     };
 
+
+    const [delorcancel, setDelorcancel] = React.useState('취소하기');
     React.useEffect(() => {
         if(location.state!=null){
             console.log(location.state.node)
@@ -303,11 +257,11 @@ function AccountCreate() {
             
             let temp = undefinedtostr(param.branchList)
             if(temp!==''){
-            let str=''
+            let str=[]
             let branchname=''
             for(let i=0;i<param.branchList.length;i++){
-               str += param.branchList[i].branchNo
-               str+=','
+               str.push(param.branchList[i].branchNo)
+            //    str+=','
                branchname += param.branchList[i].branchName
                branchname+=','
             }
@@ -319,6 +273,7 @@ function AccountCreate() {
             setValue('attachNo' , undefinedtostr(param.attachNo))
             setValue('userNo' , undefinedtostr(param.userNo))
            }
+           setDelorcancel('삭제하기')
         }    
       }, [])
     return (
@@ -873,7 +828,7 @@ function AccountCreate() {
                     <Grid container spacing={2} ml={{ m: 0 }}>
                         <Grid item>
                             <TextField
-                            {...register('tel', { required: true} )}
+                            {...register('tel', { required: false} )}
                                 fullWidth
                                 variant="outlined"
                                 // InputProps={{disableUnderline:true}}
@@ -933,7 +888,7 @@ function AccountCreate() {
                         </Typography>
                     </Stack>
                     <TextField
-                    {...register('email', { required: true} )}
+                    {...register('email', { required: false} )}
                         fullWidth
                         variant="outlined"
                         // InputProps={{disableUnderline:true}}
@@ -1137,7 +1092,7 @@ function AccountCreate() {
                         }}
                     >
                         <TextField
-                        {...register('bigo', { required: true} )}
+                        {...register('bigo', { required: false} )}
                             fullWidth
                             variant="outlined"
                             // InputProps={{disableUnderline:true}}
@@ -1204,11 +1159,18 @@ function AccountCreate() {
                             boxShadow:
                                 '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)'
                         }}
+                        onClick={() => navigate(-1)}
                     >
+                        {/* {delorcancel} */}
                         취소하기
                     </Button>
                 </Stack>
             </form>
+            <Snackbar
+          open={isSave}
+          autoHideDuration={2000}
+          onClose={() => setOpen(false)}
+          message="저장되었습니다" />
         </>
     );
 }
